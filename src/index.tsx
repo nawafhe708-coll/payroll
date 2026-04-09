@@ -3483,7 +3483,7 @@ app.get('/scholarship', (c) => {
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-gray-500">${t.schKpi1}</p>
-          <p class="text-3xl font-bold text-gray-800 mt-2">24</p>
+          <p class="text-3xl font-bold text-gray-800 mt-2">21</p>
         </div>
         <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: rgba(139,26,47,0.1)">
           <i class="fas fa-user-graduate text-xl" style="color: var(--qu-maroon)"></i>
@@ -3495,7 +3495,7 @@ app.get('/scholarship', (c) => {
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-gray-500">${t.schKpi2}</p>
-          <p class="text-3xl font-bold text-gray-800 mt-2">7</p>
+          <p class="text-3xl font-bold text-gray-800 mt-2">3</p>
         </div>
         <div class="w-12 h-12 rounded-full flex items-center justify-center bg-orange-50">
           <i class="fas fa-clock text-xl text-orange-600"></i>
@@ -4036,6 +4036,24 @@ app.get('/scholarship/tracking', (c) => {
     { id: 4, name: isRTL ? 'مريم سالم' : 'Maryam Salem', empId: 'QU-2021-0098', program: 'Masters', programAr: 'ماجستير', major: 'Public Health', majorAr: 'الصحة العامة', university: 'Qatar University', startDate: '2024-02-01', stipend: 5000, status: 'active' },
     { id: 5, name: isRTL ? 'محمود عبدالله' : 'Mahmoud Abdullah', empId: 'QU-2017-0456', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Project Management', majorAr: 'إدارة المشاريع', university: 'PMI', startDate: '2024-03-01', stipend: 3000, status: 'pending' },
     { id: 6, name: isRTL ? 'سارة علي' : 'Sara Ali', empId: 'QU-2019-0234', program: 'Masters', programAr: 'ماجستير', major: 'Data Science', majorAr: 'علم البيانات', university: 'Hamad Bin Khalifa University', startDate: '2023-01-15', stipend: 5000, status: 'completed' },
+    { id: 7, name: isRTL ? 'يوسف إبراهيم' : 'Youssef Ibrahim', empId: 'QU-2020-0321', program: 'PhD', programAr: 'دكتوراه', major: 'Education', majorAr: 'التربية', university: 'University of Cambridge', startDate: '2023-10-01', stipend: 5000, status: 'active' },
+    { id: 8, name: isRTL ? 'نورة سعيد' : 'Noura Saeed', empId: 'QU-2021-0145', program: 'Masters', programAr: 'ماجستير', major: 'International Relations', majorAr: 'العلاقات الدولية', university: 'Georgetown University Qatar', startDate: '2024-01-20', stipend: 5000, status: 'active' },
+    { id: 9, name: isRTL ? 'عبدالرحمن خليفة' : 'Abdulrahman Khalifa', empId: 'QU-2019-0412', program: 'PhD', programAr: 'دكتوراه', major: 'Islamic Studies', majorAr: 'الدراسات الإسلامية', university: 'Qatar University', startDate: '2023-02-01', stipend: 5000, status: 'active' },
+    { id: 10, name: isRTL ? 'هند راشد' : 'Hind Rashid', empId: 'QU-2022-0089', program: 'Masters', programAr: 'ماجستير', major: 'Environmental Science', majorAr: 'علوم البيئة', university: 'Hamad Bin Khalifa University', startDate: '2024-02-15', stipend: 5000, status: 'active' },
+    { id: 11, name: isRTL ? 'طارق منصور' : 'Tariq Mansour', empId: 'QU-2018-0523', program: 'PhD', programAr: 'دكتوراه', major: 'Chemistry', majorAr: 'الكيمياء', university: 'Texas A&M University at Qatar', startDate: '2022-09-01', stipend: 5000, status: 'active' },
+    { id: 12, name: isRTL ? 'ليلى جاسم' : 'Layla Jasim', empId: 'QU-2020-0267', program: 'Masters', programAr: 'ماجستير', major: 'Psychology', majorAr: 'علم النفس', university: 'Qatar University', startDate: '2023-09-15', stipend: 5000, status: 'active' },
+    { id: 13, name: isRTL ? 'سلطان المري' : 'Sultan Al-Marri', empId: 'QU-2019-0178', program: 'PhD', programAr: 'دكتوراه', major: 'Law', majorAr: 'القانون', university: 'University College London', startDate: '2023-01-10', stipend: 5000, status: 'active' },
+    { id: 14, name: isRTL ? 'عائشة محمد' : 'Aisha Mohammed', empId: 'QU-2021-0234', program: 'Masters', programAr: 'ماجستير', major: 'Architecture', majorAr: 'الهندسة المعمارية', university: 'Qatar University', startDate: '2024-01-30', stipend: 5000, status: 'active' },
+    { id: 15, name: isRTL ? 'حمد العلي' : 'Hamad Al-Ali', empId: 'QU-2020-0389', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Data Analytics', majorAr: 'تحليل البيانات', university: 'MIT Professional Education', startDate: '2024-03-15', stipend: 3000, status: 'pending' },
+    { id: 16, name: isRTL ? 'شيخة حمد' : 'Sheikha Hamad', empId: 'QU-2019-0445', program: 'PhD', programAr: 'دكتوراه', major: 'Finance', majorAr: 'المالية', university: 'London School of Economics', startDate: '2022-10-15', stipend: 5000, status: 'active' },
+    { id: 17, name: isRTL ? 'راشد سعود' : 'Rashid Saud', empId: 'QU-2021-0156', program: 'Masters', programAr: 'ماجستير', major: 'Biomedical Engineering', majorAr: 'الهندسة الطبية الحيوية', university: 'Carnegie Mellon University Qatar', startDate: '2024-02-05', stipend: 5000, status: 'active' },
+    { id: 18, name: isRTL ? 'منى خالد' : 'Mona Khaled', empId: 'QU-2020-0298', program: 'Masters', programAr: 'ماجستير', major: 'Media & Communication', majorAr: 'الإعلام والاتصال', university: 'Northwestern University Qatar', startDate: '2023-09-20', stipend: 5000, status: 'active' },
+    { id: 19, name: isRTL ? 'فهد عبدالله' : 'Fahad Abdullah', empId: 'QU-2018-0367', program: 'PhD', programAr: 'دكتوراه', major: 'Physics', majorAr: 'الفيزياء', university: 'Oxford University', startDate: '2022-10-05', stipend: 5000, status: 'active' },
+    { id: 20, name: isRTL ? 'جواهر سالم' : 'Jawaher Salem', empId: 'QU-2019-0501', program: 'Masters', programAr: 'ماجستير', major: 'Marketing', majorAr: 'التسويق', university: 'HEC Paris Qatar', startDate: '2023-09-25', stipend: 5000, status: 'completed' },
+    { id: 21, name: isRTL ? 'ماجد العنزي' : 'Majed Al-Anzi', empId: 'QU-2021-0212', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Cybersecurity', majorAr: 'الأمن السيبراني', university: 'SANS Institute', startDate: '2024-03-20', stipend: 3000, status: 'pending' },
+    { id: 22, name: isRTL ? 'آمنة ناصر' : 'Amna Nasser', empId: 'QU-2020-0334', program: 'PhD', programAr: 'دكتوراه', major: 'Mathematics', majorAr: 'الرياضيات', university: 'Qatar University', startDate: '2023-02-10', stipend: 5000, status: 'active' },
+    { id: 23, name: isRTL ? 'علي حسين' : 'Ali Hussein', empId: 'QU-2019-0289', program: 'Masters', programAr: 'ماجستير', major: 'Civil Engineering', majorAr: 'الهندسة المدنية', university: 'Texas A&M University at Qatar', startDate: '2023-09-05', stipend: 5000, status: 'active' },
+    { id: 24, name: isRTL ? 'لطيفة محمد' : 'Latifa Mohammed', empId: 'QU-2021-0167', program: 'Masters', programAr: 'ماجستير', major: 'Pharmacy', majorAr: 'الصيدلة', university: 'Qatar University', startDate: '2024-02-20', stipend: 5000, status: 'active' },
   ];
 
   let filteredScholars = [...SCHOLARS];
@@ -4186,7 +4204,7 @@ app.get('/scholarship/apply', (c) => {
         </div>
       </div>
       
-      <div class="flex gap-4 mt-6">
+      <div class="flex flex-wrap gap-4 mt-6">
         <a href="/scholarship?lang=${lang}" class="btn-secondary">
           <i class="fas fa-arrow-${isRTL ? 'right' : 'left'} mr-2"></i>
           ${isRTL ? 'العودة' : 'Back'}
@@ -4195,6 +4213,10 @@ app.get('/scholarship/apply', (c) => {
           <i class="fas fa-gavel mr-2"></i>
           ${isRTL ? 'مراجعة الشروط' : 'Review Requirements'}
         </a>
+        <button onclick="downloadScholarshipForm()" class="btn-secondary">
+          <i class="fas fa-download mr-2"></i>
+          ${isRTL ? 'تحميل نموذج الطلب (PDF)' : 'Download Application Form (PDF)'}
+        </button>
       </div>
     </div>
 
@@ -4439,6 +4461,274 @@ app.get('/scholarship/apply', (c) => {
       }
     });
   });
+  
+  // Download scholarship application form
+  function downloadScholarshipForm() {
+    const isArabic = ${isRTL};
+    const formContent = isArabic ? 
+      \`نموذج طلب الابتعاث - جامعة قطر
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+القسم الأول: البيانات الشخصية
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+الاسم الكامل (بالعربية): ________________________________________________
+
+الاسم الكامل (بالإنجليزية): _______________________________________________
+
+الرقم الوظيفي: QU-____-______
+
+القسم/الإدارة الحالية: __________________________________________________
+
+الوظيفة الحالية: _______________________________________________________
+
+تاريخ التعيين: ____/____/________
+
+عدد سنوات الخدمة: _______
+
+البريد الإلكتروني: _____________________________________________________
+
+رقم الهاتف: ____________________________________________________________
+
+العنوان: _______________________________________________________________
+
+
+القسم الثاني: تفاصيل البرنامج الأكاديمي
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+نوع البرنامج: ☐ ماجستير  ☐ دكتوراه  ☐ شهادة مهنية
+
+التخصص: _______________________________________________________________
+
+اسم الجامعة: ___________________________________________________________
+
+الدولة: ________________________________________________________________
+
+مدة البرنامج (بالسنوات): ________________________________________________
+
+تاريخ البدء المتوقع: ____/____/________
+
+نوع الدراسة: ☐ بدوام كامل  ☐ بدوام جزئي  ☐ عن بعد
+
+
+القسم الثالث: التكاليف المتوقعة
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+الرسوم الدراسية السنوية: ____________________________________________ ريال
+
+تكاليف الكتب والمواد: _______________________________________________ ريال
+
+تكاليف المعيشة المتوقعة (إن وُجدت): _________________________________ ريال
+
+الإجمالي المتوقع: ____________________________________________________ ريال
+
+
+القسم الرابع: المبررات والأهداف
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. أسباب اختيار هذا البرنامج والتخصص:
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+
+2. كيف سيفيد هذا البرنامج عملك في جامعة قطر؟
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+
+3. الأهداف المهنية بعد إكمال البرنامج:
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+
+
+القسم الخامس: المستندات المرفقة
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+☐ خطاب القبول الرسمي من الجامعة
+☐ آخر كشف درجات أكاديمي
+☐ السيرة الذاتية المحدثة
+☐ خطة الدراسة والمقررات
+☐ تفاصيل تكاليف البرنامج من الجامعة
+☐ موافقة مدير القسم/الإدارة
+☐ نسخة من الهوية الشخصية
+
+
+القسم السادس: الإقرارات والتعهدات
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+☐ أقر بأنني قرأت وفهمت شروط وقوانين برنامج الابتعاث بجامعة قطر
+
+☐ أتعهد بالالتزام بخدمة الجامعة لمدة سنتين عن كل سنة دراسية بعد التخرج
+
+☐ أتعهد بالحفاظ على معدل تراكمي لا يقل عن 3.0 طوال فترة الدراسة
+
+☐ أتعهد بتقديم كشوف الدرجات الفصلية لقسم الموارد البشرية
+
+☐ أفهم أنني سأكون مسؤولاً عن إعادة جميع التكاليف في حالة عدم إكمال البرنامج أو الإخلال بشروط الابتعاث
+
+
+التوقيعات
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+توقيع الموظف: __________________    التاريخ: ____/____/________
+
+
+موافقة مدير القسم: ______________    التاريخ: ____/____/________
+
+
+اعتماد الموارد البشرية: __________    التاريخ: ____/____/________
+
+
+اعتماد قسم الرواتب: _____________    التاريخ: ____/____/________
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+جامعة قطر - إدارة الموارد البشرية وقسم الرواتب
+الهاتف: داخلي 4100 / 4101 | البريد الإلكتروني: scholarship@qu.edu.qa
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\` 
+    : 
+      \`SCHOLARSHIP APPLICATION FORM - Qatar University
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SECTION 1: PERSONAL INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Full Name (Arabic): ______________________________________________________
+
+Full Name (English): _____________________________________________________
+
+Employee ID: QU-____-______
+
+Current Department/Division: ______________________________________________
+
+Current Position: _________________________________________________________
+
+Date of Appointment: ____/____/________
+
+Years of Service: _______
+
+Email Address: ___________________________________________________________
+
+Phone Number: ____________________________________________________________
+
+Address: _________________________________________________________________
+
+
+SECTION 2: ACADEMIC PROGRAM DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Program Type: ☐ Master's Degree  ☐ PhD  ☐ Professional Certificate
+
+Major/Field of Study: _____________________________________________________
+
+University Name: __________________________________________________________
+
+Country: __________________________________________________________________
+
+Program Duration (years): _________________________________________________
+
+Expected Start Date: ____/____/________
+
+Study Mode: ☐ Full-time  ☐ Part-time  ☐ Distance Learning
+
+
+SECTION 3: EXPECTED COSTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Annual Tuition Fees: _____________________________________________ QAR
+
+Books & Materials: ________________________________________________ QAR
+
+Living Expenses (if applicable): _________________________________ QAR
+
+Total Expected Cost: ______________________________________________ QAR
+
+
+SECTION 4: JUSTIFICATION & OBJECTIVES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Reasons for choosing this program and major:
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+
+2. How will this program benefit your work at Qatar University?
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+
+3. Career goals after completing the program:
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+__________________________________________________________________________
+
+
+SECTION 5: ATTACHED DOCUMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+☐ Official acceptance letter from university
+☐ Latest academic transcript
+☐ Updated CV/Resume
+☐ Study plan and course list
+☐ Program cost breakdown from university
+☐ Department head approval
+☐ Copy of personal ID
+
+
+SECTION 6: DECLARATIONS & COMMITMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+☐ I have read and understood Qatar University's scholarship rules and policies
+
+☐ I commit to serve the university for 2 years per year of study after graduation
+
+☐ I commit to maintain a minimum CGPA of 3.0 throughout the program
+
+☐ I commit to submit semester transcripts to Human Resources Department
+
+☐ I understand that I will be responsible for repaying all costs in case of non-completion or breach of scholarship terms
+
+
+SIGNATURES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Employee Signature: __________________    Date: ____/____/________
+
+
+Department Head Approval: _____________    Date: ____/____/________
+
+
+Human Resources Approval: _____________    Date: ____/____/________
+
+
+Payroll Department Approval: __________    Date: ____/____/________
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Qatar University - Human Resources & Payroll Department
+Phone: Ext. 4100 / 4101 | Email: scholarship@qu.edu.qa
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\`;
+
+    // Create and download the text file
+    const blob = new Blob([formContent], { type: 'text/plain;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = isArabic ? 'نموذج_طلب_الابتعاث_جامعة_قطر.txt' : 'QU_Scholarship_Application_Form.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
   </script>
   `
 
