@@ -27,7 +27,95 @@ const T = {
     navEOS: 'End of Service',
     navPromotions: 'Promotions',
     navEmailTemplates: 'Email Templates',
+    navScholarship: 'Scholarship Program',
+    navScholarshipRules: 'Scholarship Rules',
+    navScholarshipProcedures: 'Scholarship Procedures',
+    navScholarshipTracking: 'Scholar Tracking',
     navLogin: 'Employee Login',
+    
+    // ── SCHOLARSHIP ──
+    schTitle: 'Scholarship Program Management',
+    schSubtitle: 'Complete management system for employee scholarship tracking and payments',
+    schDashboard: 'Dashboard',
+    schRules: 'Rules & Policies',
+    schProcedures: 'Application Procedures',
+    schTracking: 'Scholar Tracking',
+    schApply: 'Apply for Scholarship',
+    
+    // Dashboard
+    schKpi1: 'Active Scholars',
+    schKpi2: 'Pending Applications',
+    schKpi3: 'Total Budget (QAR)',
+    schKpi4: 'This Month Payments',
+    
+    // Rules
+    schRulesTitle: 'Scholarship Rules & Policies',
+    schRulesSubtitle: 'Eligibility criteria, conditions, and regulations for the QU scholarship program',
+    schRule1Title: 'Eligibility Requirements',
+    schRule1Desc: 'Must be a permanent full-time employee with minimum 3 years of service',
+    schRule2Title: 'Coverage Amount',
+    schRule2Desc: 'Full tuition + QAR 5,000 monthly stipend for living expenses',
+    schRule3Title: 'Service Commitment',
+    schRule3Desc: 'Must serve QU for 2 years after graduation for each year of scholarship',
+    schRule4Title: 'Academic Requirements',
+    schRule4Desc: 'Maintain minimum CGPA of 3.0 throughout the program',
+    
+    // Procedures
+    schProcTitle: 'Scholarship Application Procedures',
+    schProcSubtitle: 'Step-by-step guide to apply for the Qatar University scholarship program',
+    schStep1: 'Submit Application',
+    schStep1Desc: 'Complete the scholarship application form with all required documents',
+    schStep2: 'Department Review',
+    schStep2Desc: 'Your department head reviews and approves the application',
+    schStep3: 'HR Approval',
+    schStep3Desc: 'Human Resources verifies eligibility and service requirements',
+    schStep4: 'Payroll Setup',
+    schStep4Desc: 'Payroll department sets up monthly stipend payments',
+    
+    // Tracking
+    schTrackTitle: 'Scholar Tracking & Payments',
+    schTrackSubtitle: 'Monitor all active scholars, payment schedules, and academic progress',
+    schColName: 'Scholar Name',
+    schColEmpId: 'Emp ID',
+    schColProgram: 'Program',
+    schColUniversity: 'University',
+    schColStartDate: 'Start Date',
+    schColStipend: 'Monthly Stipend',
+    schColStatus: 'Status',
+    schColActions: 'Actions',
+    schStatusActive: 'Active',
+    schStatusPending: 'Pending',
+    schStatusCompleted: 'Completed',
+    schStatusSuspended: 'Suspended',
+    schBtnViewDetails: 'View Details',
+    schBtnPayments: 'Payment History',
+    schBtnDocuments: 'Documents',
+    
+    // Application Form
+    schFormTitle: 'Scholarship Application Form',
+    schFormSubtitle: 'Complete all sections to submit your scholarship request',
+    schFormPersonal: 'Personal Information',
+    schFormProgram: 'Program Details',
+    schFormDocuments: 'Required Documents',
+    schFormName: 'Full Name',
+    schFormEmpId: 'Employee ID',
+    schFormDept: 'Department',
+    schFormProgramType: 'Program Type',
+    schFormMasters: 'Master\'s Degree',
+    schFormPhD: 'PhD',
+    schFormCertificate: 'Professional Certificate',
+    schFormMajor: 'Major/Field of Study',
+    schFormUniversity: 'University Name',
+    schFormCountry: 'Country',
+    schFormDuration: 'Program Duration (years)',
+    schFormStartDate: 'Expected Start Date',
+    schFormTuition: 'Estimated Annual Tuition (QAR)',
+    schFormUploadLetter: 'Upload Acceptance Letter',
+    schFormUploadTranscript: 'Upload Latest Transcript',
+    schFormUploadCV: 'Upload CV',
+    schFormJustification: 'Justification & Career Goals',
+    schFormSubmit: 'Submit Application',
+    schFormCancel: 'Cancel',
     navMainMenu: 'Main Menu',
     navEmployee: 'Employee',
     navDepartment: 'Payroll Department',
@@ -370,8 +458,96 @@ const T = {
     navContact: 'تواصل معنا',
     navEOS: 'نهاية الخدمة',
     navPromotions: 'الترقيات الإدارية',
+    navScholarship: 'برنامج الابتعاث',
+    navScholarshipRules: 'قوانين وشروط الابتعاث',
+    navScholarshipProcedures: 'إجراءات التقديم',
+    navScholarshipTracking: 'متابعة المبتعثين',
     navEmailTemplates: 'أرشيف قوالب الإيميل',
     navLogin: 'دخول الموظف',
+    
+    // ── الابتعاث ──
+    schTitle: 'إدارة برنامج الابتعاث',
+    schSubtitle: 'نظام متكامل لإدارة ومتابعة المبتعثين والمدفوعات',
+    schDashboard: 'لوحة المعلومات',
+    schRules: 'القوانين والشروط',
+    schProcedures: 'إجراءات التقديم',
+    schTracking: 'متابعة المبتعثين',
+    schApply: 'تقديم طلب ابتعاث',
+    
+    // لوحة المعلومات
+    schKpi1: 'المبتعثون النشطون',
+    schKpi2: 'الطلبات المعلقة',
+    schKpi3: 'إجمالي الميزانية (ريال)',
+    schKpi4: 'مدفوعات هذا الشهر',
+    
+    // القوانين
+    schRulesTitle: 'قوانين وشروط برنامج الابتعاث',
+    schRulesSubtitle: 'معايير الأهلية والشروط واللوائح الخاصة ببرنامج الابتعاث بجامعة قطر',
+    schRule1Title: 'متطلبات الأهلية',
+    schRule1Desc: 'يجب أن يكون الموظف دائماً بدوام كامل مع خدمة لا تقل عن 3 سنوات',
+    schRule2Title: 'قيمة التغطية',
+    schRule2Desc: 'الرسوم الدراسية كاملة + مكافأة شهرية 5,000 ريال لمصاريف المعيشة',
+    schRule3Title: 'التزام الخدمة',
+    schRule3Desc: 'يلتزم المبتعث بخدمة الجامعة لمدة سنتين بعد التخرج عن كل سنة ابتعاث',
+    schRule4Title: 'المتطلبات الأكاديمية',
+    schRule4Desc: 'الحفاظ على معدل تراكمي لا يقل عن 3.0 طوال فترة الدراسة',
+    
+    // الإجراءات
+    schProcTitle: 'إجراءات التقديم على برنامج الابتعاث',
+    schProcSubtitle: 'دليل شامل خطوة بخطوة للتقديم على برنامج الابتعاث بجامعة قطر',
+    schStep1: 'تقديم الطلب',
+    schStep1Desc: 'تعبئة نموذج طلب الابتعاث مع إرفاق جميع المستندات المطلوبة',
+    schStep2: 'مراجعة القسم',
+    schStep2Desc: 'مراجعة واعتماد رئيس القسم للطلب',
+    schStep3: 'اعتماد الموارد البشرية',
+    schStep3Desc: 'التحقق من أهلية الموظف ومتطلبات الخدمة',
+    schStep4: 'إعداد المدفوعات',
+    schStep4Desc: 'إعداد قسم الرواتب للمكافأة الشهرية والمستحقات',
+    
+    // متابعة المبتعثين
+    schTrackTitle: 'متابعة المبتعثين والمدفوعات',
+    schTrackSubtitle: 'متابعة جميع المبتعثين النشطين، جداول المدفوعات، والتقدم الأكاديمي',
+    schColName: 'اسم المبتعث',
+    schColEmpId: 'الرقم الوظيفي',
+    schColProgram: 'البرنامج',
+    schColUniversity: 'الجامعة',
+    schColStartDate: 'تاريخ البدء',
+    schColStipend: 'المكافأة الشهرية',
+    schColStatus: 'الحالة',
+    schColActions: 'الإجراءات',
+    schStatusActive: 'نشط',
+    schStatusPending: 'معلق',
+    schStatusCompleted: 'مكتمل',
+    schStatusSuspended: 'موقوف',
+    schBtnViewDetails: 'عرض التفاصيل',
+    schBtnPayments: 'سجل المدفوعات',
+    schBtnDocuments: 'المستندات',
+    
+    // نموذج التقديم
+    schFormTitle: 'نموذج طلب الابتعاث',
+    schFormSubtitle: 'يرجى تعبئة جميع الحقول المطلوبة لتقديم طلب الابتعاث',
+    schFormPersonal: 'البيانات الشخصية',
+    schFormProgram: 'تفاصيل البرنامج',
+    schFormDocuments: 'المستندات المطلوبة',
+    schFormName: 'الاسم الكامل',
+    schFormEmpId: 'الرقم الوظيفي',
+    schFormDept: 'القسم',
+    schFormProgramType: 'نوع البرنامج',
+    schFormMasters: 'ماجستير',
+    schFormPhD: 'دكتوراه',
+    schFormCertificate: 'شهادة مهنية',
+    schFormMajor: 'التخصص',
+    schFormUniversity: 'اسم الجامعة',
+    schFormCountry: 'الدولة',
+    schFormDuration: 'مدة البرنامج (سنوات)',
+    schFormStartDate: 'تاريخ البدء المتوقع',
+    schFormTuition: 'الرسوم الدراسية السنوية المقدرة (ريال)',
+    schFormUploadLetter: 'رفع خطاب القبول',
+    schFormUploadTranscript: 'رفع آخر كشف درجات',
+    schFormUploadCV: 'رفع السيرة الذاتية',
+    schFormJustification: 'المبررات والأهداف المهنية',
+    schFormSubmit: 'تقديم الطلب',
+    schFormCancel: 'إلغاء',
     navMainMenu: 'القائمة الرئيسية',
     navEmployee: 'الموظف',
     navDepartment: 'قسم الرواتب',
@@ -938,6 +1114,7 @@ const layout = (title: string, content: string, activePage: string, lang: Lang) 
       { href: '/end-of-service', icon: 'fa-person-walking-arrow-right', label: t.navEOS, page: 'eos' },
       { href: '/promotions', icon: 'fa-ranking-star', label: t.navPromotions, page: 'promotions' },
       { href: '/email-templates', icon: 'fa-envelope-open-text', label: t.navEmailTemplates, page: 'email-templates' },
+      { href: '/scholarship', icon: 'fa-graduation-cap', label: t.navScholarship, page: 'scholarship' },
       { href: '/sla', icon: 'fa-chart-gantt', label: isRTL ? 'إدارة طلبات SLA' : 'SLA Management', page: 'sla' },
     ].map(item => `
     <a href="${item.href}?lang=${lang}" class="sidebar-link ${activePage === item.page ? 'active' : ''} flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 text-sm mb-1 ${isRTL ? 'flex-row-reverse' : ''}">
@@ -3290,6 +3467,985 @@ app.get('/promotions', (c) => {
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
+//  SCHOLARSHIP DASHBOARD  /scholarship
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/scholarship', (c) => {
+  const lang = getLang(c)
+  const t = T[lang]
+  const isRTL = lang === 'ar'
+
+  const pageTitle = t.schTitle
+
+  const content = `
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4" style="border-left-color: var(--qu-maroon)">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-500">${t.schKpi1}</p>
+          <p class="text-3xl font-bold text-gray-800 mt-2">24</p>
+        </div>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: rgba(139,26,47,0.1)">
+          <i class="fas fa-user-graduate text-xl" style="color: var(--qu-maroon)"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-500">${t.schKpi2}</p>
+          <p class="text-3xl font-bold text-gray-800 mt-2">7</p>
+        </div>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center bg-orange-50">
+          <i class="fas fa-clock text-xl text-orange-600"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-500">${t.schKpi3}</p>
+          <p class="text-3xl font-bold text-gray-800 mt-2">${isRTL ? '2.4 مليون' : '2.4M'}</p>
+        </div>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center bg-green-50">
+          <i class="fas fa-sack-dollar text-xl text-green-600"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-500">${t.schKpi4}</p>
+          <p class="text-3xl font-bold text-gray-800 mt-2">${isRTL ? '120,000' : '120,000'}</p>
+        </div>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center bg-blue-50">
+          <i class="fas fa-money-bill-wave text-xl text-blue-600"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <a href="/scholarship/rules?lang=${lang}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background: rgba(139,26,47,0.1)">
+          <i class="fas fa-gavel text-2xl" style="color: var(--qu-maroon)"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-gray-800">${t.schRules}</h3>
+          <p class="text-sm text-gray-500 mt-1">${isRTL ? 'الشروط والمعايير' : 'Criteria & Conditions'}</p>
+        </div>
+      </div>
+    </a>
+    
+    <a href="/scholarship/procedures?lang=${lang}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center bg-orange-50">
+          <i class="fas fa-list-check text-2xl text-orange-600"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-gray-800">${t.schProcedures}</h3>
+          <p class="text-sm text-gray-500 mt-1">${isRTL ? 'خطوات التقديم' : 'Application Steps'}</p>
+        </div>
+      </div>
+    </a>
+    
+    <a href="/scholarship/tracking?lang=${lang}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center bg-green-50">
+          <i class="fas fa-chart-line text-2xl text-green-600"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-gray-800">${t.schTracking}</h3>
+          <p class="text-sm text-gray-500 mt-1">${isRTL ? 'متابعة المبتعثين' : 'Scholar Monitoring'}</p>
+        </div>
+      </div>
+    </a>
+    
+    <a href="/scholarship/apply?lang=${lang}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow" style="background: linear-gradient(135deg, var(--qu-maroon), #a52a2a)">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center bg-white bg-opacity-20">
+          <i class="fas fa-file-signature text-2xl text-white"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-white">${t.schApply}</h3>
+          <p class="text-sm text-white text-opacity-90 mt-1">${isRTL ? 'للموظفين فقط' : 'Staff Only'}</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">
+      <i class="fas fa-history mr-2" style="color: var(--qu-maroon)"></i>
+      ${isRTL ? 'النشاط الأخير' : 'Recent Activity'}
+    </h2>
+    <div class="space-y-4">
+      <div class="flex items-start gap-4 pb-4 border-b">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(139,26,47,0.1)">
+          <i class="fas fa-user-plus" style="color: var(--qu-maroon)"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-gray-800">${isRTL ? 'طلب ابتعاث جديد' : 'New Scholarship Application'}</p>
+          <p class="text-sm text-gray-600">${isRTL ? 'أحمد محمد - دكتوراه في إدارة الأعمال' : 'Ahmad Mohammed - PhD in Business Administration'}</p>
+          <p class="text-xs text-gray-400 mt-1">${isRTL ? 'منذ ساعتين' : '2 hours ago'}</p>
+        </div>
+        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">${isRTL ? 'معلق' : 'Pending'}</span>
+      </div>
+      
+      <div class="flex items-start gap-4 pb-4 border-b">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center bg-green-50">
+          <i class="fas fa-check text-green-600"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-gray-800">${isRTL ? 'تمت الموافقة على المدفوعات' : 'Payment Approved'}</p>
+          <p class="text-sm text-gray-600">${isRTL ? 'مكافآت شهر أبريل - 24 مبتعث' : 'April Stipends - 24 Scholars'}</p>
+          <p class="text-xs text-gray-400 mt-1">${isRTL ? 'منذ 5 ساعات' : '5 hours ago'}</p>
+        </div>
+        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">${isRTL ? 'معتمد' : 'Approved'}</span>
+      </div>
+      
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-50">
+          <i class="fas fa-graduation-cap text-blue-600"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-gray-800">${isRTL ? 'إكمال البرنامج' : 'Program Completion'}</p>
+          <p class="text-sm text-gray-600">${isRTL ? 'سارة علي - ماجستير في علوم الحاسب' : 'Sara Ali - Master\'s in Computer Science'}</p>
+          <p class="text-xs text-gray-400 mt-1">${isRTL ? 'منذ يوم واحد' : '1 day ago'}</p>
+        </div>
+        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">${isRTL ? 'مكتمل' : 'Completed'}</span>
+      </div>
+    </div>
+  </div>
+  `
+
+  return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SCHOLARSHIP RULES  /scholarship/rules
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/scholarship/rules', (c) => {
+  const lang = getLang(c)
+  const t = T[lang]
+  const isRTL = lang === 'ar'
+
+  const pageTitle = t.schRulesTitle
+
+  const content = `
+  <div class="max-w-5xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background: rgba(139,26,47,0.1)">
+          <i class="fas fa-gavel text-3xl" style="color: var(--qu-maroon)"></i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">${t.schRulesTitle}</h1>
+          <p class="text-gray-600 mt-2">${t.schRulesSubtitle}</p>
+        </div>
+      </div>
+      
+      <div class="flex gap-4 mt-6">
+        <a href="/scholarship?lang=${lang}" class="btn-secondary">
+          <i class="fas fa-arrow-${isRTL ? 'right' : 'left'} mr-2"></i>
+          ${isRTL ? 'العودة للوحة المعلومات' : 'Back to Dashboard'}
+        </a>
+        <a href="/scholarship/apply?lang=${lang}" class="btn-primary">
+          <i class="fas fa-file-signature mr-2"></i>
+          ${t.schApply}
+        </a>
+      </div>
+    </div>
+
+    <!-- Rules Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <!-- Rule 1 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(139,26,47,0.1)">
+            <i class="fas fa-user-check text-xl" style="color: var(--qu-maroon)"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">${t.schRule1Title}</h3>
+            <p class="text-gray-600">${t.schRule1Desc}</p>
+            <ul class="mt-4 space-y-2 text-sm text-gray-700">
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'وظيفة دائمة بدوام كامل' : 'Permanent full-time position'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'خدمة لا تقل عن 3 سنوات' : 'Minimum 3 years of service'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'تقييم أداء ممتاز' : 'Excellent performance rating'}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rule 2 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 bg-green-50">
+            <i class="fas fa-money-bill-wave text-xl text-green-600"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">${t.schRule2Title}</h3>
+            <p class="text-gray-600">${t.schRule2Desc}</p>
+            <ul class="mt-4 space-y-2 text-sm text-gray-700">
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'الرسوم الدراسية كاملة' : 'Full tuition fees'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'مكافأة شهرية 5,000 ريال' : 'QAR 5,000 monthly stipend'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'تأمين صحي شامل' : 'Comprehensive health insurance'}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rule 3 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 bg-orange-50">
+            <i class="fas fa-handshake text-xl text-orange-600"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">${t.schRule3Title}</h3>
+            <p class="text-gray-600">${t.schRule3Desc}</p>
+            <ul class="mt-4 space-y-2 text-sm text-gray-700">
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'سنتان لكل سنة دراسية' : '2 years per year of study'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'عقد ملزم قانونياً' : 'Legally binding contract'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'غرامة في حال الإخلال' : 'Penalty for breach'}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rule 4 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-50">
+            <i class="fas fa-chart-line text-xl text-blue-600"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">${t.schRule4Title}</h3>
+            <p class="text-gray-600">${t.schRule4Desc}</p>
+            <ul class="mt-4 space-y-2 text-sm text-gray-700">
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'معدل تراكمي 3.0 كحد أدنى' : 'Minimum CGPA 3.0'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'تقديم كشف درجات فصلي' : 'Submit semester transcripts'}</li>
+              <li><i class="fas fa-check text-green-600 mr-2"></i>${isRTL ? 'إنذار في حال انخفاض المعدل' : 'Warning if GPA drops'}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg mb-8">
+      <div class="flex items-start gap-4">
+        <i class="fas fa-info-circle text-2xl text-amber-600 mt-1"></i>
+        <div>
+          <h3 class="text-lg font-bold text-amber-900 mb-2">${isRTL ? 'معلومات إضافية' : 'Additional Information'}</h3>
+          <ul class="space-y-2 text-amber-800">
+            <li><i class="fas fa-circle text-xs mr-2"></i>${isRTL ? 'يجب الحصول على موافقة مدير القسم قبل التقديم' : 'Department head approval required before application'}</li>
+            <li><i class="fas fa-circle text-xs mr-2"></i>${isRTL ? 'الأولوية للبرامج ذات الصلة بمجال عمل الموظف' : 'Priority for programs related to employee\'s work field'}</li>
+            <li><i class="fas fa-circle text-xs mr-2"></i>${isRTL ? 'يمكن للموظف التقديم على برنامج بدوام جزئي مع الاحتفاظ بالوظيفة' : 'Part-time programs allowed while maintaining employment'}</li>
+            <li><i class="fas fa-circle text-xs mr-2"></i>${isRTL ? 'المكافأة الشهرية قابلة للتعديل حسب موقع الدراسة' : 'Monthly stipend adjustable based on study location'}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">
+        <i class="fas fa-envelope mr-2" style="color: var(--qu-maroon)"></i>
+        ${isRTL ? 'للاستفسار' : 'For Inquiries'}
+      </h3>
+      <p class="text-gray-600 mb-4">${isRTL ? 'لأي استفسار حول شروط وقوانين الابتعاث، يرجى التواصل مع:' : 'For any inquiries about scholarship rules and policies, please contact:'}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-phone-alt text-gray-500"></i>
+          <span class="text-gray-700">${isRTL ? 'داخلي: 4100' : 'Ext: 4100'}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <i class="fas fa-envelope text-gray-500"></i>
+          <span class="text-gray-700">scholarship@qu.edu.qa</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  `
+
+  return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SCHOLARSHIP PROCEDURES  /scholarship/procedures
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/scholarship/procedures', (c) => {
+  const lang = getLang(c)
+  const t = T[lang]
+  const isRTL = lang === 'ar'
+
+  const pageTitle = t.schProcTitle
+
+  const content = `
+  <div class="max-w-5xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center bg-orange-50">
+          <i class="fas fa-list-check text-3xl text-orange-600"></i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">${t.schProcTitle}</h1>
+          <p class="text-gray-600 mt-2">${t.schProcSubtitle}</p>
+        </div>
+      </div>
+      
+      <div class="flex gap-4 mt-6">
+        <a href="/scholarship?lang=${lang}" class="btn-secondary">
+          <i class="fas fa-arrow-${isRTL ? 'right' : 'left'} mr-2"></i>
+          ${isRTL ? 'العودة للوحة المعلومات' : 'Back to Dashboard'}
+        </a>
+        <a href="/scholarship/apply?lang=${lang}" class="btn-primary">
+          <i class="fas fa-file-signature mr-2"></i>
+          ${t.schApply}
+        </a>
+      </div>
+    </div>
+
+    <!-- Steps Timeline -->
+    <div class="space-y-8 mb-8">
+      <!-- Step 1 -->
+      <div class="relative flex items-start gap-6">
+        <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl" style="background: var(--qu-maroon)">
+          1
+        </div>
+        <div class="flex-1 bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">${t.schStep1}</h3>
+          <p class="text-gray-600 mb-4">${t.schStep1Desc}</p>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">${isRTL ? 'المستندات المطلوبة:' : 'Required Documents:'}</h4>
+            <ul class="space-y-2 text-gray-700">
+              <li><i class="fas fa-file-pdf text-red-600 mr-2"></i>${isRTL ? 'خطاب القبول الرسمي من الجامعة' : 'Official acceptance letter from university'}</li>
+              <li><i class="fas fa-file-pdf text-red-600 mr-2"></i>${isRTL ? 'آخر كشف درجات أكاديمي' : 'Latest academic transcript'}</li>
+              <li><i class="fas fa-file-pdf text-red-600 mr-2"></i>${isRTL ? 'السيرة الذاتية محدثة' : 'Updated CV/Resume'}</li>
+              <li><i class="fas fa-file-pdf text-red-600 mr-2"></i>${isRTL ? 'خطة الدراسة والأهداف المهنية' : 'Study plan and career goals'}</li>
+              <li><i class="fas fa-file-pdf text-red-600 mr-2"></i>${isRTL ? 'تفاصيل تكاليف البرنامج' : 'Program cost breakdown'}</li>
+            </ul>
+          </div>
+          <div class="mt-4 flex items-center gap-4">
+            <span class="px-4 py-2 rounded-lg text-sm font-semibold" style="background: rgba(139,26,47,0.1); color: var(--qu-maroon)">
+              <i class="fas fa-clock mr-2"></i>${isRTL ? 'المدة: 2-3 أيام' : 'Duration: 2-3 days'}
+            </span>
+            <a href="/scholarship/apply?lang=${lang}" class="text-sm font-semibold" style="color: var(--qu-maroon)">
+              ${isRTL ? 'ابدأ التقديم ←' : 'Start Application →'}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="relative flex items-start gap-6">
+        <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl bg-orange-600">
+          2
+        </div>
+        <div class="flex-1 bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">${t.schStep2}</h3>
+          <p class="text-gray-600 mb-4">${t.schStep2Desc}</p>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">${isRTL ? 'معايير المراجعة:' : 'Review Criteria:'}</h4>
+            <ul class="space-y-2 text-gray-700">
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'مدى ارتباط البرنامج بمجال العمل' : 'Program relevance to work field'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'تأثير الابتعاث على سير العمل' : 'Impact of scholarship on work operations'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'احتياجات القسم المستقبلية' : 'Department\'s future needs'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'أداء الموظف وتقييماته' : 'Employee performance and evaluations'}</li>
+            </ul>
+          </div>
+          <div class="mt-4">
+            <span class="px-4 py-2 rounded-lg text-sm font-semibold bg-orange-100 text-orange-700">
+              <i class="fas fa-clock mr-2"></i>${isRTL ? 'المدة: 5-7 أيام' : 'Duration: 5-7 days'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="relative flex items-start gap-6">
+        <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl bg-green-600">
+          3
+        </div>
+        <div class="flex-1 bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">${t.schStep3}</h3>
+          <p class="text-gray-600 mb-4">${t.schStep3Desc}</p>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">${isRTL ? 'التحقق من:' : 'Verification of:'}</h4>
+            <ul class="space-y-2 text-gray-700">
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'مدة الخدمة (3 سنوات كحد أدنى)' : 'Service duration (minimum 3 years)'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'نوع العقد (دائم بدوام كامل)' : 'Contract type (permanent full-time)'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'السجل الوظيفي والانضباط' : 'Employment record and discipline'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'عدم وجود التزامات دراسية سابقة' : 'No previous unfinished study commitments'}</li>
+            </ul>
+          </div>
+          <div class="mt-4">
+            <span class="px-4 py-2 rounded-lg text-sm font-semibold bg-green-100 text-green-700">
+              <i class="fas fa-clock mr-2"></i>${isRTL ? 'المدة: 3-5 أيام' : 'Duration: 3-5 days'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="relative flex items-start gap-6">
+        <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl bg-blue-600">
+          4
+        </div>
+        <div class="flex-1 bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-3">${t.schStep4}</h3>
+          <p class="text-gray-600 mb-4">${t.schStep4Desc}</p>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">${isRTL ? 'إعداد الترتيبات المالية:' : 'Financial Setup:'}</h4>
+            <ul class="space-y-2 text-gray-700">
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'إنشاء ملف المبتعث في النظام' : 'Create scholar profile in system'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'إعداد المكافأة الشهرية (5,000 ريال)' : 'Setup monthly stipend (QAR 5,000)'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'ترتيب دفع الرسوم الدراسية' : 'Arrange tuition fee payments'}</li>
+              <li><i class="fas fa-check-circle text-green-600 mr-2"></i>${isRTL ? 'توقيع عقد الالتزام بالخدمة' : 'Sign service commitment contract'}</li>
+            </ul>
+          </div>
+          <div class="mt-4">
+            <span class="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-100 text-blue-700">
+              <i class="fas fa-clock mr-2"></i>${isRTL ? 'المدة: 7-10 أيام' : 'Duration: 7-10 days'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Timeline -->
+    <div class="bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-500 p-6 rounded-lg">
+      <div class="flex items-center gap-4">
+        <i class="fas fa-calendar-check text-3xl text-green-600"></i>
+        <div>
+          <h3 class="text-xl font-bold text-gray-800">${isRTL ? 'إجمالي المدة المتوقعة' : 'Total Expected Duration'}</h3>
+          <p class="text-gray-700 mt-1">${isRTL ? '17-25 يوم عمل من تقديم الطلب حتى الاعتماد النهائي' : '17-25 working days from submission to final approval'}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  `
+
+  return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SCHOLARSHIP TRACKING  /scholarship/tracking
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/scholarship/tracking', (c) => {
+  const lang = getLang(c)
+  const t = T[lang]
+  const isRTL = lang === 'ar'
+
+  const pageTitle = t.schTrackTitle
+
+  const content = `
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">${t.schTrackTitle}</h1>
+      <p class="text-gray-600 mt-1">${t.schTrackSubtitle}</p>
+    </div>
+    <div class="flex gap-3">
+      <a href="/scholarship?lang=${lang}" class="btn-secondary">
+        <i class="fas fa-arrow-${isRTL ? 'right' : 'left'} mr-2"></i>
+        ${isRTL ? 'العودة' : 'Back'}
+      </a>
+      <button onclick="exportScholarData()" class="btn-secondary">
+        <i class="fas fa-download mr-2"></i>
+        ${isRTL ? 'تصدير' : 'Export'}
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">${isRTL ? 'بحث' : 'Search'}</label>
+        <input type="text" id="searchScholar" placeholder="${isRTL ? 'اسم المبتعث أو الرقم الوظيفي...' : 'Scholar name or ID...'}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">${isRTL ? 'الحالة' : 'Status'}</label>
+        <select id="filterStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500">
+          <option value="">${isRTL ? 'الكل' : 'All'}</option>
+          <option value="active">${t.schStatusActive}</option>
+          <option value="pending">${t.schStatusPending}</option>
+          <option value="completed">${t.schStatusCompleted}</option>
+          <option value="suspended">${t.schStatusSuspended}</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">${isRTL ? 'نوع البرنامج' : 'Program Type'}</label>
+        <select id="filterProgram" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500">
+          <option value="">${isRTL ? 'الكل' : 'All'}</option>
+          <option value="masters">${t.schFormMasters}</option>
+          <option value="phd">${t.schFormPhD}</option>
+          <option value="certificate">${t.schFormCertificate}</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">${isRTL ? 'الجامعة' : 'University'}</label>
+        <select id="filterUniversity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500">
+          <option value="">${isRTL ? 'الكل' : 'All'}</option>
+          <option value="qu">Qatar University</option>
+          <option value="hbku">Hamad Bin Khalifa University</option>
+          <option value="international">${isRTL ? 'جامعات دولية' : 'International Universities'}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scholars Table -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-gray-50" style="background: rgba(139,26,47,0.05)">
+          <tr>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColName}</th>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColEmpId}</th>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColProgram}</th>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColUniversity}</th>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColStartDate}</th>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColStipend}</th>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColStatus}</th>
+            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase">${t.schColActions}</th>
+          </tr>
+        </thead>
+        <tbody id="scholarsTableBody" class="divide-y divide-gray-200">
+          <!-- Data loaded via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+  const SCHOLARS = [
+    { id: 1, name: isRTL ? 'أحمد محمد علي' : 'Ahmad Mohammed Ali', empId: 'QU-2019-0245', program: 'PhD', programAr: 'دكتوراه', major: 'Business Administration', majorAr: 'إدارة الأعمال', university: 'Hamad Bin Khalifa University', startDate: '2023-09-01', stipend: 5000, status: 'active' },
+    { id: 2, name: isRTL ? 'فاطمة أحمد' : 'Fatima Ahmed', empId: 'QU-2020-0189', program: 'Masters', programAr: 'ماجستير', major: 'Computer Science', majorAr: 'علوم الحاسب', university: 'Qatar University', startDate: '2024-01-15', stipend: 5000, status: 'active' },
+    { id: 3, name: isRTL ? 'خالد حسن' : 'Khaled Hassan', empId: 'QU-2018-0312', program: 'PhD', programAr: 'دكتوراه', major: 'Engineering', majorAr: 'هندسة', university: 'Imperial College London', startDate: '2022-10-01', stipend: 5000, status: 'active' },
+    { id: 4, name: isRTL ? 'مريم سالم' : 'Maryam Salem', empId: 'QU-2021-0098', program: 'Masters', programAr: 'ماجستير', major: 'Public Health', majorAr: 'الصحة العامة', university: 'Qatar University', startDate: '2024-02-01', stipend: 5000, status: 'active' },
+    { id: 5, name: isRTL ? 'محمود عبدالله' : 'Mahmoud Abdullah', empId: 'QU-2017-0456', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Project Management', majorAr: 'إدارة المشاريع', university: 'PMI', startDate: '2024-03-01', stipend: 3000, status: 'pending' },
+    { id: 6, name: isRTL ? 'سارة علي' : 'Sara Ali', empId: 'QU-2019-0234', program: 'Masters', programAr: 'ماجستير', major: 'Data Science', majorAr: 'علم البيانات', university: 'Hamad Bin Khalifa University', startDate: '2023-01-15', stipend: 5000, status: 'completed' },
+  ];
+
+  let filteredScholars = [...SCHOLARS];
+
+  function renderScholars() {
+    const tbody = document.getElementById('scholarsTableBody');
+    const search = document.getElementById('searchScholar').value.toLowerCase();
+    const statusFilter = document.getElementById('filterStatus').value;
+    const programFilter = document.getElementById('filterProgram').value;
+    const uniFilter = document.getElementById('filterUniversity').value;
+
+    filteredScholars = SCHOLARS.filter(s => {
+      const matchSearch = !search || s.name.toLowerCase().includes(search) || s.empId.toLowerCase().includes(search);
+      const matchStatus = !statusFilter || s.status === statusFilter;
+      const matchProgram = !programFilter || s.program.toLowerCase() === programFilter;
+      const matchUni = !uniFilter || 
+        (uniFilter === 'qu' && s.university.includes('Qatar University')) ||
+        (uniFilter === 'hbku' && s.university.includes('Hamad Bin Khalifa')) ||
+        (uniFilter === 'international' && !s.university.includes('Qatar') && !s.university.includes('Hamad'));
+      
+      return matchSearch && matchStatus && matchProgram && matchUni;
+    });
+
+    const statusBadges = {
+      active: { bg: 'bg-green-100', text: 'text-green-700', label: ${isRTL ? "'نشط'" : "'Active'"} },
+      pending: { bg: 'bg-orange-100', text: 'text-orange-700', label: ${isRTL ? "'معلق'" : "'Pending'"} },
+      completed: { bg: 'bg-blue-100', text: 'text-blue-700', label: ${isRTL ? "'مكتمل'" : "'Completed'"} },
+      suspended: { bg: 'bg-red-100', text: 'text-red-700', label: ${isRTL ? "'موقوف'" : "'Suspended'"} }
+    };
+
+    tbody.innerHTML = filteredScholars.map(s => {
+      const badge = statusBadges[s.status];
+      const programLabel = ${isRTL ? 's.programAr' : 's.program'};
+      const majorLabel = ${isRTL ? 's.majorAr' : 's.major'};
+      
+      return \`
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold" style="background: var(--qu-maroon)">
+                \${s.name.charAt(0)}
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">\${s.name}</p>
+                <p class="text-sm text-gray-500">\${majorLabel}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 text-gray-700">\${s.empId}</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold" style="background: rgba(139,26,47,0.1); color: var(--qu-maroon)">
+              \${programLabel}
+            </span>
+          </td>
+          <td class="px-6 py-4 text-gray-700">\${s.university}</td>
+          <td class="px-6 py-4 text-gray-700">\${s.startDate}</td>
+          <td class="px-6 py-4 text-gray-700">${isRTL ? '' : 'QAR '}\${s.stipend.toLocaleString()}${isRTL ? ' ريال' : ''}</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold \${badge.bg} \${badge.text}">
+              \${badge.label}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center justify-center gap-2">
+              <button onclick="viewScholar(\${s.id})" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm text-gray-700">
+                <i class="fas fa-eye mr-1"></i>${isRTL ? 'عرض' : 'View'}
+              </button>
+              <button onclick="viewPayments(\${s.id})" class="px-3 py-1 bg-green-50 hover:bg-green-100 rounded-lg text-sm text-green-700">
+                <i class="fas fa-money-bill mr-1"></i>${isRTL ? 'مدفوعات' : 'Payments'}
+              </button>
+            </div>
+          </td>
+        </tr>
+      \`;
+    }).join('');
+
+    if (filteredScholars.length === 0) {
+      tbody.innerHTML = \`
+        <tr>
+          <td colspan="8" class="px-6 py-16 text-center text-gray-500">
+            <i class="fas fa-search text-4xl mb-4"></i>
+            <p>${isRTL ? 'لا توجد نتائج' : 'No results found'}</p>
+          </td>
+        </tr>
+      \`;
+    }
+  }
+
+  function viewScholar(id) {
+    const scholar = SCHOLARS.find(s => s.id === id);
+    alert(\`${isRTL ? 'عرض تفاصيل المبتعث' : 'View Scholar Details'}: \${scholar.name}\`);
+  }
+
+  function viewPayments(id) {
+    const scholar = SCHOLARS.find(s => s.id === id);
+    alert(\`${isRTL ? 'عرض سجل المدفوعات' : 'View Payment History'}: \${scholar.name}\`);
+  }
+
+  function exportScholarData() {
+    let csv = 'Name,Employee ID,Program,University,Start Date,Stipend,Status\\n';
+    filteredScholars.forEach(s => {
+      csv += \`\${s.name},\${s.empId},\${s.program},\${s.university},\${s.startDate},\${s.stipend},\${s.status}\\n\`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'scholars_' + new Date().toISOString().split('T')[0] + '.csv';
+    a.click();
+  }
+
+  // Event listeners
+  document.getElementById('searchScholar').addEventListener('input', renderScholars);
+  document.getElementById('filterStatus').addEventListener('change', renderScholars);
+  document.getElementById('filterProgram').addEventListener('change', renderScholars);
+  document.getElementById('filterUniversity').addEventListener('change', renderScholars);
+
+  // Initial render
+  renderScholars();
+  </script>
+  `
+
+  return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SCHOLARSHIP APPLICATION  /scholarship/apply
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/scholarship/apply', (c) => {
+  const lang = getLang(c)
+  const t = T[lang]
+  const isRTL = lang === 'ar'
+
+  const pageTitle = t.schFormTitle
+
+  const content = `
+  <!-- Header -->
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--qu-maroon), #a52a2a)">
+          <i class="fas fa-file-signature text-3xl text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">${t.schFormTitle}</h1>
+          <p class="text-gray-600 mt-2">${t.schFormSubtitle}</p>
+        </div>
+      </div>
+      
+      <div class="flex gap-4 mt-6">
+        <a href="/scholarship?lang=${lang}" class="btn-secondary">
+          <i class="fas fa-arrow-${isRTL ? 'right' : 'left'} mr-2"></i>
+          ${isRTL ? 'العودة' : 'Back'}
+        </a>
+        <a href="/scholarship/rules?lang=${lang}" class="text-sm font-semibold" style="color: var(--qu-maroon); padding: 0.5rem 1rem; display: inline-flex; align-items: center;">
+          <i class="fas fa-gavel mr-2"></i>
+          ${isRTL ? 'مراجعة الشروط' : 'Review Requirements'}
+        </a>
+      </div>
+    </div>
+
+    <!-- Application Form -->
+    <form id="scholarshipForm" class="space-y-8">
+      <!-- Personal Information -->
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(139,26,47,0.1)">
+            <i class="fas fa-user" style="color: var(--qu-maroon)"></i>
+          </div>
+          ${t.schFormPersonal}
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormName} <span class="text-red-600">*</span></label>
+            <input type="text" id="fullName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="${isRTL ? 'أدخل الاسم الكامل' : 'Enter full name'}">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormEmpId} <span class="text-red-600">*</span></label>
+            <input type="text" id="empId" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="QU-YYYY-XXXX">
+          </div>
+          
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormDept} <span class="text-red-600">*</span></label>
+            <input type="text" id="department" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="${isRTL ? 'القسم الحالي' : 'Current department'}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Program Details -->
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center bg-orange-50">
+            <i class="fas fa-graduation-cap text-orange-600"></i>
+          </div>
+          ${t.schFormProgram}
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormProgramType} <span class="text-red-600">*</span></label>
+            <select id="programType" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500">
+              <option value="">${isRTL ? 'اختر نوع البرنامج' : 'Select program type'}</option>
+              <option value="masters">${t.schFormMasters}</option>
+              <option value="phd">${t.schFormPhD}</option>
+              <option value="certificate">${t.schFormCertificate}</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormMajor} <span class="text-red-600">*</span></label>
+            <input type="text" id="major" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="${isRTL ? 'مثال: إدارة الأعمال' : 'e.g., Business Administration'}">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormUniversity} <span class="text-red-600">*</span></label>
+            <input type="text" id="university" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="${isRTL ? 'اسم الجامعة' : 'University name'}">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormCountry} <span class="text-red-600">*</span></label>
+            <input type="text" id="country" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="${isRTL ? 'الدولة' : 'Country'}">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormDuration} <span class="text-red-600">*</span></label>
+            <input type="number" id="duration" required min="0.5" max="10" step="0.5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="2">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormStartDate} <span class="text-red-600">*</span></label>
+            <input type="date" id="startDate" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500">
+          </div>
+          
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">${t.schFormTuition} <span class="text-red-600">*</span></label>
+            <input type="number" id="tuition" required min="0" step="1000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="50000">
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-50">
+            <i class="fas fa-paperclip text-blue-600"></i>
+          </div>
+          ${t.schFormDocuments}
+        </h2>
+        
+        <div class="space-y-4">
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-maroon-500 transition-colors">
+            <label class="flex flex-col items-center cursor-pointer">
+              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+              <span class="text-sm font-medium text-gray-700">${t.schFormUploadLetter}</span>
+              <input type="file" id="acceptanceLetter" accept=".pdf" class="hidden">
+              <span class="text-xs text-gray-500 mt-2">PDF ${isRTL ? 'فقط، حتى 5 ميجابايت' : 'only, up to 5MB'}</span>
+            </label>
+          </div>
+          
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-maroon-500 transition-colors">
+            <label class="flex flex-col items-center cursor-pointer">
+              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+              <span class="text-sm font-medium text-gray-700">${t.schFormUploadTranscript}</span>
+              <input type="file" id="transcript" accept=".pdf" class="hidden">
+              <span class="text-xs text-gray-500 mt-2">PDF ${isRTL ? 'فقط، حتى 5 ميجابايت' : 'only, up to 5MB'}</span>
+            </label>
+          </div>
+          
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-maroon-500 transition-colors">
+            <label class="flex flex-col items-center cursor-pointer">
+              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+              <span class="text-sm font-medium text-gray-700">${t.schFormUploadCV}</span>
+              <input type="file" id="cv" accept=".pdf" class="hidden">
+              <span class="text-xs text-gray-500 mt-2">PDF ${isRTL ? 'فقط، حتى 5 ميجابايت' : 'only, up to 5MB'}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Justification -->
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center bg-green-50">
+            <i class="fas fa-pen text-green-600"></i>
+          </div>
+          ${t.schFormJustification}
+        </h2>
+        
+        <textarea id="justification" required rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maroon-500" placeholder="${isRTL ? 'اشرح كيف سيفيد هذا البرنامج الجامعة ومجال عملك...' : 'Explain how this program will benefit the university and your work field...'}"></textarea>
+        <p class="text-sm text-gray-500 mt-2">${isRTL ? 'الحد الأدنى 200 حرف' : 'Minimum 200 characters'}</p>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="flex gap-4">
+        <button type="submit" class="btn-primary flex-1">
+          <i class="fas fa-paper-plane mr-2"></i>
+          ${t.schFormSubmit}
+        </button>
+        <a href="/scholarship?lang=${lang}" class="btn-secondary">
+          ${t.schFormCancel}
+        </a>
+      </div>
+    </form>
+
+    <!-- Info Box -->
+    <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mt-8">
+      <div class="flex items-start gap-4">
+        <i class="fas fa-info-circle text-2xl text-blue-600 mt-1"></i>
+        <div>
+          <h3 class="text-lg font-bold text-blue-900 mb-2">${isRTL ? 'ملاحظة هامة' : 'Important Note'}</h3>
+          <ul class="space-y-2 text-blue-800 text-sm">
+            <li><i class="fas fa-check mr-2"></i>${isRTL ? 'سيتم إرسال طلبك إلى قسم الرواتب للمراجعة' : 'Your application will be sent to payroll department for review'}</li>
+            <li><i class="fas fa-check mr-2"></i>${isRTL ? 'ستتلقى إشعاراً بالبريد الإلكتروني عند تحديث حالة طلبك' : 'You will receive email notification when your application status is updated'}</li>
+            <li><i class="fas fa-check mr-2"></i>${isRTL ? 'يمكنك متابعة حالة طلبك عبر بوابة الموظفين' : 'You can track your application status via staff portal'}</li>
+            <li><i class="fas fa-check mr-2"></i>${isRTL ? 'متوسط مدة المعالجة: 17-25 يوم عمل' : 'Average processing time: 17-25 working days'}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Form submission
+  document.getElementById('scholarshipForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+      fullName: document.getElementById('fullName').value,
+      empId: document.getElementById('empId').value,
+      department: document.getElementById('department').value,
+      programType: document.getElementById('programType').value,
+      major: document.getElementById('major').value,
+      university: document.getElementById('university').value,
+      country: document.getElementById('country').value,
+      duration: document.getElementById('duration').value,
+      startDate: document.getElementById('startDate').value,
+      tuition: document.getElementById('tuition').value,
+      justification: document.getElementById('justification').value
+    };
+    
+    // Validate justification length
+    if (formData.justification.length < 200) {
+      alert(${isRTL ? "'يجب أن تكون المبررات 200 حرف على الأقل'" : "'Justification must be at least 200 characters'"});
+      return;
+    }
+    
+    // Create SLA request
+    const slaRequests = JSON.parse(localStorage.getItem('sla_requests') || '[]');
+    const reqId = 'REQ-' + (3000 + slaRequests.length);
+    
+    const newRequest = {
+      id: reqId,
+      type: 'scholarship',
+      typeLabel: ${isRTL ? "'طلب ابتعاث'" : "'Scholarship Application'"},
+      empName: formData.fullName,
+      empId: formData.empId,
+      submittedAt: new Date().toISOString(),
+      slaDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(), // 20 days
+      status: 'open',
+      priority: 'high',
+      description: \`\${formData.programType} - \${formData.major} - \${formData.university}\`,
+      details: formData,
+      source: 'staff'
+    };
+    
+    slaRequests.push(newRequest);
+    localStorage.setItem('sla_requests', JSON.stringify(slaRequests));
+    
+    // Broadcast to SLA page
+    if (typeof BroadcastChannel !== 'undefined') {
+      const bc = new BroadcastChannel('sla_updates');
+      bc.postMessage({ type: 'new_request', request: newRequest });
+      bc.close();
+    }
+    
+    // Show success message
+    alert(${isRTL ? "'تم تقديم طلب الابتعاث بنجاح!\\n\\nرقم الطلب: '" : "'Scholarship application submitted successfully!\\n\\nRequest ID: '"} + reqId + ${isRTL ? "'\\n\\nيمكنك متابعة حالة الطلب عبر بوابة الموظفين.'" : "'\\n\\nYou can track your application via staff portal.'"});
+    
+    // Redirect to staff portal
+    setTimeout(() => {
+      window.location.href = '/staff-request?lang=${lang}';
+    }, 1500);
+  });
+  
+  // File upload preview
+  ['acceptanceLetter', 'transcript', 'cv'].forEach(id => {
+    document.getElementById(id).addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert(${isRTL ? "'حجم الملف يتجاوز 5 ميجابايت'" : "'File size exceeds 5MB'"});
+          this.value = '';
+          return;
+        }
+        const label = this.closest('label');
+        const span = label.querySelector('span');
+        span.innerHTML = \`<i class="fas fa-check-circle text-green-600 mr-2"></i>\${file.name}\`;
+      }
+    });
+  });
+  </script>
+  `
+
+  return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
 //  END OF SERVICE  /end-of-service
 // ─────────────────────────────────────────────────────────────────────────────
 app.get('/end-of-service', (c) => {
@@ -4830,6 +5986,564 @@ app.get('/staff-contact', (c) => {
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
+//  SCHOLARSHIP SYSTEM  /scholarship  (نظام الابتعاث)
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/scholarship', (c) => {
+  const lang = getLang(c)
+  const isRTL = lang === 'ar'
+  const t = T[lang]
+
+  const pageTitle = isRTL ? 'نظام الابتعاث' : 'Scholarship System'
+
+  const content = `
+<div dir="${isRTL?'rtl':'ltr'}">
+
+  <!-- Header -->
+  <div class="mb-6 ${isRTL?'text-right':''}">
+    <h1 class="text-2xl font-bold text-gray-800">${isRTL?'نظام إدارة الابتعاث':'Scholarship Management System'}</h1>
+    <p class="text-gray-500 mt-1 text-sm">${isRTL?'إدارة المبتعثين، تتبع المدفوعات، والطلبات الجديدة':'Manage scholars, track payments, and new applications'}</p>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    ${[
+      {id:'total_scholars',icon:'fa-graduation-cap',color:'var(--qu-maroon)',bg:'rgba(139,26,47,0.08)',value:'45',label:isRTL?'إجمالي المبتعثين':'Total Scholars'},
+      {id:'active_scholars',icon:'fa-user-graduate',color:'#10B981',bg:'rgba(16,185,129,0.08)',value:'38',label:isRTL?'مبتعث نشط':'Active'},
+      {id:'pending_payments',icon:'fa-money-bill-wave',color:'#F59E0B',bg:'rgba(245,158,11,0.08)',value:'12',label:isRTL?'مدفوعات معلقة':'Pending Payments'},
+      {id:'new_requests',icon:'fa-file-invoice',color:'#EF4444',bg:'rgba(239,68,68,0.08)',value:'5',label:isRTL?'طلبات جديدة':'New Requests'},
+    ].map(k=>`
+    <div class="card p-4 flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${k.bg}">
+        <i class="fas ${k.icon}" style="color:${k.color}"></i>
+      </div>
+      <div class="${isRTL?'text-right':''}">
+        <p class="text-2xl font-bold text-gray-800" id="${k.id}">${k.value}</p>
+        <p class="text-xs text-gray-500">${k.label}</p>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <!-- Tabs -->
+  <div class="mb-6 flex gap-2 border-b border-gray-200 overflow-x-auto ${isRTL?'flex-row-reverse':''}">
+    <button onclick="showScholarshipTab('dashboard')" id="tab_dashboard" class="sch-tab-btn active pb-3 px-4 text-sm font-semibold border-b-2 border-red-700 text-red-700 whitespace-nowrap">
+      <i class="fas fa-chart-line mr-1.5"></i>${isRTL?'لوحة التحكم':'Dashboard'}
+    </button>
+    <button onclick="showScholarshipTab('scholars')" id="tab_scholars" class="sch-tab-btn pb-3 px-4 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">
+      <i class="fas fa-users mr-1.5"></i>${isRTL?'المبتعثون':'Scholars'}
+    </button>
+    <button onclick="showScholarshipTab('payments')" id="tab_payments" class="sch-tab-btn pb-3 px-4 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">
+      <i class="fas fa-dollar-sign mr-1.5"></i>${isRTL?'المدفوعات':'Payments'}
+    </button>
+    <button onclick="showScholarshipTab('rules')" id="tab_rules" class="sch-tab-btn pb-3 px-4 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">
+      <i class="fas fa-book mr-1.5"></i>${isRTL?'القوانين':'Rules'}
+    </button>
+    <button onclick="showScholarshipTab('requests')" id="tab_requests" class="sch-tab-btn pb-3 px-4 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">
+      <i class="fas fa-inbox mr-1.5"></i>${isRTL?'الطلبات':'Requests'} <span class="ml-1 px-1.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-600">5</span>
+    </button>
+  </div>
+
+  <!-- Dashboard Tab -->
+  <div id="pane_dashboard">
+    <!-- Quick Stats Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3 ${isRTL?'flex-row-reverse':''}">
+          <h3 class="font-bold text-gray-700 text-sm">${isRTL?'حسب الدرجة العلمية':'By Degree Type'}</h3>
+          <i class="fas fa-award" style="color:var(--qu-gold)"></i>
+        </div>
+        <div class="space-y-2">
+          <div class="flex justify-between text-sm ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'دكتوراه':'PhD'}</span>
+            <span class="font-bold text-gray-800">25</span>
+          </div>
+          <div class="flex justify-between text-sm ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'ماجستير':'Master'}</span>
+            <span class="font-bold text-gray-800">18</span>
+          </div>
+          <div class="flex justify-between text-sm ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'دبلوم':'Diploma'}</span>
+            <span class="font-bold text-gray-800">2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3 ${isRTL?'flex-row-reverse':''}">
+          <h3 class="font-bold text-gray-700 text-sm">${isRTL?'حسب الحالة':'By Status'}</h3>
+          <i class="fas fa-chart-pie text-blue-500"></i>
+        </div>
+        <div class="space-y-2">
+          <div class="flex justify-between text-sm ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'نشط':'Active'}</span>
+            <span class="font-bold text-green-600">38</span>
+          </div>
+          <div class="flex justify-between text-sm ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'معلّق':'Suspended'}</span>
+            <span class="font-bold text-orange-600">5</span>
+          </div>
+          <div class="flex justify-between text-sm ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'مكتمل':'Completed'}</span>
+            <span class="font-bold text-gray-500">2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3 ${isRTL?'flex-row-reverse':''}">
+          <h3 class="font-bold text-gray-700 text-sm">${isRTL?'الميزانية الشهرية':'Monthly Budget'}</h3>
+          <i class="fas fa-wallet text-green-600"></i>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <p class="text-2xl font-bold" style="color:var(--qu-maroon)">2.4M ${isRTL?'ريال':'QR'}</p>
+            <p class="text-xs text-gray-500">${isRTL?'إجمالي المدفوعات الشهرية':'Total monthly payments'}</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-green-600 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-arrow-up"></i>
+            <span>${isRTL?'5% زيادة عن الشهر الماضي':'5% from last month'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card p-5">
+      <h3 class="font-bold text-gray-800 mb-4 ${isRTL?'text-right':''}">${isRTL?'النشاط الأخير':'Recent Activity'}</h3>
+      <div class="space-y-3">
+        ${[
+          {icon:'fa-check-circle',color:'#10B981',text:isRTL?'تمت الموافقة على طلب ابتعاث أحمد المري':'Ahmed Al-Marri scholarship approved',time:isRTL?'منذ ساعتين':'2h ago'},
+          {icon:'fa-dollar-sign',color:'#F59E0B',text:isRTL?'تم صرف راتب ابتعاث فاطمة الكبيسي':'Fatima Al-Kubaisi payment processed',time:isRTL?'منذ 5 ساعات':'5h ago'},
+          {icon:'fa-file-alt',color:'#3B82F6',text:isRTL?'طلب ابتعاث جديد من نورة المنصوري':'New application from Noora Al-Mansouri',time:isRTL?'أمس':'Yesterday'},
+          {icon:'fa-exclamation-triangle',color:'#EF4444',text:isRTL?'تأخر دفعة محمد العلي – يتطلب مراجعة':'Mohammed Al-Ali payment delayed – review needed',time:isRTL?'منذ يومين':'2d ago'},
+        ].map(a=>`
+        <div class="flex items-start gap-3 pb-3 border-b border-gray-100 last:border-0 ${isRTL?'flex-row-reverse':''}">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background:rgba(${a.color==='#10B981'?'16,185,129':a.color==='#F59E0B'?'245,158,11':a.color==='#3B82F6'?'59,130,246':'239,68,68'},0.1)">
+            <i class="fas ${a.icon} text-xs" style="color:${a.color}"></i>
+          </div>
+          <div class="flex-1 ${isRTL?'text-right':''}">
+            <p class="text-sm text-gray-800">${a.text}</p>
+            <p class="text-xs text-gray-400 mt-0.5">${a.time}</p>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+
+  <!-- Scholars Tab -->
+  <div id="pane_scholars" class="hidden">
+    <div class="card p-4 mb-4 flex flex-wrap gap-3 items-center ${isRTL?'flex-row-reverse':''}">
+      <input id="scholarSearch" type="text" placeholder="${isRTL?'ابحث باسم المبتعث أو الرقم الوظيفي...':'Search by name or employee ID...'}"
+        class="border border-gray-200 rounded-xl px-4 py-2 text-sm flex-1 min-w-48 focus:outline-none ${isRTL?'text-right':''}" oninput="filterScholars()"/>
+      <select id="degreeFilter" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none ${isRTL?'text-right':''}" onchange="filterScholars()">
+        <option value="">${isRTL?'كل الدرجات':'All Degrees'}</option>
+        <option value="phd">${isRTL?'دكتوراه':'PhD'}</option>
+        <option value="master">${isRTL?'ماجستير':'Master'}</option>
+        <option value="diploma">${isRTL?'دبلوم':'Diploma'}</option>
+      </select>
+      <select id="statusScholarFilter" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none ${isRTL?'text-right':''}" onchange="filterScholars()">
+        <option value="">${isRTL?'كل الحالات':'All Statuses'}</option>
+        <option value="active">${isRTL?'نشط':'Active'}</option>
+        <option value="suspended">${isRTL?'معلّق':'Suspended'}</option>
+        <option value="completed">${isRTL?'مكتمل':'Completed'}</option>
+      </select>
+      <button onclick="openAddScholarModal()" class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap">
+        <i class="fas fa-plus"></i>${isRTL?'مبتعث جديد':'Add Scholar'}
+      </button>
+    </div>
+
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-100 bg-gray-50">
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'المبتعث':'Scholar'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الدرجة':'Degree'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الجامعة':'University'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الراتب الشهري':'Monthly Salary'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الحالة':'Status'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'إجراءات':'Actions'}</th>
+            </tr>
+          </thead>
+          <tbody id="scholarsTableBody"></tbody>
+        </table>
+      </div>
+      <div id="scholarsEmpty" class="hidden py-16 text-center text-gray-400">
+        <i class="fas fa-graduation-cap text-4xl mb-3 block opacity-30"></i>
+        <p class="text-sm">${isRTL?'لا يوجد مبتعثون حالياً':'No scholars found'}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payments Tab -->
+  <div id="pane_payments" class="hidden">
+    <div class="card p-4 mb-4 flex flex-wrap gap-3 items-center ${isRTL?'flex-row-reverse':''}">
+      <select id="paymentMonthFilter" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none ${isRTL?'text-right':''}">
+        <option value="">${isRTL?'كل الأشهر':'All Months'}</option>
+        <option value="2025-04">${isRTL?'أبريل 2025':'April 2025'}</option>
+        <option value="2025-03">${isRTL?'مارس 2025':'March 2025'}</option>
+        <option value="2025-02">${isRTL?'فبراير 2025':'February 2025'}</option>
+      </select>
+      <select id="paymentStatusFilter" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none ${isRTL?'text-right':''}">
+        <option value="">${isRTL?'كل الحالات':'All Statuses'}</option>
+        <option value="pending">${isRTL?'معلق':'Pending'}</option>
+        <option value="processing">${isRTL?'قيد التنفيذ':'Processing'}</option>
+        <option value="paid">${isRTL?'مدفوع':'Paid'}</option>
+        <option value="failed">${isRTL?'فشل':'Failed'}</option>
+      </select>
+      <button onclick="exportPayments()" class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 border border-gray-200 bg-white text-gray-600 hover:bg-gray-50">
+        <i class="fas fa-download"></i>${isRTL?'تصدير':'Export'}
+      </button>
+    </div>
+
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-100 bg-gray-50">
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'رقم الدفعة':'Payment ID'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'المبتعث':'Scholar'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'المبلغ':'Amount'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'التاريخ':'Date'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الحالة':'Status'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'إجراءات':'Actions'}</th>
+            </tr>
+          </thead>
+          <tbody id="paymentsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules Tab -->
+  <div id="pane_rules" class="hidden">
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- القوانين -->
+      <div class="card p-6">
+        <div class="flex items-center gap-3 mb-4 ${isRTL?'flex-row-reverse':''}">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(139,26,47,0.08)">
+            <i class="fas fa-balance-scale" style="color:var(--qu-maroon)"></i>
+          </div>
+          <h2 class="text-lg font-bold text-gray-800">${isRTL?'شروط الابتعاث':'Scholarship Conditions'}</h2>
+        </div>
+        <div class="space-y-3 text-sm">
+          <div class="flex items-start gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-gray-700 ${isRTL?'text-right':''}">${isRTL?'أن يكون الموظف قطري الجنسية':'Employee must be Qatari national'}</p>
+          </div>
+          <div class="flex items-start gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-gray-700 ${isRTL?'text-right':''}">${isRTL?'الخدمة الفعلية لا تقل عن 3 سنوات':'Minimum 3 years of service'}</p>
+          </div>
+          <div class="flex items-start gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-gray-700 ${isRTL?'text-right':''}">${isRTL?'تقدير الأداء "ممتاز" أو "جيد جداً" في آخر سنتين':'Performance rating "Excellent" or "Very Good" for last 2 years'}</p>
+          </div>
+          <div class="flex items-start gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-gray-700 ${isRTL?'text-right':''}">${isRTL?'الحصول على قبول من جامعة معتمدة':'Admission from accredited university'}</p>
+          </div>
+          <div class="flex items-start gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-gray-700 ${isRTL?'text-right':''}">${isRTL?'التفرغ الكامل للدراسة (ما لم تكن الدراسة بنظام جزئي)':'Full-time study (unless part-time approved)'}</p>
+          </div>
+          <div class="flex items-start gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-check-circle text-green-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-gray-700 ${isRTL?'text-right':''}">${isRTL?'التعهد بالعودة للعمل لمدة ضعف مدة الابتعاث':'Commitment to return for double scholarship duration'}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- المستحقات المالية -->
+      <div class="card p-6">
+        <div class="flex items-center gap-3 mb-4 ${isRTL?'flex-row-reverse':''}">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(16,185,129,0.08)">
+            <i class="fas fa-money-bill-wave text-green-600"></i>
+          </div>
+          <h2 class="text-lg font-bold text-gray-800">${isRTL?'المستحقات المالية':'Financial Entitlements'}</h2>
+        </div>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between items-center pb-2 border-b ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'الراتب الأساسي':'Basic Salary'}</span>
+            <span class="font-bold text-gray-800">100%</span>
+          </div>
+          <div class="flex justify-between items-center pb-2 border-b ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'بدل السكن':'Housing Allowance'}</span>
+            <span class="font-bold text-gray-800">50%</span>
+          </div>
+          <div class="flex justify-between items-center pb-2 border-b ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'بدل الكتب':'Books Allowance'}</span>
+            <span class="font-bold text-green-600">${isRTL?'5,000 ريال/سنة':'QR 5,000/year'}</span>
+          </div>
+          <div class="flex justify-between items-center pb-2 border-b ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'تذاكر السفر':'Travel Tickets'}</span>
+            <span class="font-bold text-green-600">${isRTL?'ذهاب وعودة/سنة':'Round trip/year'}</span>
+          </div>
+          <div class="flex justify-between items-center pb-2 border-b ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'الرسوم الدراسية':'Tuition Fees'}</span>
+            <span class="font-bold text-green-600">${isRTL?'كاملة':'Full coverage'}</span>
+          </div>
+          <div class="flex justify-between items-center ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'بدل مصاريف أخرى':'Miscellaneous'}</span>
+            <span class="font-bold text-gray-800">${isRTL?'حسب الحاجة':'As needed'}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- الإجراءات -->
+      <div class="card p-6">
+        <div class="flex items-center gap-3 mb-4 ${isRTL?'flex-row-reverse':''}">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(59,130,246,0.08)">
+            <i class="fas fa-list-check text-blue-600"></i>
+          </div>
+          <h2 class="text-lg font-bold text-gray-800">${isRTL?'إجراءات التقديم':'Application Procedures'}</h2>
+        </div>
+        <div class="space-y-3">
+          ${[
+            {num:1,text:isRTL?'تعبئة نموذج طلب الابتعاث الإلكتروني':'Complete online scholarship application form'},
+            {num:2,text:isRTL?'إرفاق قبول الجامعة المعتمدة':'Attach university admission letter'},
+            {num:3,text:isRTL?'تقديم تقييم الأداء للسنتين الأخيرتين':'Submit performance evaluations (last 2 years)'},
+            {num:4,text:isRTL?'الحصول على موافقة المشرف المباشر':'Obtain direct supervisor approval'},
+            {num:5,text:isRTL?'مراجعة اللجنة الإدارية والموافقة النهائية':'Review by administrative committee'},
+            {num:6,text:isRTL?'توقيع عقد الابتعاث والتعهدات':'Sign scholarship contract and commitments'},
+          ].map(s=>`
+          <div class="flex items-start gap-3 ${isRTL?'flex-row-reverse':''}">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white" style="background:var(--qu-maroon)">${s.num}</div>
+            <p class="text-sm text-gray-700 ${isRTL?'text-right':''}">${s.text}</p>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- المدة الزمنية -->
+      <div class="card p-6">
+        <div class="flex items-center gap-3 mb-4 ${isRTL?'flex-row-reverse':''}">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.08)">
+            <i class="fas fa-clock text-amber-500"></i>
+          </div>
+          <h2 class="text-lg font-bold text-gray-800">${isRTL?'المدة الزمنية':'Duration'}</h2>
+        </div>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between items-center pb-2 border-b ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'دكتوراه':'PhD'}</span>
+            <span class="font-bold text-gray-800">${isRTL?'4-5 سنوات':'4-5 years'}</span>
+          </div>
+          <div class="flex justify-between items-center pb-2 border-b ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'ماجستير':'Master'}</span>
+            <span class="font-bold text-gray-800">${isRTL?'2-3 سنوات':'2-3 years'}</span>
+          </div>
+          <div class="flex justify-between items-center ${isRTL?'flex-row-reverse':''}">
+            <span class="text-gray-600">${isRTL?'دبلوم':'Diploma'}</span>
+            <span class="font-bold text-gray-800">${isRTL?'1-2 سنة':'1-2 years'}</span>
+          </div>
+          <div class="mt-4 rounded-lg p-3" style="background:#FEF3C7">
+            <p class="text-xs text-amber-800 ${isRTL?'text-right':''}">${isRTL?'<strong>ملاحظة:</strong> يمكن تمديد المدة بموافقة اللجنة المختصة في حالات استثنائية':'<strong>Note:</strong> Extension possible with committee approval in exceptional cases'}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Requests Tab -->
+  <div id="pane_requests" class="hidden">
+    <div class="card p-4 mb-4 flex flex-wrap gap-3 items-center ${isRTL?'flex-row-reverse':''}">
+      <select id="requestStatusFilter" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none ${isRTL?'text-right':''}">
+        <option value="">${isRTL?'كل الحالات':'All Statuses'}</option>
+        <option value="pending">${isRTL?'معلق':'Pending'}</option>
+        <option value="under_review">${isRTL?'قيد المراجعة':'Under Review'}</option>
+        <option value="approved">${isRTL?'موافق':'Approved'}</option>
+        <option value="rejected">${isRTL?'مرفوض':'Rejected'}</option>
+      </select>
+    </div>
+
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-100 bg-gray-50">
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'رقم الطلب':'Request ID'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الموظف':'Employee'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الدرجة المطلوبة':'Degree'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الجامعة':'University'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'تاريخ التقديم':'Submission Date'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الحالة':'Status'}</th>
+              <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'إجراءات':'Actions'}</th>
+            </tr>
+          </thead>
+          <tbody id="requestsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .sch-tab-btn.active { border-color: var(--qu-maroon) !important; color: var(--qu-maroon) !important; }
+</style>
+
+<script>
+const SCH_KEY = 'scholarship_data';
+const SCH_PAYMENTS_KEY = 'scholarship_payments';
+const SCH_REQUESTS_KEY = 'scholarship_requests';
+const IS_RTL_SCH = ${isRTL};
+
+// Sample Data
+function initScholarshipData(){
+  if(localStorage.getItem(SCH_KEY)) return;
+  const scholars = [
+    {id:'S001',name:'أحمد محمد المري',empId:'QU-10145',degree:'phd',university:'جامعة كامبريدج',monthlySalary:45000,status:'active',startDate:'2023-09-01'},
+    {id:'S002',name:'فاطمة يوسف الكبيسي',empId:'QU-10298',degree:'master',university:'جامعة أكسفورد',monthlySalary:35000,status:'active',startDate:'2024-01-15'},
+    {id:'S003',name:'محمد علي السليطي',empId:'QU-10412',degree:'phd',university:'MIT',monthlySalary:48000,status:'active',startDate:'2022-09-01'},
+    {id:'S004',name:'نورة خالد المنصوري',empId:'QU-10567',degree:'master',university:'جامعة لندن',monthlySalary:32000,status:'suspended',startDate:'2024-02-01'},
+    {id:'S005',name:'سعيد عبدالله الدوسري',empId:'QU-10689',degree:'diploma',university:'جامعة قطر',monthlySalary:18000,status:'active',startDate:'2024-03-01'},
+  ];
+  localStorage.setItem(SCH_KEY, JSON.stringify(scholars));
+
+  const payments = [
+    {id:'PAY-001',scholarId:'S001',amount:45000,date:'2025-04-28',status:'paid',month:'2025-04'},
+    {id:'PAY-002',scholarId:'S002',amount:35000,date:'2025-04-28',status:'paid',month:'2025-04'},
+    {id:'PAY-003',scholarId:'S003',amount:48000,date:'2025-04-28',status:'processing',month:'2025-04'},
+    {id:'PAY-004',scholarId:'S001',amount:45000,date:'2025-03-28',status:'paid',month:'2025-03'},
+  ];
+  localStorage.setItem(SCH_PAYMENTS_KEY, JSON.stringify(payments));
+
+  const requests = [
+    {id:'REQ-001',empName:'يوسف أحمد العمادي',empId:'QU-10890',degree:'master',university:'جامعة هارفارد',submittedAt:'2025-04-01',status:'pending'},
+    {id:'REQ-002',empName:'مريم سالم النعيمي',empId:'QU-10912',degree:'phd',university:'جامعة ستانفورد',submittedAt:'2025-04-05',status:'under_review'},
+    {id:'REQ-003',empName:'خالد محمد الكواري',empId:'QU-10945',degree:'master',university:'جامعة تورنتو',submittedAt:'2025-04-08',status:'pending'},
+  ];
+  localStorage.setItem(SCH_REQUESTS_KEY, JSON.stringify(requests));
+}
+initScholarshipData();
+
+function getScholars(){ try{return JSON.parse(localStorage.getItem(SCH_KEY)||'[]')}catch(e){return[]} }
+function saveScholars(d){ localStorage.setItem(SCH_KEY, JSON.stringify(d)) }
+function getPayments(){ try{return JSON.parse(localStorage.getItem(SCH_PAYMENTS_KEY)||'[]')}catch(e){return[]} }
+function getRequests(){ try{return JSON.parse(localStorage.getItem(SCH_REQUESTS_KEY)||'[]')}catch(e){return[]} }
+function saveRequests(d){ localStorage.setItem(SCH_REQUESTS_KEY, JSON.stringify(d)) }
+
+function showScholarshipTab(tab){
+  ['dashboard','scholars','payments','rules','requests'].forEach(t=>{
+    document.getElementById('pane_'+t).classList.toggle('hidden',t!==tab);
+    const btn = document.getElementById('tab_'+t);
+    if(btn){
+      btn.classList.toggle('border-red-700',t===tab);
+      btn.classList.toggle('text-red-700',t===tab);
+      btn.classList.toggle('border-transparent',t!==tab);
+      btn.classList.toggle('text-gray-500',t!==tab);
+      btn.classList.remove('active');
+      if(t===tab) btn.classList.add('active');
+    }
+  });
+  if(tab==='scholars') renderScholarsTable();
+  if(tab==='payments') renderPaymentsTable();
+  if(tab==='requests') renderRequestsTable();
+}
+
+function renderScholarsTable(){
+  const scholars = getScholars();
+  const tbody = document.getElementById('scholarsTableBody');
+  const empty = document.getElementById('scholarsEmpty');
+  if(scholars.length===0){ tbody.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  tbody.innerHTML = scholars.map(s=>{
+    const statusLabel = {active:IS_RTL_SCH?'نشط':'Active',suspended:IS_RTL_SCH?'معلق':'Suspended',completed:IS_RTL_SCH?'مكتمل':'Completed'}[s.status]||s.status;
+    const statusColor = {active:'badge-done',suspended:'badge-open',completed:'badge-breach'}[s.status]||'badge-open';
+    const degreeLabel = {phd:IS_RTL_SCH?'دكتوراه':'PhD',master:IS_RTL_SCH?'ماجستير':'Master',diploma:IS_RTL_SCH?'دبلوم':'Diploma'}[s.degree]||s.degree;
+    return \`
+    <tr class="border-b border-gray-50 hover:bg-gray-50">
+      <td class="px-4 py-3">
+        <p class="font-semibold text-gray-800 text-sm">\${s.name}</p>
+        <p class="text-xs text-gray-400">\${s.empId}</p>
+      </td>
+      <td class="px-4 py-3 text-sm text-gray-700">\${degreeLabel}</td>
+      <td class="px-4 py-3 text-sm text-gray-700">\${s.university}</td>
+      <td class="px-4 py-3 text-sm font-semibold text-gray-800">\${s.monthlySalary.toLocaleString()} ${isRTL?'ريال':'QR'}</td>
+      <td class="px-4 py-3"><span class="\${statusColor} text-xs px-2 py-1 rounded-full font-semibold">\${statusLabel}</span></td>
+      <td class="px-4 py-3">
+        <button onclick="viewScholar('\${s.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition" title="${isRTL?'عرض':'View'}"><i class="fas fa-eye text-xs"></i></button>
+      </td>
+    </tr>\`;
+  }).join('');
+}
+
+function renderPaymentsTable(){
+  const payments = getPayments();
+  const scholars = getScholars();
+  const tbody = document.getElementById('paymentsTableBody');
+  tbody.innerHTML = payments.map(p=>{
+    const scholar = scholars.find(s=>s.id===p.scholarId);
+    const statusLabel = {pending:IS_RTL_SCH?'معلق':'Pending',processing:IS_RTL_SCH?'قيد التنفيذ':'Processing',paid:IS_RTL_SCH?'مدفوع':'Paid',failed:IS_RTL_SCH?'فشل':'Failed'}[p.status]||p.status;
+    const statusColor = {pending:'badge-open',processing:'badge-inprogress',paid:'badge-done',failed:'badge-breach'}[p.status]||'badge-open';
+    return \`
+    <tr class="border-b border-gray-50 hover:bg-gray-50">
+      <td class="px-4 py-3 font-mono text-xs font-bold text-gray-800">\${p.id}</td>
+      <td class="px-4 py-3 text-sm text-gray-700">\${scholar?scholar.name:p.scholarId}</td>
+      <td class="px-4 py-3 text-sm font-semibold text-gray-800">\${p.amount.toLocaleString()} ${isRTL?'ريال':'QR'}</td>
+      <td class="px-4 py-3 text-xs text-gray-500">\${new Date(p.date).toLocaleDateString(IS_RTL_SCH?'ar-QA':'en-GB')}</td>
+      <td class="px-4 py-3"><span class="\${statusColor} text-xs px-2 py-1 rounded-full font-semibold">\${statusLabel}</span></td>
+      <td class="px-4 py-3">
+        <button onclick="viewPayment('\${p.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition" title="${isRTL?'عرض':'View'}"><i class="fas fa-eye text-xs"></i></button>
+      </td>
+    </tr>\`;
+  }).join('');
+}
+
+function renderRequestsTable(){
+  const requests = getRequests();
+  const tbody = document.getElementById('requestsTableBody');
+  tbody.innerHTML = requests.map(r=>{
+    const statusLabel = {pending:IS_RTL_SCH?'معلق':'Pending',under_review:IS_RTL_SCH?'قيد المراجعة':'Under Review',approved:IS_RTL_SCH?'موافق':'Approved',rejected:IS_RTL_SCH?'مرفوض':'Rejected'}[r.status]||r.status;
+    const statusColor = {pending:'badge-open',under_review:'badge-inprogress',approved:'badge-done',rejected:'badge-breach'}[r.status]||'badge-open';
+    const degreeLabel = {phd:IS_RTL_SCH?'دكتوراه':'PhD',master:IS_RTL_SCH?'ماجستير':'Master',diploma:IS_RTL_SCH?'دبلوم':'Diploma'}[r.degree]||r.degree;
+    return \`
+    <tr class="border-b border-gray-50 hover:bg-gray-50">
+      <td class="px-4 py-3 font-mono text-xs font-bold text-gray-800">\${r.id}</td>
+      <td class="px-4 py-3">
+        <p class="font-semibold text-gray-800 text-sm">\${r.empName}</p>
+        <p class="text-xs text-gray-400">\${r.empId}</p>
+      </td>
+      <td class="px-4 py-3 text-sm text-gray-700">\${degreeLabel}</td>
+      <td class="px-4 py-3 text-sm text-gray-700">\${r.university}</td>
+      <td class="px-4 py-3 text-xs text-gray-500">\${new Date(r.submittedAt).toLocaleDateString(IS_RTL_SCH?'ar-QA':'en-GB')}</td>
+      <td class="px-4 py-3"><span class="\${statusColor} text-xs px-2 py-1 rounded-full font-semibold">\${statusLabel}</span></td>
+      <td class="px-4 py-3">
+        <div class="flex gap-1.5">
+          <button onclick="viewRequest('\${r.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition" title="${isRTL?'عرض':'View'}"><i class="fas fa-eye text-xs"></i></button>
+          <button onclick="approveRequest('\${r.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition" title="${isRTL?'موافقة':'Approve'}"><i class="fas fa-check text-xs"></i></button>
+          <button onclick="rejectRequest('\${r.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition" title="${isRTL?'رفض':'Reject'}"><i class="fas fa-times text-xs"></i></button>
+        </div>
+      </td>
+    </tr>\`;
+  }).join('');
+}
+
+function filterScholars(){}
+function filterPayments(){}
+function filterRequests(){}
+function viewScholar(id){ alert('View scholar: '+id); }
+function viewPayment(id){ alert('View payment: '+id); }
+function viewRequest(id){ alert('View request: '+id); }
+function approveRequest(id){ 
+  const reqs = getRequests();
+  const idx = reqs.findIndex(r=>r.id===id);
+  if(idx!==-1){ reqs[idx].status='approved'; saveRequests(reqs); renderRequestsTable(); }
+}
+function rejectRequest(id){
+  const reqs = getRequests();
+  const idx = reqs.findIndex(r=>r.id===id);
+  if(idx!==-1){ reqs[idx].status='rejected'; saveRequests(reqs); renderRequestsTable(); }
+}
+function openAddScholarModal(){ alert('Add new scholar modal'); }
+function exportPayments(){ alert('Export payments'); }
+
+// Init
+showScholarshipTab('dashboard');
+</script>`
+
+  return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
 //  SLA ADMIN  /sla  (قسم الرواتب – لوحة إدارة الطلبات)
 // ─────────────────────────────────────────────────────────────────────────────
 app.get('/sla', (c) => {
@@ -4922,6 +6636,7 @@ app.get('/sla', (c) => {
       <option value="advance">${isRTL?'سلفة':'Advance'}</option>
       <option value="certificate">${isRTL?'شهادة راتب':'Salary Certificate'}</option>
       <option value="eos">${isRTL?'نهاية الخدمة':'End of Service'}</option>
+      <option value="scholarship">${isRTL?'طلب ابتعاث':'Scholarship Application'}</option>
       <option value="other">${isRTL?'أخرى':'Other'}</option>
     </select>
     <select id="slaSourceFilter" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none ${isRTL?'text-right':''}" onchange="renderSLATable()">
@@ -5303,10 +7018,11 @@ const SERVICE_LABELS = {
   advance:     IS_RTL?'سلفة':'Advance',
   certificate: IS_RTL?'شهادة راتب':'Salary Certificate',
   eos:         IS_RTL?'نهاية الخدمة':'End of Service',
+  scholarship: IS_RTL?'طلب ابتعاث':'Scholarship Application',
   other:       IS_RTL?'أخرى':'Other'
 };
 
-const SLA_DAYS = { salary:2, allowance:3, advance:1, certificate:1, eos:5, other:3 };
+const SLA_DAYS = { salary:2, allowance:3, advance:1, certificate:1, eos:5, scholarship:20, other:3 };
 
 function getSLARequests(){ try{return JSON.parse(localStorage.getItem(SLA_KEY)||'[]')}catch(e){return[]} }
 function saveSLARequests(d){ localStorage.setItem(SLA_KEY, JSON.stringify(d)) }
