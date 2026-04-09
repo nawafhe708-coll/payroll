@@ -81,6 +81,8 @@ const T = {
     schColUniversity: 'University',
     schColStartDate: 'Start Date',
     schColStipend: 'Monthly Stipend',
+    schColMarital: 'Marital Status',
+    schColChildren: 'Children',
     schColStatus: 'Status',
     schColActions: 'Actions',
     schStatusActive: 'Active',
@@ -513,6 +515,8 @@ const T = {
     schColUniversity: 'الجامعة',
     schColStartDate: 'تاريخ البدء',
     schColStipend: 'المكافأة الشهرية',
+    schColMarital: 'الحالة الاجتماعية',
+    schColChildren: 'عدد الأبناء',
     schColStatus: 'الحالة',
     schColActions: 'الإجراءات',
     schStatusActive: 'نشط',
@@ -4017,6 +4021,8 @@ app.get('/scholarship/tracking', (c) => {
             <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColUniversity}</th>
             <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColStartDate}</th>
             <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColStipend}</th>
+            <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColMarital}</th>
+            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase">${t.schColChildren}</th>
             <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColStatus}</th>
             <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase">${t.schColActions}</th>
           </tr>
@@ -4030,30 +4036,30 @@ app.get('/scholarship/tracking', (c) => {
 
   <script>
   const SCHOLARS = [
-    { id: 1, name: isRTL ? 'أحمد محمد علي' : 'Ahmad Mohammed Ali', empId: 'QU-2019-0245', program: 'PhD', programAr: 'دكتوراه', major: 'Business Administration', majorAr: 'إدارة الأعمال', university: 'Hamad Bin Khalifa University', startDate: '2023-09-01', stipend: 5000, status: 'active' },
-    { id: 2, name: isRTL ? 'فاطمة أحمد' : 'Fatima Ahmed', empId: 'QU-2020-0189', program: 'Masters', programAr: 'ماجستير', major: 'Computer Science', majorAr: 'علوم الحاسب', university: 'Qatar University', startDate: '2024-01-15', stipend: 5000, status: 'active' },
-    { id: 3, name: isRTL ? 'خالد حسن' : 'Khaled Hassan', empId: 'QU-2018-0312', program: 'PhD', programAr: 'دكتوراه', major: 'Engineering', majorAr: 'هندسة', university: 'Imperial College London', startDate: '2022-10-01', stipend: 5000, status: 'active' },
-    { id: 4, name: isRTL ? 'مريم سالم' : 'Maryam Salem', empId: 'QU-2021-0098', program: 'Masters', programAr: 'ماجستير', major: 'Public Health', majorAr: 'الصحة العامة', university: 'Qatar University', startDate: '2024-02-01', stipend: 5000, status: 'active' },
-    { id: 5, name: isRTL ? 'محمود عبدالله' : 'Mahmoud Abdullah', empId: 'QU-2017-0456', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Project Management', majorAr: 'إدارة المشاريع', university: 'PMI', startDate: '2024-03-01', stipend: 3000, status: 'pending' },
-    { id: 6, name: isRTL ? 'سارة علي' : 'Sara Ali', empId: 'QU-2019-0234', program: 'Masters', programAr: 'ماجستير', major: 'Data Science', majorAr: 'علم البيانات', university: 'Hamad Bin Khalifa University', startDate: '2023-01-15', stipend: 5000, status: 'completed' },
-    { id: 7, name: isRTL ? 'يوسف إبراهيم' : 'Youssef Ibrahim', empId: 'QU-2020-0321', program: 'PhD', programAr: 'دكتوراه', major: 'Education', majorAr: 'التربية', university: 'University of Cambridge', startDate: '2023-10-01', stipend: 5000, status: 'active' },
-    { id: 8, name: isRTL ? 'نورة سعيد' : 'Noura Saeed', empId: 'QU-2021-0145', program: 'Masters', programAr: 'ماجستير', major: 'International Relations', majorAr: 'العلاقات الدولية', university: 'Georgetown University Qatar', startDate: '2024-01-20', stipend: 5000, status: 'active' },
-    { id: 9, name: isRTL ? 'عبدالرحمن خليفة' : 'Abdulrahman Khalifa', empId: 'QU-2019-0412', program: 'PhD', programAr: 'دكتوراه', major: 'Islamic Studies', majorAr: 'الدراسات الإسلامية', university: 'Qatar University', startDate: '2023-02-01', stipend: 5000, status: 'active' },
-    { id: 10, name: isRTL ? 'هند راشد' : 'Hind Rashid', empId: 'QU-2022-0089', program: 'Masters', programAr: 'ماجستير', major: 'Environmental Science', majorAr: 'علوم البيئة', university: 'Hamad Bin Khalifa University', startDate: '2024-02-15', stipend: 5000, status: 'active' },
-    { id: 11, name: isRTL ? 'طارق منصور' : 'Tariq Mansour', empId: 'QU-2018-0523', program: 'PhD', programAr: 'دكتوراه', major: 'Chemistry', majorAr: 'الكيمياء', university: 'Texas A&M University at Qatar', startDate: '2022-09-01', stipend: 5000, status: 'active' },
-    { id: 12, name: isRTL ? 'ليلى جاسم' : 'Layla Jasim', empId: 'QU-2020-0267', program: 'Masters', programAr: 'ماجستير', major: 'Psychology', majorAr: 'علم النفس', university: 'Qatar University', startDate: '2023-09-15', stipend: 5000, status: 'active' },
-    { id: 13, name: isRTL ? 'سلطان المري' : 'Sultan Al-Marri', empId: 'QU-2019-0178', program: 'PhD', programAr: 'دكتوراه', major: 'Law', majorAr: 'القانون', university: 'University College London', startDate: '2023-01-10', stipend: 5000, status: 'active' },
-    { id: 14, name: isRTL ? 'عائشة محمد' : 'Aisha Mohammed', empId: 'QU-2021-0234', program: 'Masters', programAr: 'ماجستير', major: 'Architecture', majorAr: 'الهندسة المعمارية', university: 'Qatar University', startDate: '2024-01-30', stipend: 5000, status: 'active' },
-    { id: 15, name: isRTL ? 'حمد العلي' : 'Hamad Al-Ali', empId: 'QU-2020-0389', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Data Analytics', majorAr: 'تحليل البيانات', university: 'MIT Professional Education', startDate: '2024-03-15', stipend: 3000, status: 'pending' },
-    { id: 16, name: isRTL ? 'شيخة حمد' : 'Sheikha Hamad', empId: 'QU-2019-0445', program: 'PhD', programAr: 'دكتوراه', major: 'Finance', majorAr: 'المالية', university: 'London School of Economics', startDate: '2022-10-15', stipend: 5000, status: 'active' },
-    { id: 17, name: isRTL ? 'راشد سعود' : 'Rashid Saud', empId: 'QU-2021-0156', program: 'Masters', programAr: 'ماجستير', major: 'Biomedical Engineering', majorAr: 'الهندسة الطبية الحيوية', university: 'Carnegie Mellon University Qatar', startDate: '2024-02-05', stipend: 5000, status: 'active' },
-    { id: 18, name: isRTL ? 'منى خالد' : 'Mona Khaled', empId: 'QU-2020-0298', program: 'Masters', programAr: 'ماجستير', major: 'Media & Communication', majorAr: 'الإعلام والاتصال', university: 'Northwestern University Qatar', startDate: '2023-09-20', stipend: 5000, status: 'active' },
-    { id: 19, name: isRTL ? 'فهد عبدالله' : 'Fahad Abdullah', empId: 'QU-2018-0367', program: 'PhD', programAr: 'دكتوراه', major: 'Physics', majorAr: 'الفيزياء', university: 'Oxford University', startDate: '2022-10-05', stipend: 5000, status: 'active' },
-    { id: 20, name: isRTL ? 'جواهر سالم' : 'Jawaher Salem', empId: 'QU-2019-0501', program: 'Masters', programAr: 'ماجستير', major: 'Marketing', majorAr: 'التسويق', university: 'HEC Paris Qatar', startDate: '2023-09-25', stipend: 5000, status: 'completed' },
-    { id: 21, name: isRTL ? 'ماجد العنزي' : 'Majed Al-Anzi', empId: 'QU-2021-0212', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Cybersecurity', majorAr: 'الأمن السيبراني', university: 'SANS Institute', startDate: '2024-03-20', stipend: 3000, status: 'pending' },
-    { id: 22, name: isRTL ? 'آمنة ناصر' : 'Amna Nasser', empId: 'QU-2020-0334', program: 'PhD', programAr: 'دكتوراه', major: 'Mathematics', majorAr: 'الرياضيات', university: 'Qatar University', startDate: '2023-02-10', stipend: 5000, status: 'active' },
-    { id: 23, name: isRTL ? 'علي حسين' : 'Ali Hussein', empId: 'QU-2019-0289', program: 'Masters', programAr: 'ماجستير', major: 'Civil Engineering', majorAr: 'الهندسة المدنية', university: 'Texas A&M University at Qatar', startDate: '2023-09-05', stipend: 5000, status: 'active' },
-    { id: 24, name: isRTL ? 'لطيفة محمد' : 'Latifa Mohammed', empId: 'QU-2021-0167', program: 'Masters', programAr: 'ماجستير', major: 'Pharmacy', majorAr: 'الصيدلة', university: 'Qatar University', startDate: '2024-02-20', stipend: 5000, status: 'active' },
+    { id: 1, name: isRTL ? 'أحمد محمد علي' : 'Ahmad Mohammed Ali', empId: 'QU-2019-0245', program: 'PhD', programAr: 'دكتوراه', major: 'Business Administration', majorAr: 'إدارة الأعمال', university: 'Hamad Bin Khalifa University', startDate: '2023-09-01', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 3 },
+    { id: 2, name: isRTL ? 'فاطمة أحمد' : 'Fatima Ahmed', empId: 'QU-2020-0189', program: 'Masters', programAr: 'ماجستير', major: 'Computer Science', majorAr: 'علوم الحاسب', university: 'Qatar University', startDate: '2024-01-15', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 1 },
+    { id: 3, name: isRTL ? 'خالد حسن' : 'Khaled Hassan', empId: 'QU-2018-0312', program: 'PhD', programAr: 'دكتوراه', major: 'Engineering', majorAr: 'هندسة', university: 'Imperial College London', startDate: '2022-10-01', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 2 },
+    { id: 4, name: isRTL ? 'مريم سالم' : 'Maryam Salem', empId: 'QU-2021-0098', program: 'Masters', programAr: 'ماجستير', major: 'Public Health', majorAr: 'الصحة العامة', university: 'Qatar University', startDate: '2024-02-01', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'أعزب' : 'Single', maritalStatusEn: 'Single', children: 0 },
+    { id: 5, name: isRTL ? 'محمود عبدالله' : 'Mahmoud Abdullah', empId: 'QU-2017-0456', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Project Management', majorAr: 'إدارة المشاريع', university: 'PMI', startDate: '2024-03-01', stipend: 3000, status: 'pending', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 4 },
+    { id: 6, name: isRTL ? 'سارة علي' : 'Sara Ali', empId: 'QU-2019-0234', program: 'Masters', programAr: 'ماجستير', major: 'Data Science', majorAr: 'علم البيانات', university: 'Hamad Bin Khalifa University', startDate: '2023-01-15', stipend: 5000, status: 'completed', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 2 },
+    { id: 7, name: isRTL ? 'يوسف إبراهيم' : 'Youssef Ibrahim', empId: 'QU-2020-0321', program: 'PhD', programAr: 'دكتوراه', major: 'Education', majorAr: 'التربية', university: 'University of Cambridge', startDate: '2023-10-01', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 1 },
+    { id: 8, name: isRTL ? 'نورة سعيد' : 'Noura Saeed', empId: 'QU-2021-0145', program: 'Masters', programAr: 'ماجستير', major: 'International Relations', majorAr: 'العلاقات الدولية', university: 'Georgetown University Qatar', startDate: '2024-01-20', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'أعزب' : 'Single', maritalStatusEn: 'Single', children: 0 },
+    { id: 9, name: isRTL ? 'عبدالرحمن خليفة' : 'Abdulrahman Khalifa', empId: 'QU-2019-0412', program: 'PhD', programAr: 'دكتوراه', major: 'Islamic Studies', majorAr: 'الدراسات الإسلامية', university: 'Qatar University', startDate: '2023-02-01', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 3 },
+    { id: 10, name: isRTL ? 'هند راشد' : 'Hind Rashid', empId: 'QU-2022-0089', program: 'Masters', programAr: 'ماجستير', major: 'Environmental Science', majorAr: 'علوم البيئة', university: 'Hamad Bin Khalifa University', startDate: '2024-02-15', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 1 },
+    { id: 11, name: isRTL ? 'طارق منصور' : 'Tariq Mansour', empId: 'QU-2018-0523', program: 'PhD', programAr: 'دكتوراه', major: 'Chemistry', majorAr: 'الكيمياء', university: 'Texas A&M University at Qatar', startDate: '2022-09-01', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 2 },
+    { id: 12, name: isRTL ? 'ليلى جاسم' : 'Layla Jasim', empId: 'QU-2020-0267', program: 'Masters', programAr: 'ماجستير', major: 'Psychology', majorAr: 'علم النفس', university: 'Qatar University', startDate: '2023-09-15', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'أعزب' : 'Single', maritalStatusEn: 'Single', children: 0 },
+    { id: 13, name: isRTL ? 'سلطان المري' : 'Sultan Al-Marri', empId: 'QU-2019-0178', program: 'PhD', programAr: 'دكتوراه', major: 'Law', majorAr: 'القانون', university: 'University College London', startDate: '2023-01-10', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 4 },
+    { id: 14, name: isRTL ? 'عائشة محمد' : 'Aisha Mohammed', empId: 'QU-2021-0234', program: 'Masters', programAr: 'ماجستير', major: 'Architecture', majorAr: 'الهندسة المعمارية', university: 'Qatar University', startDate: '2024-01-30', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 1 },
+    { id: 15, name: isRTL ? 'حمد العلي' : 'Hamad Al-Ali', empId: 'QU-2020-0389', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Data Analytics', majorAr: 'تحليل البيانات', university: 'MIT Professional Education', startDate: '2024-03-15', stipend: 3000, status: 'pending', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 3 },
+    { id: 16, name: isRTL ? 'شيخة حمد' : 'Sheikha Hamad', empId: 'QU-2019-0445', program: 'PhD', programAr: 'دكتوراه', major: 'Finance', majorAr: 'المالية', university: 'London School of Economics', startDate: '2022-10-15', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 2 },
+    { id: 17, name: isRTL ? 'راشد سعود' : 'Rashid Saud', empId: 'QU-2021-0156', program: 'Masters', programAr: 'ماجستير', major: 'Biomedical Engineering', majorAr: 'الهندسة الطبية الحيوية', university: 'Carnegie Mellon University Qatar', startDate: '2024-02-05', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'أعزب' : 'Single', maritalStatusEn: 'Single', children: 0 },
+    { id: 18, name: isRTL ? 'منى خالد' : 'Mona Khaled', empId: 'QU-2020-0298', program: 'Masters', programAr: 'ماجستير', major: 'Media & Communication', majorAr: 'الإعلام والاتصال', university: 'Northwestern University Qatar', startDate: '2023-09-20', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 2 },
+    { id: 19, name: isRTL ? 'فهد عبدالله' : 'Fahad Abdullah', empId: 'QU-2018-0367', program: 'PhD', programAr: 'دكتوراه', major: 'Physics', majorAr: 'الفيزياء', university: 'Oxford University', startDate: '2022-10-05', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 3 },
+    { id: 20, name: isRTL ? 'جواهر سالم' : 'Jawaher Salem', empId: 'QU-2019-0501', program: 'Masters', programAr: 'ماجستير', major: 'Marketing', majorAr: 'التسويق', university: 'HEC Paris Qatar', startDate: '2023-09-25', stipend: 5000, status: 'completed', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 1 },
+    { id: 21, name: isRTL ? 'ماجد العنزي' : 'Majed Al-Anzi', empId: 'QU-2021-0212', program: 'Certificate', programAr: 'شهادة مهنية', major: 'Cybersecurity', majorAr: 'الأمن السيبراني', university: 'SANS Institute', startDate: '2024-03-20', stipend: 3000, status: 'pending', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 2 },
+    { id: 22, name: isRTL ? 'آمنة ناصر' : 'Amna Nasser', empId: 'QU-2020-0334', program: 'PhD', programAr: 'دكتوراه', major: 'Mathematics', majorAr: 'الرياضيات', university: 'Qatar University', startDate: '2023-02-10', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'أعزب' : 'Single', maritalStatusEn: 'Single', children: 0 },
+    { id: 23, name: isRTL ? 'علي حسين' : 'Ali Hussein', empId: 'QU-2019-0289', program: 'Masters', programAr: 'ماجستير', major: 'Civil Engineering', majorAr: 'الهندسة المدنية', university: 'Texas A&M University at Qatar', startDate: '2023-09-05', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 1 },
+    { id: 24, name: isRTL ? 'لطيفة محمد' : 'Latifa Mohammed', empId: 'QU-2021-0167', program: 'Masters', programAr: 'ماجستير', major: 'Pharmacy', majorAr: 'الصيدلة', university: 'Qatar University', startDate: '2024-02-20', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 1 },
   ];
 
   let filteredScholars = [...SCHOLARS];
@@ -4111,6 +4117,12 @@ app.get('/scholarship/tracking', (c) => {
           <td class="px-6 py-4 text-gray-700">\${s.university}</td>
           <td class="px-6 py-4 text-gray-700">\${s.startDate}</td>
           <td class="px-6 py-4 text-gray-700">${isRTL ? '' : 'QAR '}\${s.stipend.toLocaleString()}${isRTL ? ' ريال' : ''}</td>
+          <td class="px-6 py-4 text-gray-700">\${s.maritalStatus}</td>
+          <td class="px-6 py-4 text-center">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm">
+              \${s.children}
+            </span>
+          </td>
           <td class="px-6 py-4">
             <span class="px-3 py-1 rounded-full text-xs font-semibold \${badge.bg} \${badge.text}">
               \${badge.label}
