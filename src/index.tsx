@@ -4024,6 +4024,7 @@ app.get('/scholarship/tracking', (c) => {
             <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColMarital}</th>
             <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase">${t.schColChildren}</th>
             <th class="px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-semibold text-gray-700 uppercase">${t.schColStatus}</th>
+            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase">${isRTL ? 'الشيك ليست' : 'Checklist'}</th>
             <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase">${t.schColActions}</th>
           </tr>
         </thead>
@@ -4035,6 +4036,7 @@ app.get('/scholarship/tracking', (c) => {
   </div>
 
   <script>
+  const isRTL = ${isRTL ? 'true' : 'false'};
   const SCHOLARS = [
     { id: 1, name: isRTL ? 'أحمد محمد علي' : 'Ahmad Mohammed Ali', empId: 'QU-2019-0245', program: 'PhD', programAr: 'دكتوراه', major: 'Business Administration', majorAr: 'إدارة الأعمال', university: 'Hamad Bin Khalifa University', startDate: '2023-09-01', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوج' : 'Married', maritalStatusEn: 'Married', children: 3 },
     { id: 2, name: isRTL ? 'فاطمة أحمد' : 'Fatima Ahmed', empId: 'QU-2020-0189', program: 'Masters', programAr: 'ماجستير', major: 'Computer Science', majorAr: 'علوم الحاسب', university: 'Qatar University', startDate: '2024-01-15', stipend: 5000, status: 'active', maritalStatus: isRTL ? 'متزوجة' : 'Married', maritalStatusEn: 'Married', children: 1 },
@@ -4128,6 +4130,18 @@ app.get('/scholarship/tracking', (c) => {
               \${badge.label}
             </span>
           </td>
+          <td class="px-6 py-4 text-center" id="schChklCell_\${s.id}">
+            <button onclick="openSchChecklist(\${s.id},'\${s.name}')"
+              class="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl border-2 hover:shadow-md transition min-w-[64px] mx-auto sch-chkl-btn"
+              data-schid="\${s.id}"
+              style="border-color:#F59E0B33;background:#F59E0B11">
+              <span class="text-xs font-bold sch-chkl-pct" style="color:#F59E0B">0%</span>
+              <div class="w-12 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all sch-chkl-bar" style="width:0%;background:#F59E0B"></div>
+              </div>
+              <span class="text-xs text-gray-500 sch-chkl-count">0/${isRTL ? '١٠' : '10'}</span>
+            </button>
+          </td>
           <td class="px-6 py-4">
             <div class="flex items-center justify-center gap-2">
               <button onclick="viewScholar(\${s.id})" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm text-gray-700">
@@ -4145,7 +4159,7 @@ app.get('/scholarship/tracking', (c) => {
     if (filteredScholars.length === 0) {
       tbody.innerHTML = \`
         <tr>
-          <td colspan="8" class="px-6 py-16 text-center text-gray-500">
+          <td colspan="9" class="px-6 py-16 text-center text-gray-500">
             <i class="fas fa-search text-4xl mb-4"></i>
             <p>${isRTL ? 'لا توجد نتائج' : 'No results found'}</p>
           </td>
@@ -4153,6 +4167,113 @@ app.get('/scholarship/tracking', (c) => {
       \`;
     }
   }
+
+  // ─── SCHOLARSHIP CHECKLIST ─────────────────────────────────────────────────
+  const SCH_STEPS = [
+    { id:'req',   icon:'fa-file-alt',             color:'#8B1A2F', label: '${isRTL ? "تقديم الطلب وتوثيق المستندات" : "Application Submission & Documents"}',  desc: '${isRTL ? "خطاب القبول، كشف الدرجات، السيرة الذاتية، خطة الدراسة، بيان التكلفة" : "Acceptance letter, transcripts, CV, study plan, cost statement"}' },
+    { id:'dept',  icon:'fa-users',                color:'#C4922A', label: '${isRTL ? "موافقة رئيس القسم" : "Department Head Approval"}',                         desc: '${isRTL ? "مراجعة ملاءمة البرنامج وتأثير الابتعاث على مهام الموظف" : "Review program suitability and impact on employee duties"}' },
+    { id:'hr',    icon:'fa-id-badge',             color:'#3B82F6', label: '${isRTL ? "اعتماد الموارد البشرية" : "HR Department Approval"}',                       desc: '${isRTL ? "التحقق من مدة الخدمة ≥3 سنوات، نوع العقد، والسجل الوظيفي" : "Verify ≥3 years service, contract type, and employment record"}' },
+    { id:'fin',   icon:'fa-calculator',           color:'#7C3AED', label: '${isRTL ? "إعداد ملف المدفوعات" : "Payment File Setup"}',                              desc: '${isRTL ? "إنشاء ملف مبتعث، تحديد المكافأة الشهرية، جدول دفع الرسوم" : "Create scholar file, set monthly stipend, tuition payment schedule"}' },
+    { id:'cont',  icon:'fa-file-signature',       color:'#059669', label: '${isRTL ? "توقيع عقد الابتعاث" : "Scholarship Contract Signing"}',                     desc: '${isRTL ? "توقيع العقد وشروط الالتزام بالخدمة بعد العودة" : "Sign contract including post-study service commitment terms"}' },
+    { id:'pay1',  icon:'fa-money-bill-wave',      color:'#0891B2', label: '${isRTL ? "صرف أول دفعة رسوم دراسية" : "First Tuition Fee Payment"}',                   desc: '${isRTL ? "تحويل رسوم الفصل الدراسي الأول مباشرة للجامعة" : "Transfer first semester fees directly to the university"}' },
+    { id:'stip',  icon:'fa-wallet',               color:'#10B981', label: '${isRTL ? "تفعيل المكافأة الشهرية" : "Monthly Stipend Activation"}',                    desc: '${isRTL ? "تفعيل تحويل المكافأة الشهرية (5,000 ريال) إلى حساب المبتعث" : "Activate monthly stipend transfer (QAR 5,000) to scholar account"}' },
+    { id:'ins',   icon:'fa-shield-heart',         color:'#EF4444', label: '${isRTL ? "تفعيل التأمين الصحي" : "Health Insurance Activation"}',                      desc: '${isRTL ? "تفعيل وثيقة التأمين الصحي طوال فترة الابتعاث" : "Activate health insurance policy for the scholarship duration"}' },
+    { id:'rep',   icon:'fa-chart-line',           color:'#F59E0B', label: '${isRTL ? "متابعة التقارير الدورية" : "Periodic Progress Reports"}',                    desc: '${isRTL ? "استلام تقارير التقدم الأكاديمي كل فصل دراسي" : "Receive academic progress reports every semester"}' },
+    { id:'done',  icon:'fa-graduation-cap',       color:'#6366F1', label: '${isRTL ? "إتمام الابتعاث والعودة" : "Scholarship Completion & Return"}',               desc: '${isRTL ? "التحقق من الشهادة، تفعيل التزام الخدمة، إغلاق ملف الابتعاث" : "Verify degree, activate service commitment, close scholarship file"}' },
+  ];
+
+  const SCH_CHKL_KEY = 'qu_sch_checklists';
+  function getSchChecklists(){ try{return JSON.parse(localStorage.getItem(SCH_CHKL_KEY)||'{}')}catch{return{}} }
+  function saveSchChecklists(d){ localStorage.setItem(SCH_CHKL_KEY,JSON.stringify(d)) }
+
+  // ─── UPDATE CHECKLIST BUTTONS IN TABLE ─────────────────────────────────────
+  function updateSchChklBtns(){
+    const all = getSchChecklists();
+    document.querySelectorAll('.sch-chkl-btn').forEach(btn=>{
+      const id   = parseInt(btn.getAttribute('data-schid'));
+      const data = all[id] || {};
+      const done = SCH_STEPS.filter(s=>data[s.id]).length;
+      const pct  = Math.round((done/SCH_STEPS.length)*100);
+      const col  = pct===100?'#10B981':pct>50?'#3B82F6':'#F59E0B';
+      btn.style.borderColor = col+'33';
+      btn.style.background  = col+'11';
+      btn.querySelector('.sch-chkl-pct').textContent  = pct+'%';
+      btn.querySelector('.sch-chkl-pct').style.color  = col;
+      btn.querySelector('.sch-chkl-bar').style.width   = pct+'%';
+      btn.querySelector('.sch-chkl-bar').style.background = col;
+      btn.querySelector('.sch-chkl-count').textContent = done+'/'+SCH_STEPS.length;
+    });
+  }
+
+  let _currentSchId = null, _currentSchName = null;
+  function openSchChecklist(id, name){
+    _currentSchId = id;
+    _currentSchName = name;
+    const all = getSchChecklists();
+    const data = all[id] || {};
+    const done = SCH_STEPS.filter(s=>data[s.id]).length;
+    const pct  = Math.round((done/SCH_STEPS.length)*100);
+    document.getElementById('schModalTitle').textContent = name;
+    document.getElementById('schModalEmpId').textContent = '${isRTL ? "رقم الموظف" : "Scholar ID"}: ' + (SCHOLARS.find(s=>s.id===id)||{}).empId;
+    document.getElementById('schProgressBar').style.width  = pct+'%';
+    document.getElementById('schProgressPct').textContent  = pct+'%';
+    document.getElementById('schProgressText').textContent = done+' ${isRTL ? "من" : "of"} '+SCH_STEPS.length+' ${isRTL ? "مكتملة" : "completed"}';
+    document.getElementById('schStepsList').innerHTML = SCH_STEPS.map((s,i)=>{
+      const checked  = !!data[s.id];
+      const dateStr  = data[s.id+'_date'] ? ('<span class="text-xs text-gray-400 ms-1">'+data[s.id+'_date']+'</span>') : '';
+      return \`<div class="flex items-start gap-3 p-3 rounded-xl border transition \${checked?'border-green-200 bg-green-50':'border-gray-100 bg-white'} ${isRTL?'flex-row-reverse':''}" id="schStep_\${s.id}">
+        <div class="flex-shrink-0 mt-0.5">
+          <input type="checkbox" id="schChk_\${s.id}" \${checked?'checked':''} onchange="toggleSchStep('\${s.id}')"
+            class="w-4 h-4 rounded accent-green-600 cursor-pointer"/>
+        </div>
+        <div class="flex-1 min-w-0 ${isRTL?'text-right':''}">
+          <div class="flex items-center gap-2 flex-wrap ${isRTL?'flex-row-reverse justify-end':''}">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white flex-shrink-0" style="background:\${s.color}">\${i+1}</span>
+            <i class="fas \${s.icon} text-sm" style="color:\${s.color}"></i>
+            <span class="font-semibold text-sm text-gray-800">\${s.label}</span>
+            \${checked?'<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700"><i class="fas fa-check me-1"></i>${isRTL ? "مكتمل" : "Done"}</span>':'<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500">${isRTL ? "معلق" : "Pending"}</span>'}
+            \${dateStr}
+          </div>
+          <p class="text-xs text-gray-500 mt-1">\${s.desc}</p>
+        </div>
+      </div>\`;
+    }).join('');
+    document.getElementById('schChecklistModal').classList.remove('hidden');
+    document.body.style.overflow='hidden';
+  }
+
+  function toggleSchStep(stepId){
+    const all = getSchChecklists();
+    if(!all[_currentSchId]) all[_currentSchId]={};
+    const was = !!all[_currentSchId][stepId];
+    if(was){ delete all[_currentSchId][stepId]; delete all[_currentSchId][stepId+'_date']; }
+    else { all[_currentSchId][stepId]=true; all[_currentSchId][stepId+'_date']=new Date().toLocaleDateString('${isRTL ? "ar-QA" : "en-GB"}'); }
+    saveSchChecklists(all);
+    const data = all[_currentSchId];
+    const done = SCH_STEPS.filter(s=>data[s.id]).length;
+    const pct  = Math.round((done/SCH_STEPS.length)*100);
+    document.getElementById('schProgressBar').style.width  = pct+'%';
+    document.getElementById('schProgressPct').textContent  = pct+'%';
+    document.getElementById('schProgressText').textContent = done+' ${isRTL ? "من" : "of"} '+SCH_STEPS.length+' ${isRTL ? "مكتملة" : "completed"}';
+    updateSchChklBtns();
+    // reopen to refresh steps
+    openSchChecklist(_currentSchId, _currentSchName);
+  }
+
+  function closeSchModal(){
+    document.getElementById('schChecklistModal').classList.add('hidden');
+    document.body.style.overflow='';
+    updateSchChklBtns();
+  }
+
+  function resetSchChecklist(){
+    if(!confirm('${isRTL ? "إعادة تعيين جميع خطوات الابتعاث؟" : "Reset all scholarship checklist steps?"}')) return;
+    const all = getSchChecklists();
+    all[_currentSchId]={};
+    saveSchChecklists(all);
+    openSchChecklist(_currentSchId, _currentSchName);
+  }
+  // ─── END SCHOLARSHIP CHECKLIST ─────────────────────────────────────────────
 
   function viewScholar(id) {
     const scholar = SCHOLARS.find(s => s.id === id);
@@ -4178,15 +4299,67 @@ app.get('/scholarship/tracking', (c) => {
     a.click();
   }
 
+  function renderAndUpdate(){
+    renderScholars();
+    setTimeout(updateSchChklBtns, 50);
+  }
+
   // Event listeners
-  document.getElementById('searchScholar').addEventListener('input', renderScholars);
-  document.getElementById('filterStatus').addEventListener('change', renderScholars);
-  document.getElementById('filterProgram').addEventListener('change', renderScholars);
-  document.getElementById('filterUniversity').addEventListener('change', renderScholars);
+  document.getElementById('searchScholar').addEventListener('input', renderAndUpdate);
+  document.getElementById('filterStatus').addEventListener('change', renderAndUpdate);
+  document.getElementById('filterProgram').addEventListener('change', renderAndUpdate);
+  document.getElementById('filterUniversity').addEventListener('change', renderAndUpdate);
 
   // Initial render
   renderScholars();
+  setTimeout(updateSchChklBtns, 100);
   </script>
+
+  <!-- SCHOLARSHIP CHECKLIST MODAL -->
+  <div id="schChecklistModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.55)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col" style="direction:${isRTL?'rtl':'ltr'}">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0 ${isRTL?'flex-row-reverse':''}">
+        <div class="${isRTL?'text-right':''}">
+          <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-graduation-cap text-lg" style="color:var(--qu-maroon)"></i>
+            <h2 class="text-lg font-bold text-gray-800">${isRTL?'شيك ليست إجراءات الابتعاث':'Scholarship Procedures Checklist'}</h2>
+          </div>
+          <p class="text-xs text-gray-500 mt-0.5" id="schModalEmpId"></p>
+          <p class="text-sm font-semibold text-gray-700 mt-0.5" id="schModalTitle"></p>
+        </div>
+        <button onclick="closeSchModal()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition text-xl flex-shrink-0">&times;</button>
+      </div>
+      <!-- Progress -->
+      <div class="px-6 py-4 border-b border-gray-100 flex-shrink-0">
+        <div class="flex items-center justify-between mb-1.5 ${isRTL?'flex-row-reverse':''}">
+          <span class="text-xs font-semibold text-gray-600">${isRTL?'نسبة إنجاز الإجراءات':'Procedures Progress'}</span>
+          <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <span class="text-xs text-gray-500" id="schProgressText"></span>
+            <span class="font-bold text-sm" style="color:var(--qu-maroon)" id="schProgressPct">0%</span>
+          </div>
+        </div>
+        <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+          <div id="schProgressBar" class="h-full rounded-full transition-all duration-500" style="width:0%;background:var(--qu-maroon)"></div>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-4 text-xs text-gray-400 ${isRTL?'flex-row-reverse':''}">
+          <span class="flex items-center gap-1 ${isRTL?'flex-row-reverse':''}"><i class="fas fa-info-circle"></i>${isRTL?'اضغط على مربع الاختيار لتحديث الحالة':'Click checkbox to update status'}</span>
+          <span class="flex items-center gap-1 ${isRTL?'flex-row-reverse':''}"><i class="fas fa-save" style="color:#10B981"></i>${isRTL?'يُحفظ تلقائياً في المتصفح':'Auto-saved in browser'}</span>
+        </div>
+      </div>
+      <!-- Steps -->
+      <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2" id="schStepsList"></div>
+      <!-- Footer -->
+      <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between flex-shrink-0 ${isRTL?'flex-row-reverse':''}">
+        <button onclick="resetSchChecklist()" class="flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-700 transition ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-rotate-left"></i> ${isRTL?'إعادة تعيين':'Reset All'}
+        </button>
+        <button onclick="closeSchModal()" class="btn-primary px-5 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-check"></i> ${isRTL?'حفظ وإغلاق':'Save & Close'}
+        </button>
+      </div>
+    </div>
+  </div>
   `
 
   return c.html(layout(pageTitle, content, 'scholarship', lang))
@@ -5021,7 +5194,7 @@ app.get('/end-of-service', (c) => {
         </thead>
         <tbody>
           ${pendingEmployees.map(e=>`
-          <tr class="border-b border-gray-50 hover:bg-gray-50 transition emp-row" data-type="${e.type}" data-nat="${e.nat}">
+          <tr class="border-b border-gray-50 hover:bg-gray-50 transition emp-row" data-type="${e.type}" data-nat="${e.nat}" data-empid="${e.id}">
             <td class="px-4 py-3 font-mono text-xs text-gray-500">${e.id}</td>
             <td class="px-4 py-3 font-semibold text-gray-800 whitespace-nowrap">${e.name}</td>
             <td class="px-4 py-3 text-gray-600 text-xs">${e.dept}</td>
@@ -5031,13 +5204,21 @@ app.get('/end-of-service', (c) => {
             <td class="px-4 py-3 text-center font-bold text-gray-700">${e.years}</td>
             <td class="px-4 py-3 text-xs font-semibold text-gray-700 whitespace-nowrap">${e.basic}</td>
             <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${statusColor(e.status)}">${statusLabel(e.status)}</span></td>
-            <td class="px-4 py-3 min-w-[120px]">
+            <td class="px-4 py-3 min-w-[140px]">
               <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
                 <div class="flex-1 bg-gray-100 rounded-full h-2">
-                  <div class="h-2 rounded-full transition-all" style="width:${e.clearance}%;background:${e.clearance===100?'#10B981':e.clearance>50?'#3B82F6':'#F59E0B'}"></div>
+                  <div class="h-2 rounded-full transition-all prog-bar" style="width:${e.clearance}%;background:${e.clearance===100?'#10B981':e.clearance>50?'#3B82F6':'#F59E0B'}"></div>
                 </div>
-                <span class="text-xs font-bold text-gray-600 whitespace-nowrap">${e.clearance}%</span>
+                <span class="text-xs font-bold text-gray-600 whitespace-nowrap prog-num">${e.clearance}%</span>
               </div>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <button onclick="openEOSChecklist('${e.id}','${e.name}',${e.clearance})" 
+                class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                style="background:rgba(139,26,47,0.1);color:var(--qu-maroon)">
+                <i class="fas fa-list-check"></i>
+                ${isRTL ? 'الشيك ليست' : 'Checklist'}
+              </button>
             </td>
           </tr>`).join('')}
         </tbody>
@@ -5290,7 +5471,175 @@ app.get('/end-of-service', (c) => {
       </div>
     \`;
   }
-  </script>`
+
+  // ─── EOS CHECKLIST MODAL ───────────────────────────────────────────────────
+  const EOS_STEPS = ${JSON.stringify(isRTL ? [
+    { id:'hr',    icon:'fa-users',                color:'#8B1A2F', dept:'الموارد البشرية',           action:'التحقق من سجل الإجازات وتسوية الرصيد',                     form:'HR-CL-01',  days:'1–2' },
+    { id:'fin',   icon:'fa-coins',                color:'#C4922A', dept:'الشؤون المالية',             action:'تسوية السلف والقروض والمطالبات المالية',                    form:'FIN-CL-02', days:'3–5' },
+    { id:'it',    icon:'fa-laptop',               color:'#3B82F6', dept:'تقنية المعلومات',            action:'استرداد الأجهزة وإلغاء الحسابات والبريد الإلكتروني',         form:'IT-CL-03',  days:'1'   },
+    { id:'lib',   icon:'fa-book',                 color:'#10B981', dept:'المكتبة',                    action:'إعادة المواد المستعارة وتسوية الغرامات',                     form:'LIB-CL-04', days:'1'   },
+    { id:'fac',   icon:'fa-building',             color:'#6366F1', dept:'إدارة المرافق والعقارات',    action:'تسليم المفاتيح وإخلاء السكن الجامعي',                        form:'FAC-CL-05', days:'2–3' },
+    { id:'sec',   icon:'fa-shield-halved',         color:'#EF4444', dept:'أمن وسلامة الحرم الجامعي', action:'تسليم بطاقة الهوية وتصاريح الدخول',                          form:'SEC-CL-06', days:'1'   },
+    { id:'acad',  icon:'fa-graduation-cap',        color:'#7C3AED', dept:'العلاقات الأكاديمية',       action:'تسليم الدرجات والمناهج وإغلاق الأبحاث',                     form:'AC-CL-07',  days:'5–7' },
+    { id:'res',   icon:'fa-microscope',            color:'#0891B2', dept:'إدارة البحث العلمي',         action:'إغلاق المنح والمشاريع البحثية الجارية',                      form:'RES-CL-08', days:'3–5' },
+    { id:'leg',   icon:'fa-scale-balanced',        color:'#374151', dept:'إدارة الشؤون القانونية',    action:'التحقق من غياب أي التزامات قانونية أو تعاقدية',             form:'LEG-CL-09', days:'2'   },
+    { id:'pay',   icon:'fa-file-invoice-dollar',   color:'#059669', dept:'قسم الرواتب',               action:'احتساب وتسوية مستحقات نهاية الخدمة النهائية',               form:'PAY-CL-10', days:'2–3' },
+  ] : [
+    { id:'hr',    icon:'fa-users',                color:'#8B1A2F', dept:'Human Resources',           action:'Verify leave balance and settle outstanding leave',                  form:'HR-CL-01',  days:'1–2' },
+    { id:'fin',   icon:'fa-coins',                color:'#C4922A', dept:'Finance Department',         action:'Settle advances, loans, and financial claims',                       form:'FIN-CL-02', days:'3–5' },
+    { id:'it',    icon:'fa-laptop',               color:'#3B82F6', dept:'Information Technology',    action:'Return devices and deactivate accounts & email',                      form:'IT-CL-03',  days:'1'   },
+    { id:'lib',   icon:'fa-book',                 color:'#10B981', dept:'Library',                   action:'Return borrowed materials and settle fines',                         form:'LIB-CL-04', days:'1'   },
+    { id:'fac',   icon:'fa-building',             color:'#6366F1', dept:'Facilities & Real Estate',  action:'Return keys and vacate university accommodation',                    form:'FAC-CL-05', days:'2–3' },
+    { id:'sec',   icon:'fa-shield-halved',         color:'#EF4444', dept:'Campus Security & Safety', action:'Return ID card and all access passes',                               form:'SEC-CL-06', days:'1'   },
+    { id:'acad',  icon:'fa-graduation-cap',        color:'#7C3AED', dept:'Academic Affairs',          action:'Submit grades, syllabi and close ongoing research',                  form:'AC-CL-07',  days:'5–7' },
+    { id:'res',   icon:'fa-microscope',            color:'#0891B2', dept:'Research Management',       action:'Close grants and active research projects',                          form:'RES-CL-08', days:'3–5' },
+    { id:'leg',   icon:'fa-scale-balanced',        color:'#374151', dept:'Legal Affairs',             action:'Confirm no outstanding legal or contractual obligations',            form:'LEG-CL-09', days:'2'   },
+    { id:'pay',   icon:'fa-file-invoice-dollar',   color:'#059669', dept:'Payroll Department',        action:'Calculate and process final end-of-service entitlements',            form:'PAY-CL-10', days:'2–3' },
+  ])};
+
+  const EOS_CHECKLIST_KEY = 'qu_eos_checklists';
+  function getEOSChecklists(){ try{return JSON.parse(localStorage.getItem(EOS_CHECKLIST_KEY)||'{}')}catch{return{}} }
+  function saveEOSChecklists(d){ localStorage.setItem(EOS_CHECKLIST_KEY,JSON.stringify(d)) }
+
+  let _currentEmpId = null;
+  function openEOSChecklist(empId, empName, clearancePct){
+    _currentEmpId = empId;
+    const all = getEOSChecklists();
+    const data = all[empId] || {};
+    const done = EOS_STEPS.filter(s=>data[s.id]).length;
+    const pct  = Math.round((done/EOS_STEPS.length)*100);
+
+    document.getElementById('eosModalTitle').textContent = empName;
+    document.getElementById('eosModalSubtitle').textContent = '${isRTL ? "رقم الموظف" : "Employee ID"}: ' + empId;
+    // progress bar
+    document.getElementById('eosProgressBar').style.width = pct + '%';
+    document.getElementById('eosProgressPct').textContent = pct + '%';
+    document.getElementById('eosProgressText').textContent = done + ' ${isRTL ? "من" : "of"} ' + EOS_STEPS.length + ' ${isRTL ? "مكتمل" : "completed"}';
+    // steps
+    document.getElementById('eosStepsList').innerHTML = EOS_STEPS.map((s,i)=>{
+      const checked = !!data[s.id];
+      const dateStr = data[s.id+'_date'] ? ('<span class="text-xs text-gray-400 ms-1">'+data[s.id+'_date']+'</span>') : '';
+      return \`<div class="flex items-start gap-3 p-3 rounded-xl border transition \${checked?'border-green-200 bg-green-50':'border-gray-100 bg-white'} ${isRTL?'flex-row-reverse':''}" id="eosStep_\${s.id}">
+        <div class="flex-shrink-0 mt-0.5">
+          <input type="checkbox" id="chk_\${s.id}" \${checked?'checked':''} onchange="toggleEOSStep('\${s.id}')"
+            class="w-4 h-4 rounded accent-green-600 cursor-pointer"/>
+        </div>
+        <div class="flex-1 min-w-0 ${isRTL?'text-right':''}">
+          <div class="flex items-center gap-2 flex-wrap ${isRTL?'flex-row-reverse justify-end':''}">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white flex-shrink-0" style="background:\${s.color}">\${i+1}</span>
+            <i class="fas \${s.icon} text-sm" style="color:\${s.color}"></i>
+            <span class="font-semibold text-sm text-gray-800">\${s.dept}</span>
+            \${checked?'<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700"><i class="fas fa-check me-1"></i>${isRTL ? "مكتمل" : "Done"}</span>':'<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500">${isRTL ? "معلق" : "Pending"}</span>'}
+            \${dateStr}
+          </div>
+          <p class="text-xs text-gray-500 mt-1">\${s.action}</p>
+          <div class="flex items-center gap-3 mt-1.5 flex-wrap ${isRTL?'flex-row-reverse justify-end':''}">
+            <span class="text-xs font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-500">\${s.form}</span>
+            <span class="text-xs text-gray-400"><i class="fas fa-clock me-1"></i>\${s.days} ${isRTL ? "أيام" : "days"}</span>
+          </div>
+        </div>
+      </div>\`;
+    }).join('');
+    document.getElementById('eosChecklistModal').classList.remove('hidden');
+    document.body.style.overflow='hidden';
+  }
+
+  function toggleEOSStep(stepId){
+    const all = getEOSChecklists();
+    if(!all[_currentEmpId]) all[_currentEmpId]={};
+    const wasChecked = !!all[_currentEmpId][stepId];
+    if(wasChecked){
+      delete all[_currentEmpId][stepId];
+      delete all[_currentEmpId][stepId+'_date'];
+    } else {
+      all[_currentEmpId][stepId] = true;
+      all[_currentEmpId][stepId+'_date'] = new Date().toLocaleDateString('${isRTL ? "ar-QA" : "en-GB"}');
+    }
+    saveEOSChecklists(all);
+    // recalc progress
+    const data = all[_currentEmpId];
+    const done = EOS_STEPS.filter(s=>data[s.id]).length;
+    const pct  = Math.round((done/EOS_STEPS.length)*100);
+    document.getElementById('eosProgressBar').style.width = pct+'%';
+    document.getElementById('eosProgressPct').textContent = pct+'%';
+    document.getElementById('eosProgressText').textContent = done+' ${isRTL ? "من" : "of"} '+EOS_STEPS.length+' ${isRTL ? "مكتمل" : "completed"}';
+    // update step row style
+    const row = document.getElementById('eosStep_'+stepId);
+    const chk = document.getElementById('chk_'+stepId);
+    if(row){
+      if(!wasChecked){
+        row.className=row.className.replace('border-gray-100 bg-white','border-green-200 bg-green-50');
+        row.innerHTML=row.innerHTML.replace('<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500">${isRTL ? "معلق" : "Pending"}</span>','<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700"><i class=\\"fas fa-check me-1\\"></i>${isRTL ? "مكتمل" : "Done"}</span>');
+      }
+    }
+    // update progress bar color on table row
+    const pBar = document.querySelector('[data-empid="'+_currentEmpId+'"] .prog-bar');
+    if(pBar){ pBar.style.width=pct+'%'; pBar.style.background=pct===100?'#10B981':pct>50?'#3B82F6':'#F59E0B'; }
+    const pNum = document.querySelector('[data-empid="'+_currentEmpId+'"] .prog-num');
+    if(pNum) pNum.textContent=pct+'%';
+  }
+
+  function closeEOSModal(){
+    document.getElementById('eosChecklistModal').classList.add('hidden');
+    document.body.style.overflow='';
+  }
+
+  // reset all checklist steps for current employee
+  function resetEOSChecklist(){
+    if(!confirm('${isRTL ? "هل أنت متأكد من إعادة تعيين جميع خطوات الشيك ليست؟" : "Reset all checklist steps for this employee?"}')) return;
+    const all = getEOSChecklists();
+    all[_currentEmpId]={};
+    saveEOSChecklists(all);
+    openEOSChecklist(_currentEmpId, document.getElementById('eosModalTitle').textContent, 0);
+  }
+  </script>
+
+  <!-- EOS CHECKLIST MODAL -->
+  <div id="eosChecklistModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.55)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col" style="direction:${isRTL?'rtl':'ltr'}">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0 ${isRTL?'flex-row-reverse':''}">
+        <div class="${isRTL?'text-right':''}">
+          <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-list-check text-lg" style="color:var(--qu-maroon)"></i>
+            <h2 class="text-lg font-bold text-gray-800">${isRTL?'شيك ليست إخلاء الطرف':'End-of-Service Checklist'}</h2>
+          </div>
+          <p class="text-xs text-gray-500 mt-0.5" id="eosModalSubtitle"></p>
+          <p class="text-sm font-semibold text-gray-700 mt-0.5" id="eosModalTitle"></p>
+        </div>
+        <button onclick="closeEOSModal()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition text-xl flex-shrink-0">&times;</button>
+      </div>
+      <!-- Progress -->
+      <div class="px-6 py-4 border-b border-gray-100 flex-shrink-0">
+        <div class="flex items-center justify-between mb-1.5 ${isRTL?'flex-row-reverse':''}">
+          <span class="text-xs font-semibold text-gray-600">${isRTL?'نسبة الإنجاز':'Completion Progress'}</span>
+          <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <span class="text-xs text-gray-500" id="eosProgressText"></span>
+            <span class="font-bold text-sm" style="color:var(--qu-maroon)" id="eosProgressPct">0%</span>
+          </div>
+        </div>
+        <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+          <div id="eosProgressBar" class="h-full rounded-full transition-all duration-500" style="width:0%;background:var(--qu-maroon)"></div>
+        </div>
+        <div class="mt-2 flex items-center gap-2 text-xs text-gray-400 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-info-circle"></i>
+          <span>${isRTL?'اضغط على مربع الاختيار لتحديث حالة كل خطوة':'Click a checkbox to update each step status'}</span>
+        </div>
+      </div>
+      <!-- Steps list scrollable -->
+      <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2" id="eosStepsList"></div>
+      <!-- Footer actions -->
+      <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between flex-shrink-0 ${isRTL?'flex-row-reverse':''}">
+        <button onclick="resetEOSChecklist()" class="flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-700 transition ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-rotate-left"></i> ${isRTL?'إعادة تعيين':'Reset All'}
+        </button>
+        <button onclick="closeEOSModal()" class="btn-primary px-5 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-check"></i> ${isRTL?'حفظ وإغلاق':'Save & Close'}
+        </button>
+      </div>
+    </div>
+  </div>
+  `
 
   return c.html(layout(lbl.title, content, 'eos', lang))
 })
