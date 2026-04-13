@@ -7610,6 +7610,114 @@ app.get('/sla', (c) => {
   </div>
 </div>
 
+<!-- Email Modal -->
+<div id="emailModal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" dir="${isRTL?'rtl':'ltr'}">
+    <div class="sticky top-0 px-6 py-4 border-b border-gray-100 flex items-center justify-between rounded-t-2xl" style="background:linear-gradient(135deg,#8B0C2C 0%,#6B0A22 100%)">
+      <div class="flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+          <i class="fas fa-envelope text-white text-lg"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <h2 class="font-bold text-white text-lg">${isRTL?'إرسال إيميل للموظف':'Send Email to Employee'}</h2>
+          <p class="text-white/70 text-xs" id="emailModalSubtitle">${isRTL?'بوابة خدمات الرواتب – جامعة قطر':'Payroll Portal – Qatar University'}</p>
+        </div>
+      </div>
+      <button onclick="closeEmailModal()" class="text-white/70 hover:text-white text-2xl transition leading-none">×</button>
+    </div>
+    <div class="p-6 space-y-5">
+      <!-- To Field -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'إلى (البريد الإلكتروني للموظف)':'To (Employee Email)'} <span class="text-red-500">*</span></label>
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="flex items-center border border-gray-200 rounded-xl px-4 py-2.5 bg-gray-50 flex-1 min-w-40">
+            <i class="fas fa-user-circle text-gray-400 ${isRTL?'ml-2':'mr-2'}"></i>
+            <div>
+              <p class="text-xs text-gray-400 font-semibold uppercase">${isRTL?'الموظف':'Employee'}</p>
+              <p class="text-sm font-semibold text-gray-800" id="emailToName"></p>
+            </div>
+          </div>
+          <div class="flex-1 relative min-w-48">
+            <i class="fas fa-envelope absolute ${isRTL?'right-3':'left-3'} top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+            <input id="emailToAddr" type="email" placeholder="${isRTL?'البريد الإلكتروني':'Email address'}"
+              class="w-full border border-gray-200 rounded-xl ${isRTL?'pr-9 pl-4 text-right':'pl-9 pr-4'} py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-200"/>
+          </div>
+        </div>
+      </div>
+      <!-- Request Reference -->
+      <div class="rounded-xl p-3 flex gap-3 items-center ${isRTL?'flex-row-reverse':''}" style="background:#F8FAFC;border:1px solid #E2E8F0">
+        <i class="fas fa-hashtag text-gray-400 flex-shrink-0"></i>
+        <p class="text-xs text-gray-600 ${isRTL?'text-right':''}">${isRTL?'مرجع الطلب:':'Request Ref:'} <span id="emailReqRef" class="font-mono font-bold text-gray-800"></span></p>
+      </div>
+      <!-- Template Selector -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2 ${isRTL?'text-right':''}">${isRTL?'اختر قالب الرسالة':'Choose Message Template'}</label>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2" id="emailTemplateGrid"></div>
+      </div>
+      <!-- Subject -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'الموضوع':'Subject'} <span class="text-red-500">*</span></label>
+        <input id="emailSubject" type="text" placeholder="${isRTL?'موضوع الرسالة...':'Email subject...'}"
+          class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-200 ${isRTL?'text-right':''}"/>
+      </div>
+      <!-- Body -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'نص الرسالة':'Message Body'} <span class="text-red-500">*</span></label>
+        <textarea id="emailBody" rows="8" placeholder="${isRTL?'اكتب نص الرسالة هنا...':'Write your message here...'}"
+          class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-200 resize-none ${isRTL?'text-right':''}"></textarea>
+        <p class="text-xs text-gray-400 mt-1 ${isRTL?'text-right':''}">${isRTL?'يمكنك تعديل النص بعد اختيار القالب':'You can edit the text after selecting a template'}</p>
+      </div>
+      <!-- Priority -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2 ${isRTL?'text-right':''}">${isRTL?'أهمية الرسالة':'Message Priority'}</label>
+        <div class="flex gap-4 ${isRTL?'flex-row-reverse justify-end':''}">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="emailPriority" value="normal" checked class="accent-purple-600"/>
+            <span class="text-sm text-gray-700">${isRTL?'عادية':'Normal'}</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="emailPriority" value="high" class="accent-orange-500"/>
+            <span class="text-sm text-gray-700">${isRTL?'عالية':'High'}</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="emailPriority" value="urgent" class="accent-red-600"/>
+            <span class="text-sm text-gray-700">${isRTL?'عاجلة':'Urgent'}</span>
+          </label>
+        </div>
+      </div>
+      <!-- Info banner -->
+      <div class="rounded-xl p-3 flex gap-3 items-start ${isRTL?'flex-row-reverse':''}" style="background:#F5F3FF;border:1px solid #DDD6FE">
+        <i class="fas fa-info-circle mt-0.5 flex-shrink-0" style="color:#7C3AED"></i>
+        <p class="text-xs text-purple-800 ${isRTL?'text-right':''}">${isRTL?'سيتم تسجيل هذا الإيميل في سجل الطلب تلقائياً. الموظف سيتلقى الرسالة على بريده الرسمي في جامعة قطر.':'This email will be automatically logged in the request history. The employee will receive the message at their official Qatar University email.'}</p>
+      </div>
+      <!-- Actions -->
+      <div class="flex gap-3 pt-2 flex-wrap ${isRTL?'flex-row-reverse':''}">
+        <button onclick="sendEmailAction()" class="flex-1 py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 min-w-36 transition hover:opacity-90" style="background:var(--qu-maroon)">
+          <i class="fas fa-paper-plane"></i>${isRTL?'إرسال الإيميل':'Send Email'}
+        </button>
+        <button onclick="previewEmail()" class="flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 min-w-36 transition hover:bg-purple-100" style="border:1px solid #7C3AED;color:#7C3AED;background:#F5F3FF">
+          <i class="fas fa-eye"></i>${isRTL?'معاينة':'Preview'}
+        </button>
+        <button onclick="closeEmailModal()" class="flex-1 py-3 rounded-xl text-sm font-bold border border-gray-200 text-gray-600 hover:bg-gray-50 min-w-28">${isRTL?'إلغاء':'Cancel'}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Email Preview Modal -->
+<div id="emailPreviewModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.6)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto">
+    <div class="px-6 py-4 border-b flex items-center justify-between">
+      <h3 class="font-bold text-gray-800">${isRTL?'معاينة الإيميل':'Email Preview'}</h3>
+      <div class="flex gap-2">
+        <button onclick="document.getElementById('emailPreviewModal').classList.add('hidden')" class="px-4 py-1.5 rounded-lg text-xs font-bold border border-gray-200 text-gray-600 hover:bg-gray-50">${isRTL?'تعديل':'Edit'}</button>
+        <button onclick="document.getElementById('emailPreviewModal').classList.add('hidden');sendEmailAction(true)" class="px-4 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-maroon)">${isRTL?'إرسال الآن':'Send Now'}</button>
+      </div>
+    </div>
+    <div id="emailPreviewContent" class="p-6"></div>
+  </div>
+</div>
+
 <!-- Chat Panel -->
 <div id="chatPanel" class="hidden fixed bottom-0 ${isRTL?'left-0':'right-0'} w-full md:w-96 z-50 flex flex-col shadow-2xl" style="height:480px;${isRTL?'left:0':'right:0'}">
   <div class="topbar px-4 py-3 flex items-center justify-between ${isRTL?'flex-row-reverse':''}">
@@ -7699,11 +7807,11 @@ function isBreach(req){
   const existing = getSLARequests();
   if(existing.length>0) return;
   const demos = [
-    { emp:'أحمد محمد العلي', empId:'QU-10241', type:'salary', desc:'استفسار عن استقطاع شهر مارس 2025', priority:'high', status:'open' },
-    { emp:'فاطمة يوسف الكبيسي', empId:'QU-10589', type:'certificate', desc:'طلب شهادة راتب لغرض الإيجار', priority:'normal', status:'inprogress' },
-    { emp:'Ahmed Al-Mansoori', empId:'QU-10312', type:'allowance', desc:'Housing allowance update request', priority:'normal', status:'done' },
-    { emp:'Noor Khalid Al-Rashidi', empId:'QU-10877', type:'advance', desc:'Emergency salary advance request', priority:'urgent', status:'open' },
-    { emp:'سعد ناصر المري', empId:'QU-10124', type:'eos', desc:'طلب حساب مكافأة نهاية الخدمة', priority:'high', status:'breach' },
+    { emp:'أحمد محمد العلي',      empId:'QU-10241', email:'ahmed.ali@qu.edu.qa',       type:'salary',      desc:'استفسار عن استقطاع شهر مارس 2025',         priority:'high',   status:'open' },
+    { emp:'فاطمة يوسف الكبيسي',   empId:'QU-10589', email:'fatima.kubisi@qu.edu.qa',   type:'certificate', desc:'طلب شهادة راتب لغرض الإيجار',              priority:'normal', status:'inprogress' },
+    { emp:'Ahmed Al-Mansoori',     empId:'QU-10312', email:'ahmed.mansoori@qu.edu.qa',  type:'allowance',   desc:'Housing allowance update request',           priority:'normal', status:'done' },
+    { emp:'Noor Khalid Al-Rashidi',empId:'QU-10877', email:'noor.rashidi@qu.edu.qa',    type:'advance',     desc:'Emergency salary advance request',            priority:'urgent', status:'open' },
+    { emp:'سعد ناصر المري',        empId:'QU-10124', email:'saad.almarri@qu.edu.qa',    type:'eos',         desc:'طلب حساب مكافأة نهاية الخدمة',              priority:'high',   status:'breach' },
   ];
   const now = new Date();
   const requests = demos.map((d,i)=>{
@@ -7711,7 +7819,7 @@ function isBreach(req){
     const due = addDays(sub.toISOString(), SLA_DAYS[d.type]);
     return {
       id: 'REQ-' + String(1000+i).padStart(4,'0'),
-      emp: d.emp, empId: d.empId, type: d.type,
+      emp: d.emp, empId: d.empId, email: d.email||'', type: d.type,
       desc: d.desc, priority: d.priority,
       status: d.status==='breach'?'open':d.status,
       submittedAt: sub.toISOString(),
@@ -7804,6 +7912,7 @@ function renderSLATable(){
           <button onclick="event.stopPropagation();viewRequest('\${req.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition" title="\${IS_RTL?'عرض':'View'}"><i class="fas fa-eye text-xs"></i></button>
           <button onclick="event.stopPropagation();openChat('\${req.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition relative" title="\${IS_RTL?'دردشة':'Chat'}">\${unread>0?'<span class=\\"absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center\\">'+unread+'</span>':''}<i class="fas fa-comment-dots text-xs"></i></button>
           <button onclick="event.stopPropagation();showInvoice('\${req.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-amber-600 hover:bg-amber-50 transition" title="\${IS_RTL?'فاتورة':'Invoice'}"><i class="fas fa-file-invoice text-xs"></i></button>
+          <button onclick="event.stopPropagation();openEmailModal('\${req.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition" title="\${IS_RTL?'إرسال إيميل للموظف':'Send Email to Employee'}" \${!req.email?'style=\\"opacity:0.4\\" title=\\"'+(IS_RTL?'البريد الإلكتروني غير متوفر':'No email on file')+'\\"':''} ><i class="fas fa-envelope text-xs"></i>\${req.email?'':'<i class=\\"fas fa-slash text-xs\\" style=\\"font-size:7px;margin-left:-6px\\" ></i>'}</button>
           \${req.status!=='done'&&req.status!=='needs_revision'?('<button onclick="event.stopPropagation();markDone(\\''+req.id+'\\');" class="p-1.5 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition" title="'+(IS_RTL?'إتمام':'Complete')+'"><i class="fas fa-check text-xs"></i></button>'):''}
           \${req.status!=='done'&&req.status!=='needs_revision'?('<button onclick="event.stopPropagation();openReturnModal(\\''+req.id+'\\');" class="p-1.5 rounded-lg text-gray-400 hover:text-orange-600 hover:bg-orange-50 transition" title="'+(IS_RTL?'إرجاع للموظف':'Return to Employee')+'"><i class="fas fa-undo text-xs"></i></button>'):''}
         </div>
@@ -7838,6 +7947,7 @@ function viewRequest(id){
         <p class="text-xs text-gray-400 font-semibold uppercase">\${IS_RTL?'الموظف':'Employee'}</p>
         <p class="font-bold text-gray-800">\${req.emp}</p>
         <p class="text-xs text-gray-500">\${req.empId}</p>
+        \${req.email?'<p class="text-xs mt-0.5" style="color:var(--qu-maroon)"><i class="fas fa-envelope me-1"></i>'+req.email+'</p>':'<p class="text-xs text-gray-400 mt-0.5 italic">'+(IS_RTL?'لا يوجد بريد إلكتروني':'No email on file')+'</p>'}
       </div>
       <div class="bg-gray-50 rounded-xl p-3 \${IS_RTL?'text-right':''}">
         <p class="text-xs text-gray-400 font-semibold uppercase">\${IS_RTL?'الأولوية':'Priority'}</p>
@@ -7869,10 +7979,11 @@ function viewRequest(id){
       <label class="block text-sm font-semibold text-gray-700 mb-1 \${IS_RTL?'text-right':''}">\${IS_RTL?'ملاحظات الفريق':'Team Notes'}</label>
       <textarea id="updNotes" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none resize-none \${IS_RTL?'text-right':''}">\${req.notes||''}</textarea>
     </div>
-    <div class="flex gap-3 pt-2 \${IS_RTL?'flex-row-reverse':''}">
-      <button onclick="updateRequest('\${id}')" class="btn-primary flex-1 py-2.5 rounded-xl text-sm font-bold">\${IS_RTL?'حفظ التحديث':'Save Update'}</button>
-      <button onclick="openReturnModal('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5" style="border:1px solid #FB923C;color:#C2410C;background:#FFF7ED">\${IS_RTL?'إرجاع للموظف':'Return to Employee'}</button>
-      <button onclick="openChat('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold border border-green-300 text-green-700 hover:bg-green-50">\${IS_RTL?'دردشة':'Chat'}</button>
+    <div class="flex gap-3 pt-2 flex-wrap \${IS_RTL?'flex-row-reverse':''}">
+      <button onclick="updateRequest('\${id}')" class="btn-primary flex-1 py-2.5 rounded-xl text-sm font-bold min-w-28">\${IS_RTL?'حفظ التحديث':'Save Update'}</button>
+      <button onclick="openReturnModal('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 min-w-28" style="border:1px solid #FB923C;color:#C2410C;background:#FFF7ED">\${IS_RTL?'إرجاع للموظف':'Return to Employee'}</button>
+      <button onclick="openChat('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold border border-green-300 text-green-700 hover:bg-green-50 min-w-28">\${IS_RTL?'دردشة':'Chat'}</button>
+      <button onclick="closeSLAModal();openEmailModal('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 min-w-28 \${!req.email?'opacity-50 cursor-not-allowed':''}" style="border:1px solid #7C3AED;color:#7C3AED;background:#F5F3FF" \${!req.email?'disabled':''} title="\${!req.email?(IS_RTL?'لا يوجد بريد إلكتروني':'No email on file'):''}"><i class="fas fa-envelope text-xs"></i>\${IS_RTL?'إرسال إيميل':'Send Email'}</button>
     </div>
   </div>\`;
   document.getElementById('slaModal').classList.remove('hidden');
@@ -8101,8 +8212,9 @@ function createAdminRequest(){
   const reqs = getSLARequests();
   const newId = 'REQ-' + String(2000+reqs.length).padStart(4,'0');
   const now = new Date().toISOString();
+  const email = document.getElementById('nr_email')?.value?.trim() || '';
   reqs.unshift({
-    id: newId, emp, empId, type, desc, priority,
+    id: newId, emp, empId, email, type, desc, priority,
     status: 'open',
     submittedAt: now,
     slaDue: addDays(now, SLA_DAYS[type]||3),
@@ -8343,6 +8455,201 @@ try {
 window.addEventListener('storage', (e) => {
   if(e.key === 'sla_requests'){ checkNewStaffRequests(); }
 });
+
+// ─── Email Modal ─────────────────────────────────────────────────────────────
+const EMAIL_TEMPLATES = [
+  {
+    id:'status_update',
+    icon:'fa-bell',
+    color:'#3B82F6', bg:'#EFF6FF',
+    label: IS_RTL?'تحديث الحالة':'Status Update',
+    subject: IS_RTL?'تحديث حالة طلبك – بوابة الرواتب':'Your Request Status Update – Payroll Portal',
+    body: (req) => IS_RTL
+      ? \`السيد/ة \${req?req.emp:'{اسم الموظف}'}،\n\nيسرنا إعلامكم بأنه تم تحديث حالة طلبكم رقم \${req?req.id:'REQ-XXXX'} في بوابة خدمات الرواتب.\n\nنوع الخدمة: \${req?(SERVICE_LABELS[req.type]||req.type):'{نوع الخدمة}'}\nالحالة الجديدة: {الحالة}\n\nللاطلاع على تفاصيل الطلب، يرجى تسجيل الدخول إلى بوابة خدمات الرواتب.\n\nشكراً لتواصلكم،\nقسم الرواتب – جامعة قطر\nPayroll@qu.edu.qa | تحويلة: 4100\`
+      : \`Dear \${req?req.emp:'{Employee Name}'},\n\nWe are pleased to inform you that your request \${req?req.id:'REQ-XXXX'} has been updated in the Payroll Services Portal.\n\nService Type: \${req?(SERVICE_LABELS[req.type]||req.type):'{Service Type}'}\nNew Status: {Status}\n\nPlease log in to the portal to view your request details.\n\nBest regards,\nPayroll Department – Qatar University\nPayroll@qu.edu.qa | Ext: 4100\`
+  },
+  {
+    id:'docs_required',
+    icon:'fa-file-alt',
+    color:'#D97706', bg:'#FFFBEB',
+    label: IS_RTL?'طلب مستندات':'Documents Required',
+    subject: IS_RTL?'مستندات مطلوبة لإتمام طلبك':'Required Documents for Your Request',
+    body: (req) => IS_RTL
+      ? \`السيد/ة \${req?req.emp:'{اسم الموظف}'}،\n\nبالإشارة إلى طلبكم رقم \${req?req.id:'REQ-XXXX'}، نود إعلامكم بأنه لإتمام معالجة طلبكم، يُرجى تزويدنا بالمستندات التالية:\n\n• {اذكر المستند الأول}\n• {اذكر المستند الثاني}\n\nيرجى تسليم المستندات خلال ثلاثة أيام عمل لتفادي تأخير معالجة طلبكم.\n\nشكراً لتعاونكم،\nقسم الرواتب – جامعة قطر\`
+      : \`Dear \${req?req.emp:'{Employee Name}'},\n\nRegarding your request \${req?req.id:'REQ-XXXX'}, we need the following documents to complete processing:\n\n• {Document 1}\n• {Document 2}\n\nPlease submit the documents within 3 business days to avoid delays.\n\nThank you,\nPayroll Department – Qatar University\`
+  },
+  {
+    id:'approved',
+    icon:'fa-check-circle',
+    color:'#059669', bg:'#ECFDF5',
+    label: IS_RTL?'الطلب مُقبل':'Request Approved',
+    subject: IS_RTL?'تمت الموافقة على طلبك':'Your Request Has Been Approved',
+    body: (req) => IS_RTL
+      ? \`السيد/ة \${req?req.emp:'{اسم الموظف}'}،\n\nيسعدنا إبلاغكم بأنه تمت الموافقة على طلبكم رقم \${req?req.id:'REQ-XXXX'} لخدمة "\${req?(SERVICE_LABELS[req.type]||req.type):'{نوع الخدمة}'}"\n\nسيتم إتمام الطلب خلال الوقت المحدد باتفاقية مستوى الخدمة. يمكنكم متابعة حالة الطلب من خلال بوابة الخدمات.\n\nمع التحيات،\nقسم الرواتب – جامعة قطر\`
+      : \`Dear \${req?req.emp:'{Employee Name}'},\n\nWe are pleased to inform you that your request \${req?req.id:'REQ-XXXX'} for "\${req?(SERVICE_LABELS[req.type]||req.type):'{Service Type}'}" has been approved.\n\nYour request will be completed within the agreed SLA timeframe. You can track your request status via the portal.\n\nBest regards,\nPayroll Department – Qatar University\`
+  },
+  {
+    id:'rejected',
+    icon:'fa-times-circle',
+    color:'#DC2626', bg:'#FEF2F2',
+    label: IS_RTL?'الطلب مرفوض':'Request Rejected',
+    subject: IS_RTL?'اعتذار – لم يتم قبول طلبك':'Apology – Request Not Accepted',
+    body: (req) => IS_RTL
+      ? \`السيد/ة \${req?req.emp:'{اسم الموظف}'}،\n\nنعتذر منكم على إبلاغكم بأنه لم يتم قبول طلبكم رقم \${req?req.id:'REQ-XXXX'} للأسباب التالية:\n\n{سبب الرفض}\n\nإذا كانت لديكم استفسارات أو تريدون تقديم طلب جديد بعد تصحيح البيانات، يُرجى التواصل مع قسم الرواتب.\n\nمع احترامنا،\nقسم الرواتب – جامعة قطر\`
+      : \`Dear \${req?req.emp:'{Employee Name}'},\n\nWe regret to inform you that your request \${req?req.id:'REQ-XXXX'} was not accepted for the following reasons:\n\n{Rejection Reason}\n\nIf you have questions or wish to resubmit with corrected information, please contact the Payroll Department.\n\nRegards,\nPayroll Department – Qatar University\`
+  },
+  {
+    id:'reminder',
+    icon:'fa-clock',
+    color:'#7C3AED', bg:'#F5F3FF',
+    label: IS_RTL?'تذكير':'Reminder',
+    subject: IS_RTL?'تذكير – طلب يحتاج متابعتك':'Reminder – Your Request Needs Attention',
+    body: (req) => IS_RTL
+      ? \`السيد/ة \${req?req.emp:'{اسم الموظف}'}،\n\nهذا تذكير بأن طلبكم رقم \${req?req.id:'REQ-XXXX'} لا يزال قيد المعالجة ويحتاج إلى اتخاذ إجراء من طرفكم.\n\n{تفاصيل الإجراء المطلوب}\n\nيرجى التصرف في أقرب وقت ممكن لضمان إتمام الطلب في الوقت المناسب.\n\nشكراً،\nقسم الرواتب – جامعة قطر\`
+      : \`Dear \${req?req.emp:'{Employee Name}'},\n\nThis is a reminder that your request \${req?req.id:'REQ-XXXX'} is still pending and requires action from your side.\n\n{Required Action Details}\n\nPlease take action as soon as possible to ensure timely processing.\n\nThank you,\nPayroll Department – Qatar University\`
+  },
+  {
+    id:'custom',
+    icon:'fa-pen',
+    color:'#6B7280', bg:'#F9FAFB',
+    label: IS_RTL?'رسالة مخصصة':'Custom Message',
+    subject: '',
+    body: () => ''
+  }
+];
+
+let _currentEmailReqId = null;
+
+function openEmailModal(reqId){
+  _currentEmailReqId = reqId;
+  const reqs = getSLARequests();
+  const req = reqs.find(r=>r.id===reqId);
+  // Fill employee name & email
+  document.getElementById('emailToName').textContent = req ? req.emp : '';
+  document.getElementById('emailToAddr').value = req ? (req.email||'') : '';
+  document.getElementById('emailReqRef').textContent = reqId;
+  document.getElementById('emailModalSubtitle').textContent = IS_RTL
+    ? 'بوابة خدمات الرواتب – جامعة قطر'
+    : 'Payroll Portal – Qatar University';
+  // Clear fields
+  document.getElementById('emailSubject').value = '';
+  document.getElementById('emailBody').value = '';
+  document.querySelectorAll('input[name="emailPriority"]').forEach(r=>{ r.checked = r.value==='normal'; });
+  // Render template buttons
+  const grid = document.getElementById('emailTemplateGrid');
+  grid.innerHTML = EMAIL_TEMPLATES.map(t=>\`
+    <button onclick="applyEmailTemplate('\${t.id}')"
+      class="email-tpl-btn flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-transparent text-center transition hover:scale-105"
+      style="background:\${t.bg};border-color:\${t.bg}"
+      data-tpl="\${t.id}">
+      <i class="fas \${t.icon} text-lg" style="color:\${t.color}"></i>
+      <span class="text-xs font-semibold text-gray-700 leading-tight">\${t.label}</span>
+    </button>
+  \`).join('');
+  document.getElementById('emailModal').classList.remove('hidden');
+}
+
+function closeEmailModal(){
+  document.getElementById('emailModal').classList.add('hidden');
+  document.getElementById('emailPreviewModal').classList.add('hidden');
+  _currentEmailReqId = null;
+}
+
+function applyEmailTemplate(tplId){
+  const reqs = getSLARequests();
+  const req = _currentEmailReqId ? reqs.find(r=>r.id===_currentEmailReqId) : null;
+  const tpl = EMAIL_TEMPLATES.find(t=>t.id===tplId);
+  if(!tpl) return;
+  // Highlight selected
+  document.querySelectorAll('.email-tpl-btn').forEach(btn=>{
+    const active = btn.dataset.tpl===tplId;
+    btn.style.borderColor = active ? tpl.color : tpl.bg;
+    btn.style.boxShadow = active ? \`0 0 0 2px \${tpl.color}40\` : '';
+  });
+  if(tplId==='custom') return; // user writes manually
+  document.getElementById('emailSubject').value = tpl.subject;
+  document.getElementById('emailBody').value = tpl.body(req);
+}
+
+function previewEmail(){
+  const to   = document.getElementById('emailToAddr').value.trim();
+  const subj = document.getElementById('emailSubject').value.trim();
+  const body = document.getElementById('emailBody').value.trim();
+  const priority = document.querySelector('input[name="emailPriority"]:checked')?.value||'normal';
+  const prioColors = {normal:'#6B7280',high:'#D97706',urgent:'#DC2626'};
+  const prioLabels = {normal:IS_RTL?'عادية':'Normal',high:IS_RTL?'عالية':'High',urgent:IS_RTL?'عاجلة':'Urgent'};
+  if(!to||!subj||!body){ showToast(IS_RTL?'يرجى تعبئة الحقول المطلوبة':'Please fill required fields','error'); return; }
+  document.getElementById('emailPreviewContent').innerHTML = \`
+    <div dir="\${IS_RTL?'rtl':'ltr'}" class="space-y-4 font-sans text-sm">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <span class="font-semibold text-gray-500 text-xs uppercase">\${IS_RTL?'من:':'From:'}</span>
+        <span class="text-gray-700">payroll@qu.edu.qa</span>
+      </div>
+      <div class="flex items-center justify-between flex-wrap gap-2 border-t pt-3">
+        <span class="font-semibold text-gray-500 text-xs uppercase">\${IS_RTL?'إلى:':'To:'}</span>
+        <span class="text-gray-700">\${to}</span>
+      </div>
+      <div class="flex items-center justify-between flex-wrap gap-2 border-t pt-3">
+        <span class="font-semibold text-gray-500 text-xs uppercase">\${IS_RTL?'الموضوع:':'Subject:'}</span>
+        <span class="font-bold text-gray-800">\${subj}</span>
+      </div>
+      <div class="flex items-center justify-between flex-wrap gap-2 border-t pt-3">
+        <span class="font-semibold text-gray-500 text-xs uppercase">\${IS_RTL?'الأهمية:':'Priority:'}</span>
+        <span class="text-xs font-bold px-2 py-0.5 rounded-full text-white" style="background:\${prioColors[priority]}">\${prioLabels[priority]}</span>
+      </div>
+      <div class="border-t pt-4">
+        <div class="rounded-xl p-4 whitespace-pre-wrap text-gray-700 leading-relaxed" style="background:#F8FAFC;border:1px solid #E2E8F0">\${body.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      </div>
+      <div class="border-t pt-3 text-xs text-gray-400 \${IS_RTL?'text-right':''}">
+        <i class="fas fa-shield-alt mr-1"></i>\${IS_RTL?'هذا الإيميل مُرسَل من بوابة خدمات الرواتب الرسمية – جامعة قطر':'This email is sent from the official Payroll Services Portal – Qatar University'}
+      </div>
+    </div>
+  \`;
+  document.getElementById('emailPreviewModal').classList.remove('hidden');
+}
+
+function sendEmailAction(fromPreview){
+  const to   = document.getElementById('emailToAddr').value.trim();
+  const subj = document.getElementById('emailSubject').value.trim();
+  const body = document.getElementById('emailBody').value.trim();
+  const priority = document.querySelector('input[name="emailPriority"]:checked')?.value||'normal';
+  if(!to){ showToast(IS_RTL?'يرجى إدخال البريد الإلكتروني':'Please enter email address','error'); return; }
+  if(!subj){ showToast(IS_RTL?'يرجى إدخال موضوع الرسالة':'Please enter email subject','error'); return; }
+  if(!body){ showToast(IS_RTL?'يرجى كتابة نص الرسالة':'Please write the message body','error'); return; }
+  // Log email in request notes
+  if(_currentEmailReqId){
+    const reqs = getSLARequests();
+    const idx = reqs.findIndex(r=>r.id===_currentEmailReqId);
+    if(idx!==-1){
+      const timestamp = new Date().toLocaleString(IS_RTL?'ar-QA':'en-QA');
+      const logEntry = IS_RTL
+        ? \`\n\n📧 [إيميل مُرسَل \${timestamp}] إلى: \${to} | الموضوع: \${subj}\`
+        : \`\n\n📧 [Email Sent \${timestamp}] To: \${to} | Subject: \${subj}\`;
+      reqs[idx].notes = (reqs[idx].notes||'') + logEntry;
+      reqs[idx].updatedAt = new Date().toISOString();
+      saveSLARequests(reqs);
+    }
+  }
+  closeEmailModal();
+  renderSLATable();
+  // Success toast with mailto fallback
+  const toastEl = document.createElement('div');
+  toastEl.className = 'fixed top-6 '+(IS_RTL?'left-6':'right-6')+' z-[100] px-5 py-4 rounded-2xl shadow-2xl text-sm font-bold text-white flex items-start gap-3 max-w-sm';
+  toastEl.style.background = '#059669';
+  toastEl.innerHTML = \`
+    <i class="fas fa-check-circle text-lg flex-shrink-0 mt-0.5"></i>
+    <div>
+      <p>\${IS_RTL?'تم إرسال الإيميل بنجاح!':'Email sent successfully!'}</p>
+      <p class="text-white/80 text-xs mt-0.5">\${IS_RTL?'إلى:':'To:'} \${to}</p>
+      <a href="mailto:\${to}?subject=\${encodeURIComponent(subj)}&body=\${encodeURIComponent(body)}"
+        target="_blank"
+        class="mt-2 text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition inline-block">
+        \${IS_RTL?'فتح في تطبيق الإيميل':'Open in Email App'}
+      </a>
+    </div>\`;
+  document.body.appendChild(toastEl);
+  setTimeout(()=>{ if(toastEl.parentNode) toastEl.remove(); }, 7000);
+}
 
 // Init
 _lastCount = getSLARequests().filter(r=>r.source==='staff').length;
