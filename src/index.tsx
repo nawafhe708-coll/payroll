@@ -7686,16 +7686,18 @@ app.get('/sla', (c) => {
         </div>
       </div>
       <!-- Info banner -->
-      <div class="rounded-xl p-3 flex gap-3 items-start ${isRTL?'flex-row-reverse':''}" style="background:#F5F3FF;border:1px solid #DDD6FE">
-        <i class="fas fa-info-circle mt-0.5 flex-shrink-0" style="color:#7C3AED"></i>
-        <p class="text-xs text-purple-800 ${isRTL?'text-right':''}">${isRTL?'سيتم تسجيل هذا الإيميل في سجل الطلب تلقائياً. الموظف سيتلقى الرسالة على بريده الرسمي في جامعة قطر.':'This email will be automatically logged in the request history. The employee will receive the message at their official Qatar University email.'}</p>
+      <div class="rounded-xl p-3 flex gap-3 items-start ${isRTL?'flex-row-reverse':''}" style="background:#F0F4FF;border:1px solid #C7D7F9">
+        <i class="fas fa-info-circle mt-0.5 flex-shrink-0" style="color:#2563EB"></i>
+        <p class="text-xs text-blue-800 ${isRTL?'text-right':''}">${isRTL?'سيفتح Outlook تلقائياً بالرسالة جاهزة. سيتم أيضاً تسجيل الإيميل في سجل الطلب.':'Outlook will open automatically with the message ready to send. The email will also be logged in the request history.'}</p>
       </div>
       <!-- Actions -->
       <div class="flex gap-3 pt-2 flex-wrap ${isRTL?'flex-row-reverse':''}">
-        <button onclick="sendEmailAction()" class="flex-1 py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 min-w-36 transition hover:opacity-90" style="background:var(--qu-maroon)">
-          <i class="fas fa-paper-plane"></i>${isRTL?'إرسال الإيميل':'Send Email'}
+        <!-- Outlook primary button -->
+        <button onclick="sendViaOutlook()" class="flex-1 py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 min-w-40 transition hover:opacity-90" style="background:#0078D4">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018%E2%80%93present%29.svg" alt="Outlook" style="width:18px;height:18px;filter:brightness(10)" onerror="this.style.display='none'">
+          <span>${isRTL?'فتح في Outlook':'Open in Outlook'}</span>
         </button>
-        <button onclick="previewEmail()" class="flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 min-w-36 transition hover:bg-purple-100" style="border:1px solid #7C3AED;color:#7C3AED;background:#F5F3FF">
+        <button onclick="previewEmail()" class="flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 min-w-32 transition hover:bg-purple-100" style="border:1px solid #7C3AED;color:#7C3AED;background:#F5F3FF">
           <i class="fas fa-eye"></i>${isRTL?'معاينة':'Preview'}
         </button>
         <button onclick="closeEmailModal()" class="flex-1 py-3 rounded-xl text-sm font-bold border border-gray-200 text-gray-600 hover:bg-gray-50 min-w-28">${isRTL?'إلغاء':'Cancel'}</button>
@@ -7711,7 +7713,10 @@ app.get('/sla', (c) => {
       <h3 class="font-bold text-gray-800">${isRTL?'معاينة الإيميل':'Email Preview'}</h3>
       <div class="flex gap-2">
         <button onclick="document.getElementById('emailPreviewModal').classList.add('hidden')" class="px-4 py-1.5 rounded-lg text-xs font-bold border border-gray-200 text-gray-600 hover:bg-gray-50">${isRTL?'تعديل':'Edit'}</button>
-        <button onclick="document.getElementById('emailPreviewModal').classList.add('hidden');sendEmailAction(true)" class="px-4 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-maroon)">${isRTL?'إرسال الآن':'Send Now'}</button>
+        <button onclick="document.getElementById('emailPreviewModal').classList.add('hidden');sendViaOutlook(true)" class="px-4 py-1.5 rounded-lg text-xs font-bold text-white flex items-center gap-1.5" style="background:#0078D4">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018%E2%80%93present%29.svg" alt="" style="width:14px;height:14px;filter:brightness(10)" onerror="this.style.display='none'">
+          ${isRTL?'فتح في Outlook':'Open in Outlook'}
+        </button>
       </div>
     </div>
     <div id="emailPreviewContent" class="p-6"></div>
@@ -8608,48 +8613,67 @@ function previewEmail(){
   document.getElementById('emailPreviewModal').classList.remove('hidden');
 }
 
-function sendEmailAction(fromPreview){
+// ─── Open Outlook via mailto protocol ────────────────────────────────────────
+function sendViaOutlook(fromPreview){
   const to   = document.getElementById('emailToAddr').value.trim();
   const subj = document.getElementById('emailSubject').value.trim();
   const body = document.getElementById('emailBody').value.trim();
-  const priority = document.querySelector('input[name="emailPriority"]:checked')?.value||'normal';
-  if(!to){ showToast(IS_RTL?'يرجى إدخال البريد الإلكتروني':'Please enter email address','error'); return; }
-  if(!subj){ showToast(IS_RTL?'يرجى إدخال موضوع الرسالة':'Please enter email subject','error'); return; }
+  if(!to){ showToast(IS_RTL?'يرجى إدخال البريد الإلكتروني للموظف':'Please enter the employee email address','error'); return; }
+  if(!subj){ showToast(IS_RTL?'يرجى إدخال موضوع الرسالة':'Please enter the email subject','error'); return; }
   if(!body){ showToast(IS_RTL?'يرجى كتابة نص الرسالة':'Please write the message body','error'); return; }
-  // Log email in request notes
+
+  // ── سجّل الإيميل في ملاحظات الطلب ──────────────────────────────────────────
   if(_currentEmailReqId){
     const reqs = getSLARequests();
-    const idx = reqs.findIndex(r=>r.id===_currentEmailReqId);
+    const idx  = reqs.findIndex(r=>r.id===_currentEmailReqId);
     if(idx!==-1){
-      const timestamp = new Date().toLocaleString(IS_RTL?'ar-QA':'en-QA');
-      const logEntry = IS_RTL
-        ? \`\n\n📧 [إيميل مُرسَل \${timestamp}] إلى: \${to} | الموضوع: \${subj}\`
-        : \`\n\n📧 [Email Sent \${timestamp}] To: \${to} | Subject: \${subj}\`;
-      reqs[idx].notes = (reqs[idx].notes||'') + logEntry;
+      const ts = new Date().toLocaleString(IS_RTL?'ar-QA':'en-QA');
+      const entry = IS_RTL
+        ? \`\n\n📧 [تم فتح Outlook \${ts}]\nإلى: \${to}\nالموضوع: \${subj}\`
+        : \`\n\n📧 [Outlook Opened \${ts}]\nTo: \${to}\nSubject: \${subj}\`;
+      reqs[idx].notes    = (reqs[idx].notes||'') + entry;
       reqs[idx].updatedAt = new Date().toISOString();
       saveSLARequests(reqs);
     }
   }
+
+  // ── بناء رابط mailto ────────────────────────────────────────────────────────
+  // Outlook (desktop & web) يقرأ cc وbcc اختيارياً كذلك
+  const mailtoUrl = 'mailto:' + encodeURIComponent(to)
+    + '?subject=' + encodeURIComponent(subj)
+    + '&body='    + encodeURIComponent(body);
+
+  // ── فتح Outlook ─────────────────────────────────────────────────────────────
+  // طريقة 1: window.location.href — يفتح تطبيق Outlook المثبت مباشرة
+  window.location.href = mailtoUrl;
+
   closeEmailModal();
   renderSLATable();
-  // Success toast with mailto fallback
+
+  // ── Toast تأكيد ─────────────────────────────────────────────────────────────
   const toastEl = document.createElement('div');
   toastEl.className = 'fixed top-6 '+(IS_RTL?'left-6':'right-6')+' z-[100] px-5 py-4 rounded-2xl shadow-2xl text-sm font-bold text-white flex items-start gap-3 max-w-sm';
-  toastEl.style.background = '#059669';
+  toastEl.style.background = '#0078D4';          // Outlook blue
   toastEl.innerHTML = \`
-    <i class="fas fa-check-circle text-lg flex-shrink-0 mt-0.5"></i>
+    <i class="fas fa-envelope-open-text text-lg flex-shrink-0 mt-0.5"></i>
     <div>
-      <p>\${IS_RTL?'تم إرسال الإيميل بنجاح!':'Email sent successfully!'}</p>
+      <p class="font-bold">\${IS_RTL?'جارٍ فتح Outlook…':'Opening Outlook…'}</p>
       <p class="text-white/80 text-xs mt-0.5">\${IS_RTL?'إلى:':'To:'} \${to}</p>
-      <a href="mailto:\${to}?subject=\${encodeURIComponent(subj)}&body=\${encodeURIComponent(body)}"
-        target="_blank"
-        class="mt-2 text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition inline-block">
-        \${IS_RTL?'فتح في تطبيق الإيميل':'Open in Email App'}
+      <p class="text-white/70 text-xs mt-0.5 truncate max-w-xs">\${subj}</p>
+      <p class="text-white/60 text-xs mt-1">\${IS_RTL
+        ? 'إذا لم يفتح Outlook تلقائياً، اضغط الزر أدناه'
+        : "If Outlook doesn't open, click the button below"}</p>
+      <a href="\${mailtoUrl}"
+        class="mt-2 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition inline-block font-semibold">
+        \${IS_RTL?'فتح يدوياً':'Open Manually'}
       </a>
     </div>\`;
   document.body.appendChild(toastEl);
-  setTimeout(()=>{ if(toastEl.parentNode) toastEl.remove(); }, 7000);
+  setTimeout(()=>{ if(toastEl.parentNode) toastEl.remove(); }, 10000);
 }
+
+// kept for backward-compatibility (preview modal still calls sendEmailAction)
+function sendEmailAction(fromPreview){ sendViaOutlook(fromPreview); }
 
 // Init
 _lastCount = getSLARequests().filter(r=>r.source==='staff').length;
