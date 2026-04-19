@@ -1120,6 +1120,7 @@ const layout = (title: string, content: string, activePage: string, lang: Lang) 
       { href: '/email-templates', icon: 'fa-envelope-open-text', label: t.navEmailTemplates, page: 'email-templates' },
       { href: '/scholarship', icon: 'fa-graduation-cap', label: t.navScholarship, page: 'scholarship' },
       { href: '/sla', icon: 'fa-chart-gantt', label: isRTL ? 'إدارة طلبات SLA' : 'SLA Management', page: 'sla' },
+      { href: '/admin/news', icon: 'fa-newspaper', label: isRTL ? 'إدارة الأخبار' : 'News Manager', page: 'admin-news' },
     ].map(item => `
     <a href="${item.href}?lang=${lang}" class="sidebar-link ${activePage === item.page ? 'active' : ''} flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 text-sm mb-1 ${isRTL ? 'flex-row-reverse' : ''}">
       <i class="fas ${item.icon} w-5 text-center flex-shrink-0"></i>
@@ -1241,10 +1242,25 @@ const layout = (title: string, content: string, activePage: string, lang: Lang) 
         <i class="fas fa-bullhorn ${isRTL ? 'ml-1.5' : 'mr-1.5'}"></i>${t.latest}
       </span>
       <div class="overflow-hidden flex-1">
-        <div class="ticker text-white text-xs">${t.ticker}</div>
+        <div class="ticker text-white text-xs" id="mainTicker">${t.ticker}</div>
       </div>
+      <a href="/admin/news?lang=${lang}" title="${isRTL?'إدارة الأخبار':'Manage News'}"
+        class="text-white/60 hover:text-white transition flex-shrink-0 ms-2"
+        style="font-size:11px">
+        <i class="fas fa-pen-to-square"></i>
+      </a>
     </div>
   </div>
+  <script>
+  (function(){
+    try{
+      const saved = JSON.parse(localStorage.getItem('qu_news_ticker'));
+      if(saved && saved.length){
+        document.getElementById('mainTicker').innerHTML = saved.join(' &nbsp;|&nbsp; ');
+      }
+    }catch(e){}
+  })();
+  </script>
 
   <!-- ── PAGE CONTENT ── -->
   <main class="flex-1 p-4 md:p-6">
@@ -1442,9 +1458,11 @@ app.get('/', (c) => {
         <h3 class="font-bold text-gray-800 flex items-center gap-2">
           <i class="fas fa-bullhorn text-sm" style="color:var(--qu-maroon)"></i> ${t.recentAnnouncements}
         </h3>
-        <span class="text-xs cursor-pointer" style="color:var(--qu-maroon)">${t.viewAllArrow}</span>
+        <a href="/admin/news?lang=${lang}" class="text-xs font-semibold flex items-center gap-1 hover:opacity-80 transition" style="color:var(--qu-maroon)">
+          <i class="fas fa-pen-to-square text-xs"></i>${isRTL?'تعديل الإعلانات':'Edit Announcements'}
+        </a>
       </div>
-      <div class="space-y-2">
+      <div class="space-y-2" id="homeAnnList">
         ${[
           { title: t.ann1, date: t.ann1Date, badge: 'badge-green', icon: 'fa-money-bill-wave', label: t.ann1Badge },
           { title: t.ann2, date: t.ann2Date, badge: 'badge-amber', icon: 'fa-star-and-crescent', label: t.ann2Badge },
@@ -1462,6 +1480,30 @@ app.get('/', (c) => {
           <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${a.badge} whitespace-nowrap flex-shrink-0">${a.label}</span>
         </div>`).join('')}
       </div>
+      <script>
+      (function(){
+        const BADGE_BG_H = {'badge-green':'#ECFDF5','badge-amber':'#FFFBEB','badge-blue':'#EFF6FF','badge-red':'#FEF2F2','badge-purple':'#EDE9FE','badge-cyan':'#CFFAFE'};
+        const BADGE_CL_H = {'badge-green':'#059669','badge-amber':'#D97706','badge-blue':'#2563EB','badge-red':'#DC2626','badge-purple':'#7C3AED','badge-cyan':'#0891B2'};
+        try{
+          const saved = JSON.parse(localStorage.getItem('qu_announcements'));
+          if(saved && saved.length){
+            const list = document.getElementById('homeAnnList');
+            list.innerHTML = saved.map(a=>\`
+              <div class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 transition cursor-pointer">
+                <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(139,26,47,0.08)">
+                  <i class="fas \${a.icon} text-sm" style="color:var(--qu-maroon)"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800">\${a.title}</p>
+                  <p class="text-xs text-gray-400 mt-0.5"><i class="fas fa-calendar me-1"></i>\${a.date}</p>
+                </div>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0"
+                  style="background:\${BADGE_BG_H[a.bg]||'#EFF6FF'};color:\${BADGE_CL_H[a.bg]||'#2563EB'}">\${a.badge}</span>
+              </div>\`).join('');
+          }
+        }catch(e){}
+      })();
+      </script>
     </div>
 
     <!-- Calendar + Contact -->
@@ -7192,6 +7234,374 @@ showScholarshipTab('dashboard');
 </script>`
 
   return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  NEWS ADMIN  /admin/news  (إدارة آخر الأخبار والإعلانات)
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/admin/news', (c) => {
+  const lang  = getLang(c)
+  const isRTL = lang === 'ar'
+  const pageTitle = isRTL ? 'إدارة الأخبار والإعلانات' : 'News & Announcements Manager'
+
+  const content = `
+<div dir="${isRTL?'rtl':'ltr'}">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+    <div class="${isRTL?'text-right':''}">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <span class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:var(--qu-maroon)">
+          <i class="fas fa-newspaper text-white text-lg"></i>
+        </span>
+        ${isRTL?'إدارة الأخبار والإعلانات':'News & Announcements Manager'}
+      </h1>
+      <p class="text-gray-500 text-sm mt-1 ${isRTL?'text-right':''}">${isRTL?'تخصيص شريط الأخبار المتحرك وبطاقات الإعلانات في الصفحة الرئيسية':'Customize the news ticker and announcement cards on the home page'}</p>
+    </div>
+    <div class="flex gap-2">
+      <a href="/?lang=${lang}" target="_blank" class="px-4 py-2 rounded-xl text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center gap-2">
+        <i class="fas fa-external-link-alt text-xs"></i>${isRTL?'عرض الصفحة الرئيسية':'View Home Page'}
+      </a>
+      <button onclick="resetAllNews()" class="px-4 py-2 rounded-xl text-sm font-semibold border border-red-200 text-red-600 hover:bg-red-50 flex items-center gap-2">
+        <i class="fas fa-undo text-xs"></i>${isRTL?'إعادة الضبط':'Reset to Default'}
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       SECTION 1 – TICKER
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="card p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-gray-800 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+        <span class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--qu-gold)">
+          <i class="fas fa-stream text-white text-sm"></i>
+        </span>
+        ${isRTL?'شريط الأخبار المتحرك':'News Ticker Strip'}
+      </h2>
+      <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-white" style="background:var(--qu-gold)" id="tickerCountBadge">0 ${isRTL?'خبر':'items'}</span>
+    </div>
+
+    <!-- Preview -->
+    <div class="rounded-xl overflow-hidden mb-5" style="background:var(--qu-gold)">
+      <div class="py-2 px-4 flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <span class="text-white font-bold text-xs uppercase tracking-wide whitespace-nowrap flex-shrink-0">
+          <i class="fas fa-bullhorn ${isRTL?'ml-1.5':'mr-1.5'}"></i>${isRTL?'آخر الأخبار:':'Latest:'}
+        </span>
+        <div class="overflow-hidden flex-1">
+          <div class="ticker-preview text-white text-xs whitespace-nowrap" id="tickerPreview" style="animation:ticker-prev 20s linear infinite${isRTL?' reverse':''}">
+            ${isRTL?'جارٍ التحميل…':'Loading…'}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticker Items List -->
+    <div id="tickerList" class="space-y-2 mb-4"></div>
+
+    <!-- Add New Ticker Item -->
+    <div class="rounded-xl p-4" style="background:#F8FAFC;border:1px dashed #CBD5E1">
+      <p class="text-xs font-semibold text-gray-500 uppercase mb-2 ${isRTL?'text-right':''}">${isRTL?'إضافة خبر جديد للشريط':'Add New Ticker Item'}</p>
+      <div class="flex gap-2 flex-wrap">
+        <input id="newTickerInput" type="text" placeholder="${isRTL?'اكتب نص الخبر…':'Type news text…'}"
+          class="flex-1 min-w-48 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 ${isRTL?'text-right':''}"/>
+        <button onclick="addTickerItem()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition" style="background:var(--qu-gold)">
+          <i class="fas fa-plus"></i>${isRTL?'إضافة':'Add'}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       SECTION 2 – ANNOUNCEMENT CARDS
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="card p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-gray-800 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+        <span class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--qu-maroon)">
+          <i class="fas fa-bullhorn text-white text-sm"></i>
+        </span>
+        ${isRTL?'بطاقات الإعلانات (الصفحة الرئيسية)':'Announcement Cards (Home Page)'}
+      </h2>
+      <button onclick="addAnnCard()" class="px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 hover:opacity-90 transition" style="background:var(--qu-maroon)">
+        <i class="fas fa-plus"></i>${isRTL?'إضافة إعلان':'Add Card'}
+      </button>
+    </div>
+
+    <!-- Cards list -->
+    <div id="annCardsList" class="space-y-3"></div>
+  </div>
+
+  <!-- Save Button -->
+  <div class="flex justify-end gap-3">
+    <button onclick="saveAllNews()" class="px-8 py-3 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition shadow-lg" style="background:var(--qu-maroon)">
+      <i class="fas fa-save"></i>${isRTL?'حفظ كل التغييرات':'Save All Changes'}
+    </button>
+  </div>
+
+</div>
+
+<!-- Edit Card Modal -->
+<div id="annEditModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.5)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg" dir="${isRTL?'rtl':'ltr'}">
+    <div class="px-6 py-4 border-b flex items-center justify-between" style="background:var(--qu-maroon)">
+      <h3 class="font-bold text-white">${isRTL?'تعديل الإعلان':'Edit Announcement'}</h3>
+      <button onclick="closeAnnModal()" class="text-white/70 hover:text-white text-2xl leading-none">×</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <input type="hidden" id="editCardIdx"/>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1 ${isRTL?'text-right':''}">${isRTL?'عنوان الإعلان':'Title'} *</label>
+        <input id="editCardTitle" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100 ${isRTL?'text-right':''}"/>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1 ${isRTL?'text-right':''}">${isRTL?'التاريخ':'Date'}</label>
+        <input id="editCardDate" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100 ${isRTL?'text-right':''}"/>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1 ${isRTL?'text-right':''}">${isRTL?'التصنيف':'Badge'}</label>
+        <input id="editCardBadge" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100 ${isRTL?'text-right':''}"/>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2 ${isRTL?'text-right':''}">${isRTL?'الأيقونة والألوان':'Icon & Color'}</label>
+        <div class="grid grid-cols-3 gap-2" id="iconPicker">
+          ${[
+            {icon:'fa-money-bill-wave', color:'#059669', bg:'badge-green', label: isRTL?'راتب':'Salary'},
+            {icon:'fa-star-and-crescent', color:'#D97706', bg:'badge-amber', label: isRTL?'إجازة':'Leave'},
+            {icon:'fa-file-alt', color:'#2563EB', bg:'badge-blue', label: isRTL?'نموذج':'Form'},
+            {icon:'fa-file-contract', color:'#DC2626', bg:'badge-red', label: isRTL?'سياسة':'Policy'},
+            {icon:'fa-bell', color:'#7C3AED', bg:'badge-purple', label: isRTL?'إشعار':'Notice'},
+            {icon:'fa-calendar-check', color:'#0891B2', bg:'badge-cyan', label: isRTL?'تقويم':'Calendar'},
+          ].map(ic=>`
+          <button type="button" onclick="pickIcon('${ic.icon}','${ic.bg}')" class="icon-pick-btn flex flex-col items-center gap-1 p-2.5 rounded-xl border-2 border-transparent hover:border-gray-300 transition" data-icon="${ic.icon}" data-bg="${ic.bg}">
+            <i class="fas ${ic.icon} text-lg" style="color:${ic.color}"></i>
+            <span class="text-xs text-gray-600">${ic.label}</span>
+          </button>`).join('')}
+        </div>
+        <input type="hidden" id="editCardIcon" value="fa-bell"/>
+        <input type="hidden" id="editCardBg" value="badge-blue"/>
+      </div>
+      <div class="flex gap-3 pt-2 ${isRTL?'flex-row-reverse':''}">
+        <button onclick="saveAnnCard()" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white" style="background:var(--qu-maroon)">${isRTL?'حفظ':'Save'}</button>
+        <button onclick="closeAnnModal()" class="flex-1 py-2.5 rounded-xl text-sm font-bold border border-gray-200 text-gray-600">${isRTL?'إلغاء':'Cancel'}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes ticker-prev { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
+.badge-purple { background:#EDE9FE; color:#6D28D9; }
+.badge-cyan   { background:#CFFAFE; color:#0E7490; }
+</style>
+
+<script>
+const NEWS_KEY  = 'qu_news_ticker';
+const ANN_KEY   = 'qu_announcements';
+const IS_RTL_N  = ${isRTL};
+
+/* ── Defaults ── */
+const DEFAULT_TICKER = [
+  ${isRTL
+    ? `'سيتم إيداع رواتب أبريل 2025 بتاريخ 28 أبريل 2025',
+  'سياسة حساب العمل الإضافي المحدّثة تسري من 1 مايو 2025',
+  'الموعد النهائي لطلبات سلفة عيد الفطر: 10 أبريل 2025',
+  'تم تحديث نموذج بدل السكن – يرجى تحميل الإصدار الأحدث',
+  'مكتب الرواتب مغلق يوم 18 أبريل بمناسبة اليوم الوطني'`
+    : `'April 2025 salaries will be credited on 28 April 2025',
+  'New overtime calculation policy effective from 1 May 2025',
+  'Eid Al-Fitr advance payment requests deadline: 10 April 2025',
+  'Housing allowance form has been updated – download the latest version',
+  'Payroll office will be closed on 18 April for National Day'`}
+];
+
+const DEFAULT_ANN = [
+  { title: ${isRTL?`'موعد صرف رواتب أبريل 2025'`:`'April 2025 Salary Processing Date'`}, date: ${isRTL?`'15 أبريل 2025'`:`'April 15, 2025'`}, badge: ${isRTL?`'راتب'`:`'Salary'`}, icon:'fa-money-bill-wave', bg:'badge-green' },
+  { title: ${isRTL?`'سلفة عيد الفطر – الموعد النهائي للطلبات'`:`'Eid Al-Fitr Advance Payment – Request Deadline'`}, date: ${isRTL?`'10 أبريل 2025'`:`'April 10, 2025'`}, badge: ${isRTL?`'سلفة'`:`'Advance'`}, icon:'fa-star-and-crescent', bg:'badge-amber' },
+  { title: ${isRTL?`'تحديث نموذج بدل السكن (المراجعة 3)'`:`'Updated Housing Allowance Form (Rev. 3)'`}, date: ${isRTL?`'8 أبريل 2025'`:`'April 8, 2025'`}, badge: ${isRTL?`'نماذج'`:`'Forms'`}, icon:'fa-file-alt', bg:'badge-blue' },
+  { title: ${isRTL?`'سياسة حساب العمل الإضافي الجديدة – تسري من مايو 2025'`:`'New Overtime Calculation Policy – Effective May 2025'`}, date: ${isRTL?`'5 أبريل 2025'`:`'April 5, 2025'`}, badge: ${isRTL?`'سياسة'`:`'Policy'`}, icon:'fa-file-contract', bg:'badge-red' },
+];
+
+/* ── State ── */
+let tickerItems = [];
+let annCards    = [];
+
+function loadData(){
+  try { tickerItems = JSON.parse(localStorage.getItem(NEWS_KEY)) || DEFAULT_TICKER.slice(); }
+  catch(e){ tickerItems = DEFAULT_TICKER.slice(); }
+  try { annCards = JSON.parse(localStorage.getItem(ANN_KEY)) || DEFAULT_ANN.slice(); }
+  catch(e){ annCards = DEFAULT_ANN.slice(); }
+}
+
+function saveAllNews(){
+  localStorage.setItem(NEWS_KEY, JSON.stringify(tickerItems));
+  localStorage.setItem(ANN_KEY,  JSON.stringify(annCards));
+  showNewsToast(IS_RTL_N?'✅ تم الحفظ! ستظهر التغييرات فور فتح الصفحة الرئيسية':'✅ Saved! Changes appear on the home page immediately.', '#059669');
+}
+
+function resetAllNews(){
+  if(!confirm(IS_RTL_N?'هل تريد إعادة ضبط كل الأخبار إلى الافتراضي؟':'Reset all news to default?')) return;
+  tickerItems = DEFAULT_TICKER.slice();
+  annCards    = DEFAULT_ANN.slice();
+  renderAll();
+  saveAllNews();
+}
+
+/* ══ TICKER ══════════════════════════════════════════════════════════════════ */
+function renderTicker(){
+  const list = document.getElementById('tickerList');
+  const badge = document.getElementById('tickerCountBadge');
+  const preview = document.getElementById('tickerPreview');
+  badge.textContent = tickerItems.length + ' ' + (IS_RTL_N?'خبر':'items');
+  preview.textContent = tickerItems.join(' | ') || (IS_RTL_N?'لا توجد أخبار':'No items');
+  list.innerHTML = tickerItems.map((item, i) => \`
+    <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition group">
+      <span class="w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center flex-shrink-0 text-white" style="background:var(--qu-gold)">\${i+1}</span>
+      <p class="flex-1 text-sm text-gray-800 \${IS_RTL_N?'text-right':''}" id="ticker_text_\${i}">\${item}</p>
+      <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+        <button onclick="editTickerItem(\${i})" class="p-1.5 rounded-lg hover:bg-blue-50 text-blue-500" title="\${IS_RTL_N?'تعديل':'Edit'}"><i class="fas fa-pen text-xs"></i></button>
+        <button onclick="moveTickerItem(\${i},-1)" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400" title="\${IS_RTL_N?'أعلى':'Up'}"><i class="fas fa-arrow-up text-xs"></i></button>
+        <button onclick="moveTickerItem(\${i},1)" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400" title="\${IS_RTL_N?'أسفل':'Down'}"><i class="fas fa-arrow-down text-xs"></i></button>
+        <button onclick="deleteTickerItem(\${i})" class="p-1.5 rounded-lg hover:bg-red-50 text-red-400" title="\${IS_RTL_N?'حذف':'Delete'}"><i class="fas fa-trash text-xs"></i></button>
+      </div>
+    </div>
+  \`).join('');
+}
+
+function addTickerItem(){
+  const inp = document.getElementById('newTickerInput');
+  const val = inp.value.trim();
+  if(!val){ showNewsToast(IS_RTL_N?'يرجى كتابة نص الخبر':'Please enter news text','#DC2626'); return; }
+  tickerItems.push(val);
+  inp.value = '';
+  renderTicker();
+}
+
+function deleteTickerItem(i){
+  tickerItems.splice(i,1);
+  renderTicker();
+}
+
+function moveTickerItem(i, dir){
+  const j = i + dir;
+  if(j<0||j>=tickerItems.length) return;
+  [tickerItems[i], tickerItems[j]] = [tickerItems[j], tickerItems[i]];
+  renderTicker();
+}
+
+function editTickerItem(i){
+  const el = document.getElementById('ticker_text_'+i);
+  const old = tickerItems[i];
+  const input = document.createElement('input');
+  input.type='text'; input.value=old;
+  input.className='flex-1 border border-amber-300 rounded-lg px-3 py-1 text-sm focus:outline-none w-full';
+  input.onblur = ()=>{ tickerItems[i]=input.value.trim()||old; renderTicker(); };
+  input.onkeydown = (e)=>{ if(e.key==='Enter'){ input.blur(); } if(e.key==='Escape'){ tickerItems[i]=old; renderTicker(); } };
+  el.replaceWith(input);
+  input.focus(); input.select();
+}
+
+/* ══ ANNOUNCEMENT CARDS ══════════════════════════════════════════════════════ */
+const BADGE_COLORS = {
+  'badge-green':'#059669','badge-amber':'#D97706','badge-blue':'#2563EB',
+  'badge-red':'#DC2626','badge-purple':'#7C3AED','badge-cyan':'#0891B2'
+};
+const BADGE_BG = {
+  'badge-green':'#ECFDF5','badge-amber':'#FFFBEB','badge-blue':'#EFF6FF',
+  'badge-red':'#FEF2F2','badge-purple':'#EDE9FE','badge-cyan':'#CFFAFE'
+};
+
+function renderAnnCards(){
+  const list = document.getElementById('annCardsList');
+  list.innerHTML = annCards.map((card,i)=> \`
+    <div class="flex items-center gap-3 p-4 rounded-xl border border-gray-100 bg-white hover:shadow-sm transition group">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,26,47,0.08)">
+        <i class="fas \${card.icon} text-sm" style="color:var(--qu-maroon)"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-gray-800 text-sm \${IS_RTL_N?'text-right':''}">\${card.title}</p>
+        <p class="text-xs text-gray-400 mt-0.5">\${card.date}</p>
+      </div>
+      <span class="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0"
+        style="background:\${BADGE_BG[card.bg]||'#EFF6FF'};color:\${BADGE_COLORS[card.bg]||'#2563EB'}">\${card.badge}</span>
+      <div class="flex gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition">
+        <button onclick="openAnnModal(\${i})" class="p-1.5 rounded-lg hover:bg-blue-50 text-blue-500" title="\${IS_RTL_N?'تعديل':'Edit'}"><i class="fas fa-pen text-xs"></i></button>
+        <button onclick="moveAnnCard(\${i},-1)" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400"><i class="fas fa-arrow-up text-xs"></i></button>
+        <button onclick="moveAnnCard(\${i},1)" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400"><i class="fas fa-arrow-down text-xs"></i></button>
+        <button onclick="deleteAnnCard(\${i})" class="p-1.5 rounded-lg hover:bg-red-50 text-red-400"><i class="fas fa-trash text-xs"></i></button>
+      </div>
+    </div>
+  \`).join('') || \`<p class="text-center text-gray-400 py-8">\${IS_RTL_N?'لا توجد إعلانات بعد':'No announcements yet'}</p>\`;
+}
+
+function addAnnCard(){
+  annCards.push({ title: IS_RTL_N?'إعلان جديد':'New Announcement', date: new Date().toLocaleDateString(IS_RTL_N?'ar-QA':'en-QA'), badge: IS_RTL_N?'جديد':'New', icon:'fa-bell', bg:'badge-blue' });
+  renderAnnCards();
+  openAnnModal(annCards.length-1);
+}
+
+function deleteAnnCard(i){ annCards.splice(i,1); renderAnnCards(); }
+function moveAnnCard(i,dir){ const j=i+dir; if(j<0||j>=annCards.length)return; [annCards[i],annCards[j]]=[annCards[j],annCards[i]]; renderAnnCards(); }
+
+function openAnnModal(i){
+  const card = annCards[i];
+  document.getElementById('editCardIdx').value   = i;
+  document.getElementById('editCardTitle').value = card.title;
+  document.getElementById('editCardDate').value  = card.date;
+  document.getElementById('editCardBadge').value = card.badge;
+  document.getElementById('editCardIcon').value  = card.icon;
+  document.getElementById('editCardBg').value    = card.bg;
+  // highlight selected icon
+  document.querySelectorAll('.icon-pick-btn').forEach(btn=>{
+    const active = btn.dataset.icon===card.icon;
+    btn.style.borderColor = active ? '#8B0C2C' : 'transparent';
+    btn.style.background  = active ? '#FFF0F3' : '';
+  });
+  document.getElementById('annEditModal').classList.remove('hidden');
+}
+
+function closeAnnModal(){ document.getElementById('annEditModal').classList.add('hidden'); }
+
+function pickIcon(icon, bg){
+  document.getElementById('editCardIcon').value = icon;
+  document.getElementById('editCardBg').value   = bg;
+  document.querySelectorAll('.icon-pick-btn').forEach(btn=>{
+    const active = btn.dataset.icon===icon;
+    btn.style.borderColor = active ? '#8B0C2C' : 'transparent';
+    btn.style.background  = active ? '#FFF0F3' : '';
+  });
+}
+
+function saveAnnCard(){
+  const i     = parseInt(document.getElementById('editCardIdx').value);
+  const title = document.getElementById('editCardTitle').value.trim();
+  const date  = document.getElementById('editCardDate').value.trim();
+  const badge = document.getElementById('editCardBadge').value.trim();
+  const icon  = document.getElementById('editCardIcon').value;
+  const bg    = document.getElementById('editCardBg').value;
+  if(!title){ showNewsToast(IS_RTL_N?'يرجى إدخال العنوان':'Please enter title','#DC2626'); return; }
+  annCards[i] = { title, date, badge, icon, bg };
+  closeAnnModal();
+  renderAnnCards();
+}
+
+/* ══ Toast ══════════════════════════════════════════════════════════════════ */
+function showNewsToast(msg, color){
+  const el = document.createElement('div');
+  el.className = 'fixed top-6 '+(IS_RTL_N?'left-6':'right-6')+' z-[200] px-5 py-3 rounded-2xl shadow-xl text-sm font-bold text-white';
+  el.style.background = color||'#059669';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 4000);
+}
+
+/* ══ Init ════════════════════════════════════════════════════════════════════ */
+function renderAll(){ renderTicker(); renderAnnCards(); }
+loadData();
+renderAll();
+</script>`
+
+  return c.html(layout(pageTitle, content, 'admin-news', lang))
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
