@@ -6321,112 +6321,294 @@ app.get('/staff-login', (c) => {
 //  STAFF HOME  /staff
 // ─────────────────────────────────────────────────────────────────────────────
 app.get('/staff', (c) => {
-  const lang = getLang(c)
-  const t = T[lang]
+  const lang  = getLang(c)
+  const t     = T[lang]
   const isRTL = lang === 'ar'
 
+  // تقويم الرواتب – مواعيد ثابتة
+  const calRows = isRTL ? [
+    { month:'يناير 2025',   date:'28 يناير',   status:'done',    statusLabel:'تم الصرف' },
+    { month:'فبراير 2025',  date:'27 فبراير',  status:'done',    statusLabel:'تم الصرف' },
+    { month:'مارس 2025',    date:'27 مارس',    status:'done',    statusLabel:'تم الصرف' },
+    { month:'أبريل 2025',   date:'28 أبريل',   status:'done',    statusLabel:'تم الصرف' },
+    { month:'مايو 2025',    date:'27 مايو',    status:'current', statusLabel:'هذا الشهر' },
+    { month:'يونيو 2025',   date:'26 يونيو',   status:'upcoming',statusLabel:'قادم' },
+    { month:'يوليو 2025',   date:'28 يوليو',   status:'upcoming',statusLabel:'قادم' },
+    { month:'أغسطس 2025',   date:'27 أغسطس',   status:'upcoming',statusLabel:'قادم' },
+    { month:'سبتمبر 2025',  date:'28 سبتمبر',  status:'upcoming',statusLabel:'قادم' },
+    { month:'أكتوبر 2025',  date:'28 أكتوبر',  status:'upcoming',statusLabel:'قادم' },
+    { month:'نوفمبر 2025',  date:'27 نوفمبر',  status:'upcoming',statusLabel:'قادم' },
+    { month:'ديسمبر 2025',  date:'25 ديسمبر',  status:'upcoming',statusLabel:'قادم' },
+  ] : [
+    { month:'January 2025',  date:'Jan 28',  status:'done',    statusLabel:'Paid' },
+    { month:'February 2025', date:'Feb 27',  status:'done',    statusLabel:'Paid' },
+    { month:'March 2025',    date:'Mar 27',  status:'done',    statusLabel:'Paid' },
+    { month:'April 2025',    date:'Apr 28',  status:'done',    statusLabel:'Paid' },
+    { month:'May 2025',      date:'May 27',  status:'current', statusLabel:'This Month' },
+    { month:'June 2025',     date:'Jun 26',  status:'upcoming',statusLabel:'Upcoming' },
+    { month:'July 2025',     date:'Jul 28',  status:'upcoming',statusLabel:'Upcoming' },
+    { month:'August 2025',   date:'Aug 27',  status:'upcoming',statusLabel:'Upcoming' },
+    { month:'September 2025',date:'Sep 28',  status:'upcoming',statusLabel:'Upcoming' },
+    { month:'October 2025',  date:'Oct 28',  status:'upcoming',statusLabel:'Upcoming' },
+    { month:'November 2025', date:'Nov 27',  status:'upcoming',statusLabel:'Upcoming' },
+    { month:'December 2025', date:'Dec 25',  status:'upcoming',statusLabel:'Upcoming' },
+  ]
+
+  const statusStyle = {
+    done:    'background:#ECFDF5;color:#059669',
+    current: 'background:#FEF3C7;color:#D97706',
+    upcoming:'background:#F3F4F6;color:#6B7280',
+  }
+
+  // إعلانات افتراضية – تُستبدل من localStorage
+  const defaultAnn = isRTL ? [
+    { icon:'fa-money-bill-wave', bg:'rgba(139,26,47,0.08)', iconColor:'var(--qu-maroon)', title:'موعد صرف رواتب أبريل 2025', date:'28 أبريل 2025', badge:'راتب', bs:'#FEE2E2', bc:'#991B1B' },
+    { icon:'fa-star-and-crescent', bg:'rgba(196,146,42,0.08)', iconColor:'var(--qu-gold)', title:'سلفة عيد الفطر – الموعد النهائي', date:'10 أبريل 2025', badge:'سلفة', bs:'#FEF3C7', bc:'#92400E' },
+    { icon:'fa-file-alt', bg:'rgba(16,185,129,0.08)', iconColor:'#10B981', title:'تحديث نموذج بدل السكن (المراجعة 3)', date:'8 أبريل 2025', badge:'نماذج', bs:'#D1FAE5', bc:'#065F46' },
+    { icon:'fa-file-contract', bg:'rgba(220,38,38,0.08)', iconColor:'#DC2626', title:'سياسة حساب العمل الإضافي الجديدة – تسري من مايو 2025', date:'5 أبريل 2025', badge:'سياسة', bs:'#FEE2E2', bc:'#991B1B' },
+  ] : [
+    { icon:'fa-money-bill-wave', bg:'rgba(139,26,47,0.08)', iconColor:'var(--qu-maroon)', title:'April 2025 Salary Processing Date', date:'April 28, 2025', badge:'Salary', bs:'#FEE2E2', bc:'#991B1B' },
+    { icon:'fa-star-and-crescent', bg:'rgba(196,146,42,0.08)', iconColor:'var(--qu-gold)', title:'Eid Al-Fitr Advance – Request Deadline', date:'April 10, 2025', badge:'Advance', bs:'#FEF3C7', bc:'#92400E' },
+    { icon:'fa-file-alt', bg:'rgba(16,185,129,0.08)', iconColor:'#10B981', title:'Updated Housing Allowance Form (Rev. 3)', date:'April 8, 2025', badge:'Forms', bs:'#D1FAE5', bc:'#065F46' },
+    { icon:'fa-file-contract', bg:'rgba(220,38,38,0.08)', iconColor:'#DC2626', title:'New Overtime Calculation Policy – Effective May 2025', date:'April 5, 2025', badge:'Policy', bs:'#FEE2E2', bc:'#991B1B' },
+  ]
+
   const content = `
-  <div dir="${isRTL?'rtl':'ltr'}">
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">${isRTL?'مرحباً بك في بوابة موظفي جامعة قطر':'Welcome to QU Staff Portal'}</h1>
-      <p class="text-gray-500 mt-1 text-sm">${isRTL?'تصفّح النماذج الرسمية وتواصل مع الأقسام المختصة بخدمات الرواتب.':'Browse official forms and contact the relevant payroll departments.'}</p>
+  <style>
+    a.sq-card{text-decoration:none}
+    a.sq-card:hover .sq-icon{transform:scale(1.1)}
+    .sq-icon{transition:transform 0.2s}
+    .cal-row-current{background:linear-gradient(90deg,#FFFBEB,#FEF9E7);border-left:3px solid var(--qu-gold)}
+    .ticker-staff{animation:ticker-st 28s linear infinite${isRTL?' reverse':''}}
+    @keyframes ticker-st{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+    .badge-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-inline-end:5px}
+    .ann-item:hover{background:#FAFAFA}
+  </style>
+
+  <div dir="${isRTL?'rtl':'ltr'}" class="space-y-6">
+
+    <!-- ══ WELCOME BANNER ══════════════════════════════════════════════════ -->
+    <div class="rounded-2xl p-6 flex items-center justify-between gap-4 flex-wrap"
+         style="background:linear-gradient(135deg,var(--qu-maroon) 0%,#6B0A22 100%)">
+      <div class="${isRTL?'text-right':''}">
+        <p class="text-white/70 text-sm mb-1">${isRTL?'مرحباً بك في':'Welcome to'}</p>
+        <h1 class="text-2xl font-bold text-white">${isRTL?'بوابة موظفي جامعة قطر':'Qatar University Staff Portal'}</h1>
+        <p class="text-white/60 text-sm mt-1">${isRTL?'خدمات الرواتب والبدلات والدعم الوظيفي':'Payroll, Allowances & HR Support Services'}</p>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <a href="/staff-request?lang=${lang}" class="px-4 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition sq-card"
+           style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3)">
+          <i class="fas fa-plus-circle"></i>${isRTL?'طلب خدمة جديد':'New Service Request'}
+        </a>
+        <a href="/staff-forms?lang=${lang}" class="px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:opacity-90 transition sq-card"
+           style="background:var(--qu-gold);color:white">
+          <i class="fas fa-file-download"></i>${isRTL?'تحميل نموذج':'Download Form'}
+        </a>
+      </div>
     </div>
 
-    <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-      ${[
-        { icon:'fa-file-alt', color:'var(--qu-maroon)', bg:'rgba(139,26,47,0.08)', value:'18', label: isRTL?'نموذج متاح':'Available Forms' },
-        { icon:'fa-envelope', color:'#10B981',           bg:'rgba(16,185,129,0.08)', value:'6', label: isRTL?'قسم للتواصل':'Contact Departments' },
+    <!-- ══ NEWS TICKER ═════════════════════════════════════════════════════ -->
+    <div class="rounded-xl overflow-hidden" style="background:var(--qu-gold)">
+      <div class="py-2 px-4 flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <span class="text-white font-bold text-xs uppercase tracking-wide whitespace-nowrap flex-shrink-0">
+          <i class="fas fa-bullhorn ${isRTL?'ml-1.5':'mr-1.5'}"></i>${isRTL?'آخر الأخبار:':'Latest News:'}
+        </span>
+        <div class="overflow-hidden flex-1">
+          <div class="ticker-staff text-white text-xs whitespace-nowrap" id="staffTicker">
+            ${isRTL
+              ? 'سيتم إيداع رواتب مايو 2025 بتاريخ 27 مايو 2025 &nbsp;|&nbsp; سياسة العمل الإضافي الجديدة تسري من 1 مايو 2025 &nbsp;|&nbsp; تم تحديث نموذج بدل السكن – يرجى تحميل الإصدار الأحدث &nbsp;|&nbsp; مكتب الرواتب مفتوح الأحد–الخميس 7:30 ص – 3:30 م'
+              : 'May 2025 salaries credited on May 27 &nbsp;|&nbsp; New overtime policy effective May 1, 2025 &nbsp;|&nbsp; Housing allowance form updated – download latest version &nbsp;|&nbsp; Payroll office open Sun–Thu 7:30 AM – 3:30 PM'}
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    (function(){
+      try{
+        const s=JSON.parse(localStorage.getItem('qu_news_ticker'));
+        if(s&&s.length) document.getElementById('staffTicker').innerHTML=s.join(' &nbsp;|&nbsp; ');
+      }catch(e){}
+    })();
+    </script>
 
-      ].map(s => `
-      <div class="card p-5 flex items-center gap-4 ${isRTL?'flex-row-reverse':''}">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${s.bg}">
-          <i class="fas ${s.icon} text-xl" style="color:${s.color}"></i>
+    <!-- ══ STATS ══════════════════════════════════════════════════════════ -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      ${[
+        { icon:'fa-file-alt',        color:'var(--qu-maroon)', bg:'rgba(139,26,47,0.08)', value:'18', label:isRTL?'نموذج متاح':'Forms Available' },
+        { icon:'fa-concierge-bell',  color:'#7C3AED',          bg:'rgba(124,58,237,0.08)', value:'6',  label:isRTL?'أنواع خدمات':'Service Types' },
+        { icon:'fa-envelope',        color:'#10B981',           bg:'rgba(16,185,129,0.08)', value:'6',  label:isRTL?'قسم للتواصل':'Departments' },
+        { icon:'fa-clock',           color:'var(--qu-gold)',    bg:'rgba(196,146,42,0.08)', value:'1',  label:isRTL?'يوم معالجة SLA':'SLA Day' },
+      ].map(s=>`
+      <div class="card p-4 flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${s.bg}">
+          <i class="fas ${s.icon} text-lg" style="color:${s.color}"></i>
         </div>
         <div class="${isRTL?'text-right':''}">
-          <p class="text-2xl font-bold text-gray-800">${s.value}</p>
-          <p class="text-sm text-gray-500">${s.label}</p>
+          <p class="text-xl font-bold text-gray-800">${s.value}</p>
+          <p class="text-xs text-gray-500 leading-tight">${s.label}</p>
         </div>
       </div>`).join('')}
     </div>
 
-    <!-- Quick Access -->
-    <div class="mb-6">
-      <h2 class="text-lg font-bold text-gray-800 mb-4">${isRTL?'الوصول السريع':'Quick Access'}</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <a href="/staff-forms?lang=${lang}" class="card p-6 flex items-start gap-4 ${isRTL?'flex-row-reverse':''} group cursor-pointer no-underline">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition" style="background:linear-gradient(135deg,var(--qu-gold),#DBA93C)">
+    <!-- ══ MAIN GRID (أخبار + تقويم) ════════════════════════════════════ -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- ── آخر الأخبار والإعلانات ─────────────────────────────────── -->
+      <div class="lg:col-span-2 card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-gray-800 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <span class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(139,26,47,0.1)">
+              <i class="fas fa-bullhorn text-sm" style="color:var(--qu-maroon)"></i>
+            </span>
+            ${isRTL?'آخر الأخبار والإعلانات':'Latest News & Announcements'}
+          </h2>
+          <span class="text-xs font-semibold px-2 py-1 rounded-full text-white" style="background:var(--qu-maroon)" id="staffAnnBadge">4</span>
+        </div>
+        <div class="divide-y divide-gray-50" id="staffAnnList">
+          ${defaultAnn.map(a=>`
+          <div class="ann-item flex items-center gap-3 py-3 px-2 rounded-xl transition cursor-pointer ${isRTL?'flex-row-reverse':''}">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${a.bg}">
+              <i class="fas ${a.icon} text-sm" style="color:${a.iconColor}"></i>
+            </div>
+            <div class="flex-1 min-w-0 ${isRTL?'text-right':''}">
+              <p class="text-sm font-semibold text-gray-800">${a.title}</p>
+              <p class="text-xs text-gray-400 mt-0.5"><i class="fas fa-calendar-alt me-1"></i>${a.date}</p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap"
+              style="background:${a.bs};color:${a.bc}">${a.badge}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- ── تقويم الرواتب ─────────────────────────────────────────── -->
+      <div class="card p-5">
+        <h2 class="font-bold text-gray-800 flex items-center gap-2 mb-4 ${isRTL?'flex-row-reverse':''}">
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(196,146,42,0.1)">
+            <i class="fas fa-calendar-alt text-sm" style="color:var(--qu-gold)"></i>
+          </span>
+          ${isRTL?'تقويم الرواتب 2025':'Payroll Calendar 2025'}
+        </h2>
+        <div class="space-y-1">
+          ${calRows.map(r=>`
+          <div class="flex items-center justify-between px-3 py-2 rounded-xl ${r.status==='current'?'cal-row-current':'hover:bg-gray-50'} transition">
+            <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+              <span class="badge-dot" style="background:${r.status==='done'?'#10B981':r.status==='current'?'#F59E0B':'#D1D5DB'}"></span>
+              <span class="text-xs font-medium text-gray-700 ${r.status==='current'?'font-bold':''}">${r.month}</span>
+            </div>
+            <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+              <span class="text-xs font-bold text-gray-800">${r.date}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full font-semibold" style="${statusStyle[r.status]}">${r.statusLabel}</span>
+            </div>
+          </div>`).join('')}
+        </div>
+        <div class="mt-3 pt-3 border-t border-gray-100 flex items-center gap-4 text-xs text-gray-400 flex-wrap ${isRTL?'flex-row-reverse':''}">
+          <span class="flex items-center gap-1"><span class="badge-dot" style="background:#10B981"></span>${isRTL?'تم الصرف':'Paid'}</span>
+          <span class="flex items-center gap-1"><span class="badge-dot" style="background:#F59E0B"></span>${isRTL?'هذا الشهر':'Current'}</span>
+          <span class="flex items-center gap-1"><span class="badge-dot" style="background:#D1D5DB"></span>${isRTL?'قادم':'Upcoming'}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ QUICK ACCESS CARDS ════════════════════════════════════════════ -->
+    <div>
+      <h2 class="font-bold text-gray-800 mb-4 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+        <i class="fas fa-th-large text-sm" style="color:var(--qu-maroon)"></i>
+        ${isRTL?'الخدمات المتاحة':'Available Services'}
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <a href="/staff-forms?lang=${lang}" class="card p-5 flex items-start gap-4 ${isRTL?'flex-row-reverse':''} group sq-card">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 sq-icon"
+               style="background:linear-gradient(135deg,var(--qu-gold),#DBA93C)">
             <i class="fas fa-file-alt text-white text-lg"></i>
           </div>
           <div class="${isRTL?'text-right':''}">
-            <h3 class="font-bold text-gray-800 group-hover:text-red-800 transition">${isRTL?'النماذج والوثائق':'Forms & Documents'}</h3>
-            <p class="text-sm text-gray-500 mt-1">${isRTL?'تحميل النماذج الرسمية للرواتب والبدلات والاستقطاعات':'Download official payroll, allowance and deduction forms'}</p>
+            <h3 class="font-bold text-gray-800 group-hover:text-yellow-700 transition text-sm">${isRTL?'النماذج والوثائق':'Forms & Documents'}</h3>
+            <p class="text-xs text-gray-500 mt-1 leading-relaxed">${isRTL?'تحميل نماذج الرواتب والبدلات الرسمية':'Download official payroll & allowance forms'}</p>
             <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-semibold" style="background:#FEF3C7;color:#92400E">${isRTL?'18 نموذجاً':'18 Forms'}</span>
           </div>
         </a>
-        <a href="/staff-contact?lang=${lang}" class="card p-6 flex items-start gap-4 ${isRTL?'flex-row-reverse':''} group cursor-pointer no-underline">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#10B981,#34D399)">
+        <a href="/staff-contact?lang=${lang}" class="card p-5 flex items-start gap-4 ${isRTL?'flex-row-reverse':''} group sq-card">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 sq-icon"
+               style="background:linear-gradient(135deg,#10B981,#34D399)">
             <i class="fas fa-envelope text-white text-lg"></i>
           </div>
           <div class="${isRTL?'text-right':''}">
-            <h3 class="font-bold text-gray-800 group-hover:text-green-700 transition">${isRTL?'تواصل معنا':'Contact Us'}</h3>
-            <p class="text-sm text-gray-500 mt-1">${isRTL?'تواصل مع الأقسام المختصة للاستفسارات والدعم':'Reach the right team for inquiries and support'}</p>
+            <h3 class="font-bold text-gray-800 group-hover:text-green-700 transition text-sm">${isRTL?'تواصل معنا':'Contact Us'}</h3>
+            <p class="text-xs text-gray-500 mt-1 leading-relaxed">${isRTL?'تواصل مع الأقسام المختصة للاستفسارات':'Reach the right team for inquiries'}</p>
             <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-semibold" style="background:#D1FAE5;color:#065F46">${isRTL?'6 أقسام':'6 Departments'}</span>
           </div>
         </a>
-        <a href="/staff-request?lang=${lang}" class="card p-6 flex items-start gap-4 ${isRTL?'flex-row-reverse':''} group cursor-pointer no-underline" style="grid-column:span 2">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,var(--qu-maroon),var(--qu-maroon-light))">
+        <a href="/staff-request?lang=${lang}" class="card p-5 flex items-start gap-4 ${isRTL?'flex-row-reverse':''} group sq-card">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 sq-icon"
+               style="background:linear-gradient(135deg,var(--qu-maroon),#6B0A22)">
             <i class="fas fa-concierge-bell text-white text-lg"></i>
           </div>
           <div class="${isRTL?'text-right':''}">
-            <h3 class="font-bold text-gray-800 group-hover:text-red-700 transition">${isRTL?'طلب خدمة (SLA)':'Request a Service (SLA)'}</h3>
-            <p class="text-sm text-gray-500 mt-1">${isRTL?'قدّم طلب خدمة لقسم الرواتب واحصل على فاتورة إلكترونية مع الوقت المتوقع للإنجاز':'Submit a service request to Payroll Dept and receive an e-invoice with expected completion time'}</p>
-            <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-semibold" style="background:#FEE2E2;color:#991B1B">${isRTL?'6 أنواع خدمات':'6 Service Types'}</span>
+            <h3 class="font-bold text-gray-800 group-hover:text-red-700 transition text-sm">${isRTL?'طلب خدمة (SLA)':'Request a Service'}</h3>
+            <p class="text-xs text-gray-500 mt-1 leading-relaxed">${isRTL?'قدّم طلب خدمة واحصل على فاتورة إلكترونية':'Submit a request & receive e-invoice'}</p>
+            <span class="inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-semibold" style="background:#FEE2E2;color:#991B1B">${isRTL?'6 خدمات':'6 Services'}</span>
           </div>
         </a>
       </div>
     </div>
 
-    <!-- Announcements -->
-    <div>
-      <h2 class="text-lg font-bold text-gray-800 mb-4">${isRTL?'أحدث الإعلانات':'Recent Announcements'}</h2>
-      <div class="card divide-y divide-gray-50">
-        ${[
-          { icon:'fa-coins', color:'var(--qu-maroon)', bg:'rgba(139,26,47,0.08)', title: isRTL?'موعد صرف رواتب أبريل 2025':'April 2025 Salary Processing Date', date: isRTL?'28 أبريل 2025':'April 28, 2025', badge: isRTL?'راتب':'Salary', bc:'badge-red' },
-          { icon:'fa-gift', color:'var(--qu-gold)', bg:'rgba(196,146,42,0.08)', title: isRTL?'سلفة عيد الفطر – الموعد النهائي للطلبات':'Eid Al-Fitr Advance – Request Deadline', date: isRTL?'10 أبريل 2025':'April 10, 2025', badge: isRTL?'سلفة':'Advance', bc:'badge-amber' },
-          { icon:'fa-file-alt', color:'#10B981', bg:'rgba(16,185,129,0.08)', title: isRTL?'تحديث نموذج بدل السكن (المراجعة 3)':'Updated Housing Allowance Form (Rev. 3)', date: isRTL?'8 أبريل 2025':'April 8, 2025', badge: isRTL?'نماذج':'Forms', bc:'badge-green' },
-        ].map(a => `
-        <div class="px-5 py-4 flex items-center gap-4 ${isRTL?'flex-row-reverse':''}">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:${a.bg}">
-            <i class="fas ${a.icon}" style="color:${a.color}"></i>
-          </div>
-          <div class="flex-1 min-w-0 ${isRTL?'text-right':''}">
-            <p class="text-sm font-semibold text-gray-800 truncate">${a.title}</p>
-            <p class="text-xs text-gray-400 mt-0.5">${a.date}</p>
-          </div>
-          <span class="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0 badge-amber">${a.badge}</span>
-        </div>`).join('')}
+    <!-- ══ EMERGENCY CONTACT ═════════════════════════════════════════════ -->
+    <div class="card p-4 flex items-center gap-4 ${isRTL?'flex-row-reverse':''}" style="border-${isRTL?'right':'left'}:4px solid var(--qu-maroon)">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,26,47,0.08)">
+        <i class="fas fa-headset text-xl" style="color:var(--qu-maroon)"></i>
       </div>
+      <div class="flex-1 ${isRTL?'text-right':''}">
+        <p class="font-bold text-gray-800 text-sm">${isRTL?'الدعم المباشر لقسم الرواتب':'Payroll Direct Support'}</p>
+        <p class="text-gray-500 text-xs mt-0.5">
+          <i class="fas fa-phone me-1" style="color:var(--qu-maroon)"></i>${isRTL?'داخلي 4100 / 4101':'Ext. 4100 / 4101'}
+          &nbsp;·&nbsp;
+          <i class="fas fa-envelope me-1" style="color:var(--qu-maroon)"></i>payroll@qu.edu.qa
+        </p>
+        <p class="text-gray-400 text-xs mt-0.5"><i class="fas fa-clock me-1"></i>${isRTL?'الأحد–الخميس: 7:30 ص – 3:30 م':'Sun–Thu: 7:30 AM – 3:30 PM'}</p>
+      </div>
+      <a href="mailto:payroll@qu.edu.qa" class="px-4 py-2 rounded-xl text-xs font-bold text-white hover:opacity-90 transition flex-shrink-0"
+         style="background:var(--qu-maroon)">${isRTL?'راسلنا':'Email Us'}</a>
     </div>
 
-    <!-- Emergency Contact -->
-    <div class="card p-5 mt-6 flex items-center gap-4 ${isRTL?'flex-row-reverse':''}" style="border-top:3px solid var(--qu-maroon)">
-      <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,26,47,0.08)">
-        <i class="fas fa-phone text-xl" style="color:var(--qu-maroon)"></i>
-      </div>
-      <div class="${isRTL?'text-right':''}">
-        <p class="font-bold text-gray-800 text-sm">${isRTL?'تواصل طارئ':'Emergency Contact'}</p>
-        <p class="text-gray-500 text-xs mt-0.5">${isRTL?'داخلي 4100 / 4101':'Ext. 4100 / 4101'} &nbsp;|&nbsp; payroll@qu.edu.qa</p>
-        <p class="text-gray-400 text-xs">${isRTL?'الأحد–الخميس: 7:30 ص – 3:30 م':'Sun–Thu: 7:30 AM – 3:30 PM'}</p>
-      </div>
-    </div>
   </div>
-  <style>
-    .badge-red{background:#FEE2E2;color:#991B1B}
-    .badge-amber{background:#FEF3C7;color:#92400E}
-    .badge-green{background:#D1FAE5;color:#065F46}
-    a.no-underline{text-decoration:none}
-  </style>`
+
+  <!-- ── تحميل الإعلانات من localStorage ───────────────────────────── -->
+  <script>
+  (function(){
+    const BADGE_BG2={'badge-green':'#ECFDF5','badge-amber':'#FFFBEB','badge-blue':'#EFF6FF','badge-red':'#FEE2E2','badge-purple':'#EDE9FE','badge-cyan':'#CFFAFE'};
+    const BADGE_CL2={'badge-green':'#059669','badge-amber':'#D97706','badge-blue':'#2563EB','badge-red':'#DC2626','badge-purple':'#7C3AED','badge-cyan':'#0891B2'};
+    const ICON_CLR  = {
+      'fa-money-bill-wave':'var(--qu-maroon)','fa-star-and-crescent':'var(--qu-gold)',
+      'fa-file-alt':'#10B981','fa-file-contract':'#DC2626','fa-bell':'#7C3AED','fa-calendar-check':'#0891B2'
+    };
+    const ICON_BG2  = {
+      'fa-money-bill-wave':'rgba(139,26,47,0.08)','fa-star-and-crescent':'rgba(196,146,42,0.08)',
+      'fa-file-alt':'rgba(16,185,129,0.08)','fa-file-contract':'rgba(220,38,38,0.08)',
+      'fa-bell':'rgba(124,58,237,0.08)','fa-calendar-check':'rgba(8,145,178,0.08)'
+    };
+    const IS_RTL_S = ${isRTL};
+    try{
+      const saved = JSON.parse(localStorage.getItem('qu_announcements'));
+      if(saved && saved.length){
+        const list = document.getElementById('staffAnnList');
+        document.getElementById('staffAnnBadge').textContent = saved.length;
+        list.innerHTML = saved.map(a=>\`
+          <div class="ann-item flex items-center gap-3 py-3 px-2 rounded-xl transition cursor-pointer \${IS_RTL_S?'flex-row-reverse':''}">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                 style="background:\${ICON_BG2[a.icon]||'rgba(139,26,47,0.08)'}">
+              <i class="fas \${a.icon} text-sm" style="color:\${ICON_CLR[a.icon]||'var(--qu-maroon)'}"></i>
+            </div>
+            <div class="flex-1 min-w-0 \${IS_RTL_S?'text-right':''}">
+              <p class="text-sm font-semibold text-gray-800">\${a.title}</p>
+              <p class="text-xs text-gray-400 mt-0.5"><i class="fas fa-calendar-alt me-1"></i>\${a.date}</p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap"
+              style="background:\${BADGE_BG2[a.bg]||'#EFF6FF'};color:\${BADGE_CL2[a.bg]||'#2563EB'}">\${a.badge}</span>
+          </div>\`).join('');
+      }
+    }catch(e){}
+  })();
+  </script>`
 
   return c.html(staffLayout(isRTL?'الرئيسية':'Home', content, 'home', lang))
 })
