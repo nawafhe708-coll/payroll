@@ -8347,6 +8347,9 @@ app.get('/sla', (c) => {
       <button onclick="openNewRequestModal()" class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
         <i class="fas fa-plus"></i>${isRTL?'طلب جديد':'New Request'}
       </button>
+      <button onclick="openTrackingPanel()" class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 text-white ${isRTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)" title="${isRTL?'لوحة متابعة رئيس القسم':'Dept. Head Tracking Panel'}">
+        <i class="fas fa-chart-gantt"></i>${isRTL?'لوحة التكليف':'Assignment Panel'}
+      </button>
       <button onclick="exportSLA()" class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 ${isRTL?'flex-row-reverse':''}">
         <i class="fas fa-download"></i>${isRTL?'تصدير':'Export'}
       </button>
@@ -8381,12 +8384,13 @@ app.get('/sla', (c) => {
   </div>
 
   <!-- KPI Cards -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="slaKpiCards">
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6" id="slaKpiCards">
     ${[
       {id:'kpi_total',icon:'fa-inbox',color:'var(--qu-maroon)',bg:'rgba(139,26,47,0.08)',value:'0',label:isRTL?'إجمالي الطلبات':'Total Requests'},
       {id:'kpi_open',icon:'fa-clock',color:'#F59E0B',bg:'rgba(245,158,11,0.08)',value:'0',label:isRTL?'طلبات مفتوحة':'Open Requests'},
       {id:'kpi_done',icon:'fa-check-circle',color:'#10B981',bg:'rgba(16,185,129,0.08)',value:'0',label:isRTL?'مكتملة':'Completed'},
       {id:'kpi_breach',icon:'fa-exclamation-triangle',color:'#EF4444',bg:'rgba(239,68,68,0.08)',value:'0',label:isRTL?'تجاوزت SLA':'SLA Breached'},
+      {id:'kpi_assigned',icon:'fa-share-nodes',color:'#4F46E5',bg:'rgba(79,70,229,0.08)',value:'0',label:isRTL?'مكلَّفة لمختص':'Assigned'},
     ].map(k=>`
     <div class="card p-4 flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
       <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${k.bg}">
@@ -8426,6 +8430,15 @@ app.get('/sla', (c) => {
       <option value="staff">${isRTL?'بوابة الموظف':'Staff Portal'}</option>
       <option value="admin">${isRTL?'قسم الرواتب':'Payroll Dept'}</option>
     </select>
+    <select id="slaAssignedFilter" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none ${isRTL?'text-right':''}" onchange="renderSLATable()">
+      <option value="">${isRTL?'كل المكلَّفين':'All Assignees'}</option>
+      <option value="unassigned">${isRTL?'غير مكلَّف':'Unassigned'}</option>
+      <option value="SP-01">${isRTL?'محمد الغانم':'Mohammed Al-Ghanim'}</option>
+      <option value="SP-02">${isRTL?'نورة المناعي':'Noura Al-Mana\'i'}</option>
+      <option value="SP-03">${isRTL?'عبدالله القحطاني':'Abdullah Al-Qahtani'}</option>
+      <option value="SP-04">${isRTL?'ريم الكواري':'Reem Al-Kawari'}</option>
+      <option value="SP-05">${isRTL?'فيصل الدوسري':'Faisal Al-Dosari'}</option>
+    </select>
   </div>
 
   <!-- Requests Table -->
@@ -8440,6 +8453,7 @@ app.get('/sla', (c) => {
             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide ${isRTL?'text-right':'text-left'}">${isRTL?'تاريخ الطلب':'Submitted'}</th>
             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide ${isRTL?'text-right':'text-left'}">${isRTL?'الموعد النهائي SLA':'SLA Due'}</th>
             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide ${isRTL?'text-right':'text-left'}">${isRTL?'الحالة':'Status'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide ${isRTL?'text-right':'text-left'}">${isRTL?'المُكلَّف':'Assigned To'}</th>
             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide ${isRTL?'text-right':'text-left'}">${isRTL?'إجراءات':'Actions'}</th>
           </tr>
         </thead>
@@ -8463,6 +8477,116 @@ app.get('/sla', (c) => {
       <button onclick="closeSLAModal()" class="text-gray-400 hover:text-gray-600 text-xl">×</button>
     </div>
     <div class="p-6" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Modal: Transfer / Assign Request — Department Head Control
+═══════════════════════════════════════════════════════════════ -->
+<div id="transferModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(4px)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col" style="max-height:92vh" dir="${isRTL?'rtl':'ltr'}">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between ${isRTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
+      <div class="${isRTL?'text-right':''}">
+        <h2 class="font-bold text-white text-lg flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-share-nodes"></i>
+          ${isRTL?'تحويل الطلب لموظف مختص':'Assign Request to Specialist'}
+        </h2>
+        <p class="text-indigo-200 text-xs mt-0.5" id="transferReqLabel">${isRTL?'اختر الموظف المناسب للطلب':'Select the most suitable specialist'}</p>
+      </div>
+      <button onclick="closeTransferModal()" class="text-white/70 hover:text-white text-2xl leading-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition">×</button>
+    </div>
+
+    <!-- Body -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-5">
+
+      <!-- Staff Cards Grid -->
+      <div>
+        <p class="text-sm font-bold text-gray-700 mb-3 ${isRTL?'text-right':''}">${isRTL?'اختر الموظف المختص:':'Select Specialist:'}</p>
+        <div id="transferStaffGrid" class="grid grid-cols-1 gap-3 sm:grid-cols-2"></div>
+      </div>
+
+      <!-- Note / Reason -->
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'ملاحظة التحويل (اختياري):':'Transfer Note (optional):'}</label>
+        <textarea id="transferNote" rows="3" placeholder="${isRTL?'أضف تعليمات أو سبب التحويل...':'Add instructions or reason for transfer...'}"
+          class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none ${isRTL?'text-right':''}"></textarea>
+      </div>
+
+      <!-- Transfer History (if any) -->
+      <div id="transferHistoryBox" class="hidden">
+        <p class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2 ${isRTL?'flex-row-reverse text-right':''}">
+          <i class="fas fa-history text-indigo-400"></i>
+          ${isRTL?'سجل التحويلات السابقة:':'Previous Transfer History:'}
+        </p>
+        <div id="transferHistoryList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+      </div>
+
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="px-6 py-4 border-t border-gray-100 flex gap-3 ${isRTL?'flex-row-reverse':''}">
+      <button onclick="confirmTransfer()" id="transferConfirmBtn"
+        class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition disabled:opacity-50"
+        style="background:linear-gradient(135deg,#4F46E5,#7C3AED)" disabled>
+        <i class="fas fa-share-nodes"></i>
+        ${isRTL?'تأكيد التحويل':'Confirm Transfer'}
+      </button>
+      <button onclick="closeTransferModal()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 transition">
+        ${isRTL?'إلغاء':'Cancel'}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Panel: Department Head Tracking — Slide-over from right
+═══════════════════════════════════════════════════════════════ -->
+<div id="trackingPanel" class="hidden fixed inset-0 z-50 flex ${isRTL?'justify-start':'justify-end'}" style="background:rgba(0,0,0,0.45);backdrop-filter:blur(3px)">
+  <div class="bg-white w-full max-w-3xl flex flex-col shadow-2xl" dir="${isRTL?'rtl':'ltr'}" style="max-height:100vh">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between ${isRTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,#312E81,#4F46E5)">
+      <div class="${isRTL?'text-right':''}">
+        <h2 class="font-bold text-white text-lg flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-chart-gantt"></i>
+          ${isRTL?'لوحة متابعة رئيس القسم':'Department Head Tracking Panel'}
+        </h2>
+        <p class="text-indigo-200 text-xs mt-0.5">${isRTL?'إدارة تكليف الطلبات ومتابعة أداء الفريق':'Manage request assignments and track team performance'}</p>
+      </div>
+      <button onclick="closeTrackingPanel()" class="text-white/70 hover:text-white text-2xl w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/20 transition">×</button>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div class="px-6 py-3 flex items-center gap-4 flex-wrap border-b border-gray-100 ${isRTL?'flex-row-reverse':''}" style="background:#F8F7FF">
+      <div class="flex items-center gap-1.5 text-xs">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#4F46E5"></span>
+        <span class="text-gray-500">${isRTL?'إجمالي الموظفين:':'Total Staff:'}</span>
+        <span class="font-bold text-gray-800">5</span>
+      </div>
+      <div class="flex items-center gap-1.5 text-xs">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#F59E0B"></span>
+        <span class="text-gray-500" id="tp_openCount">${isRTL?'مفتوحة:':'Open:'}</span>
+        <span class="font-bold text-amber-600" id="tp_openVal">—</span>
+      </div>
+      <div class="flex items-center gap-1.5 text-xs">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#10B981"></span>
+        <span class="text-gray-500">${isRTL?'مكتملة:':'Done:'}</span>
+        <span class="font-bold text-green-600" id="tp_doneVal">—</span>
+      </div>
+      <div class="flex items-center gap-1.5 text-xs">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#EF4444"></span>
+        <span class="text-gray-500">${isRTL?'خرق SLA:':'SLA Breach:'}</span>
+        <span class="font-bold text-red-600" id="tp_breachVal">—</span>
+      </div>
+      <button onclick="openTrackingPanel()" class="ms-auto text-xs text-indigo-500 hover:text-indigo-700 flex items-center gap-1 transition">
+        <i class="fas fa-rotate-right"></i>${isRTL?'تحديث':'Refresh'}
+      </button>
+    </div>
+
+    <!-- Body: Staff Cards + Assigned Requests -->
+    <div class="flex-1 overflow-y-auto p-5" id="trackingBody">
+      <!-- populated by openTrackingPanel() JS -->
+    </div>
   </div>
 </div>
 
@@ -8919,6 +9043,26 @@ const SERVICE_LABELS = {
 
 const SLA_DAYS = { salary:2, allowance:3, advance:1, certificate:1, eos:5, scholarship:20, other:3 };
 
+// ─── قائمة الموظفين المختصين (رئيس القسم يحول إليهم الطلبات) ───
+const DEPT_STAFF = [
+  { id:'SP-01', name: IS_RTL?'محمد سعد الغانم':'Mohammed Al-Ghanim',   role: IS_RTL?'أخصائي رواتب':'Payroll Specialist',        avatar:'MG', specializations:['salary','certificate','allowance'], color:'#8B5CF6' },
+  { id:'SP-02', name: IS_RTL?'نورة خالد المناعي':'Noura Al-Manaai',    role: IS_RTL?'محللة سلف ومكافآت':'Advance & Benefits Analyst', avatar:'NM', specializations:['advance','allowance','other'],    color:'#0891B2' },
+  { id:'SP-03', name: IS_RTL?'عبدالله راشد القحطاني':'Abdullah Al-Qahtani', role: IS_RTL?'أخصائي نهاية الخدمة':'EOS Specialist',     avatar:'AQ', specializations:['eos','scholarship'],            color:'#059669' },
+  { id:'SP-04', name: IS_RTL?'ريم يوسف الكواري':'Reem Al-Kawari',      role: IS_RTL?'مختصة شهادات وبيانات':'Certificates & Data',   avatar:'RK', specializations:['certificate','salary','other'],  color:'#DC2626' },
+  { id:'SP-05', name: IS_RTL?'فيصل حمد الدوسري':'Faisal Al-Dosari',    role: IS_RTL?'مختص ابتعاث وإجراءات':'Scholarship Officer',   avatar:'FD', specializations:['scholarship','eos','advance'],   color:'#D97706' },
+];
+
+function getStaffWorkload(){
+  const reqs = getSLARequests();
+  return DEPT_STAFF.map(s=>({
+    ...s,
+    open:   reqs.filter(r=>r.assignedTo===s.id && r.status!=='done').length,
+    done:   reqs.filter(r=>r.assignedTo===s.id && r.status==='done').length,
+    breach: reqs.filter(r=>r.assignedTo===s.id && isBreach(r)).length,
+    total:  reqs.filter(r=>r.assignedTo===s.id).length,
+  }));
+}
+
 function getSLARequests(){ try{return JSON.parse(localStorage.getItem(SLA_KEY)||'[]')}catch(e){return[]} }
 function saveSLARequests(d){ localStorage.setItem(SLA_KEY, JSON.stringify(d)) }
 function getChats(){ try{return JSON.parse(localStorage.getItem(CHAT_KEY)||'{}')}catch(e){return{}} }
@@ -8953,6 +9097,9 @@ function isBreach(req){
   const requests = demos.map((d,i)=>{
     const sub = new Date(now); sub.setDate(sub.getDate() - (i*2));
     const due = addDays(sub.toISOString(), SLA_DAYS[d.type]);
+    const assignMap = ['SP-01','SP-03','','SP-02','SP-03'];
+    const assignedId = assignMap[i] || '';
+    const assignedStaff = assignedId ? DEPT_STAFF.find(s=>s.id===assignedId) : null;
     return {
       id: 'REQ-' + String(1000+i).padStart(4,'0'),
       emp: d.emp, empId: d.empId, email: d.email||'', type: d.type,
@@ -8961,7 +9108,18 @@ function isBreach(req){
       submittedAt: sub.toISOString(),
       slaDue: d.status==='breach'? new Date(sub.getTime()-24*3600000).toISOString() : due,
       updatedAt: sub.toISOString(),
-      notes: ''
+      notes: '',
+      assignedTo: assignedId,
+      assignedName: assignedStaff ? assignedStaff.name : '',
+      assignedAt: assignedId ? sub.toISOString() : null,
+      assignedNote: assignedId ? (IS_RTL?'تم التكليف تلقائياً عند الإنشاء':'Auto-assigned on creation') : '',
+      transferHistory: assignedId ? [{
+        from: IS_RTL?'رئيس القسم':'Dept. Head',
+        to: assignedStaff ? assignedStaff.name : '',
+        toId: assignedId,
+        note: IS_RTL?'تم التكليف الأولي':'Initial assignment',
+        at: sub.toISOString()
+      }] : []
     };
   });
   saveSLARequests(requests);
@@ -8980,6 +9138,8 @@ function updateKPIs(){
   document.getElementById('kpi_open').textContent = reqs.filter(r=>r.status==='open'||r.status==='inprogress').length;
   document.getElementById('kpi_done').textContent = reqs.filter(r=>r.status==='done').length;
   document.getElementById('kpi_breach').textContent = reqs.filter(r=>isBreach(r)).length;
+  const kpiAssigned = document.getElementById('kpi_assigned');
+  if(kpiAssigned) kpiAssigned.textContent = reqs.filter(r=>r.assignedTo).length;
 }
 
 function renderSLATable(){
@@ -8988,6 +9148,7 @@ function renderSLATable(){
   const statusF = document.getElementById('slaStatusFilter').value;
   const typeF = document.getElementById('slaTypeFilter').value;
   const sourceF = document.getElementById('slaSourceFilter') ? document.getElementById('slaSourceFilter').value : '';
+  const assignedF = document.getElementById('slaAssignedFilter') ? document.getElementById('slaAssignedFilter').value : '';
 
   let filtered = reqs.filter(r=>{
     const matchSearch = !search || r.emp.toLowerCase().includes(search) || r.id.toLowerCase().includes(search) || r.empId.toLowerCase().includes(search);
@@ -8995,7 +9156,8 @@ function renderSLATable(){
     const matchStatus = !statusF || rStatus===statusF;
     const matchType = !typeF || r.type===typeF;
     const matchSource = !sourceF || (sourceF==='staff'?r.source==='staff':r.source!=='staff');
-    return matchSearch && matchStatus && matchType && matchSource;
+    const matchAssigned = !assignedF || (assignedF==='unassigned'?!r.assignedTo:r.assignedTo===assignedF);
+    return matchSearch && matchStatus && matchType && matchSource && matchAssigned;
   }).sort((a,b)=>new Date(b.submittedAt).getTime()-new Date(a.submittedAt).getTime());
 
   const tbody = document.getElementById('slaTableBody');
@@ -9043,6 +9205,7 @@ function renderSLATable(){
         <span class="badge-\${displayStatus} text-xs px-2 py-1 rounded-full font-semibold">\${statusLabels[displayStatus]||displayStatus}</span>
         \${req.status==='needs_revision'&&req.revisionReason?'<p class="text-xs text-orange-600 mt-1 max-w-xs truncate" title="'+req.revisionReason+'"><i class=\\"fas fa-info-circle\\"></i> '+req.revisionReason+'</p>':''}
       </td>
+      <td class="px-4 py-3">\${buildAssignedCell(req)}</td>
       <td class="px-4 py-3">
         <div class="flex items-center gap-1.5 \${IS_RTL?'flex-row-reverse':''}">
           <button onclick="event.stopPropagation();viewRequest('\${req.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition" title="\${IS_RTL?'عرض':'View'}"><i class="fas fa-eye text-xs"></i></button>
@@ -9051,11 +9214,70 @@ function renderSLATable(){
           <button onclick="event.stopPropagation();openEmailModal('\${req.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition" title="\${IS_RTL?'إرسال إيميل للموظف':'Send Email to Employee'}" \${!req.email?'style=\\"opacity:0.4\\" title=\\"'+(IS_RTL?'البريد الإلكتروني غير متوفر':'No email on file')+'\\"':''} ><i class="fas fa-envelope text-xs"></i>\${req.email?'':'<i class=\\"fas fa-slash text-xs\\" style=\\"font-size:7px;margin-left:-6px\\" ></i>'}</button>
           \${req.status!=='done'&&req.status!=='needs_revision'?('<button onclick="event.stopPropagation();markDone(\\''+req.id+'\\');" class="p-1.5 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition" title="'+(IS_RTL?'إتمام':'Complete')+'"><i class="fas fa-check text-xs"></i></button>'):''}
           \${req.status!=='done'&&req.status!=='needs_revision'?('<button onclick="event.stopPropagation();openReturnModal(\\''+req.id+'\\');" class="p-1.5 rounded-lg text-gray-400 hover:text-orange-600 hover:bg-orange-50 transition" title="'+(IS_RTL?'إرجاع للموظف':'Return to Employee')+'"><i class="fas fa-undo text-xs"></i></button>'):''}
+          <button onclick="event.stopPropagation();openTransferModal('\${req.id}')" class="p-1.5 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition" title="\${IS_RTL?'تحويل لموظف مختص':'Transfer to Specialist'}"><i class="fas fa-share-nodes text-xs"></i></button>
         </div>
       </td>
     </tr>\`;
   }).join('');
   updateKPIs();
+}
+
+// ─── Helper: build assigned-staff cell for table rows ────────────────────────
+function buildAssignedCell(req){
+  if(!req.assignedTo){
+    return '<span class="text-xs text-gray-400 italic px-1">'+(IS_RTL?'غير مكلَّف':'Unassigned')+'</span>';
+  }
+  const sp = DEPT_STAFF.find(s=>s.id===req.assignedTo);
+  const color = sp ? sp.color : '#6B7280';
+  const initials = sp ? sp.avatar : '??';
+  const name = req.assignedName || (sp ? sp.name : req.assignedTo);
+  const role = sp ? '<p class="text-xs text-gray-400 leading-tight">'+sp.role+'</p>' : '';
+  return '<div class="flex items-center gap-2">'
+    + '<div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="background:'+color+'">'+initials+'</div>'
+    + '<div><p class="text-xs font-semibold text-gray-700 leading-tight">'+name+'</p>'+role+'</div>'
+    + '</div>';
+}
+
+// ─── Helper: build assigned-staff block for viewRequest modal ───────────────
+function buildAssignedBlock(req){
+  if(!req.assignedTo){
+    return '<div class="rounded-xl p-3 flex items-center gap-3" style="background:#F5F3FF;border:1px solid #DDD6FE">'
+      + '<i class="fas fa-user-slash text-indigo-400 me-2"></i>'
+      + '<p class="text-sm text-indigo-700">'+(IS_RTL?'لم يتم تكليف هذا الطلب بعد':'This request has not been assigned yet')+'</p>'
+      + '</div>';
+  }
+  const sp2 = DEPT_STAFF.find(s=>s.id===req.assignedTo);
+  const color2 = sp2 ? sp2.color : '#6B7280';
+  const avatar2 = sp2 ? sp2.avatar : '??';
+  const name2 = req.assignedName || (sp2 ? sp2.name : req.assignedTo);
+  const role2 = sp2 ? '<p class="text-xs text-gray-500">'+sp2.role+'</p>' : '';
+  const atHTML = req.assignedAt ? '<p class="text-xs mt-0.5" style="color:#4338CA"><i class="fas fa-clock me-1"></i>'+fmtDate(req.assignedAt)+'</p>' : '';
+  const noteHTML = req.assignedNote ? '<p class="text-xs text-gray-500 mt-0.5 italic">'+req.assignedNote+'</p>' : '';
+  const hist = req.transferHistory || [];
+  let histHTML = '';
+  if(hist.length > 1){
+    const prevItems = hist.slice(0, -1).map(function(h){
+      return '<div class="flex items-center gap-2 text-xs text-gray-500 py-1 border-b border-dashed border-gray-100">'
+        + '<i class="fas fa-arrow-right-arrow-left text-gray-300 flex-shrink-0"></i>'
+        + '<span>'+h.from+' → '+h.to+'</span>'
+        + '<span class="ms-auto opacity-60">'+fmtDate(h.at)+'</span>'
+        + '</div>';
+    }).join('');
+    histHTML = '<div class="mt-2 pt-2 border-t border-indigo-100">'
+      + '<p class="text-xs font-semibold text-gray-500 mb-1">'+(IS_RTL?'سجل التحويلات السابقة:':'Previous Transfers:')+'</p>'
+      + prevItems + '</div>';
+  }
+  return '<div class="rounded-xl p-3" style="background:#EEF2FF;border:1px solid #C7D2FE">'
+    + '<p class="text-xs font-bold mb-2 flex items-center gap-1.5" style="color:#4338CA">'
+    + '<i class="fas fa-share-nodes me-1"></i>'+(IS_RTL?'المُكلَّف الحالي بالطلب':'Currently Assigned To')+'</p>'
+    + '<div class="flex items-center gap-3">'
+    + '<div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:'+color2+'">'+avatar2+'</div>'
+    + '<div class="flex-1">'+
+      '<p class="font-bold text-gray-800 text-sm">'+name2+'</p>'
+      + role2 + atHTML + noteHTML
+    + '</div></div>'
+    + histHTML
+    + '</div>';
 }
 
 function viewRequest(id){
@@ -9102,6 +9324,7 @@ function viewRequest(id){
       <p class="text-xs text-gray-400 font-semibold uppercase mb-1">\${IS_RTL?'وصف الطلب':'Description'}</p>
       <p class="text-sm text-gray-700">\${req.desc}</p>
     </div>
+    \${buildAssignedBlock(req)}
     \${req.status==='needs_revision'&&req.revisionReason?\`
     <div class="rounded-xl p-3" style="background:#FFF7ED;border:1px solid #FED7AA">
       <p class="text-xs font-bold text-orange-700 mb-1"><i class="fas fa-undo mr-1"></i>\${IS_RTL?'سبب الإرجاع:':'Return Reason:'}</p>
@@ -9120,6 +9343,7 @@ function viewRequest(id){
       <button onclick="openReturnModal('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 min-w-28" style="border:1px solid #FB923C;color:#C2410C;background:#FFF7ED">\${IS_RTL?'إرجاع للموظف':'Return to Employee'}</button>
       <button onclick="openChat('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold border border-green-300 text-green-700 hover:bg-green-50 min-w-28">\${IS_RTL?'دردشة':'Chat'}</button>
       <button onclick="closeSLAModal();openEmailModal('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 min-w-28 \${!req.email?'opacity-50 cursor-not-allowed':''}" style="border:1px solid #7C3AED;color:#7C3AED;background:#F5F3FF" \${!req.email?'disabled':''} title="\${!req.email?(IS_RTL?'لا يوجد بريد إلكتروني':'No email on file'):''}"><i class="fas fa-envelope text-xs"></i>\${IS_RTL?'إرسال إيميل':'Send Email'}</button>
+      <button onclick="closeSLAModal();openTransferModal('\${id}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 min-w-28" style="border:1px solid #4F46E5;color:#4338CA;background:#EEF2FF"><i class="fas fa-share-nodes text-xs"></i>\${IS_RTL?'تحويل لمختص':'Assign Specialist'}</button>
     </div>
   </div>\`;
   document.getElementById('slaModal').classList.remove('hidden');
@@ -9354,7 +9578,9 @@ function createAdminRequest(){
     status: 'open',
     submittedAt: now,
     slaDue: addDays(now, SLA_DAYS[type]||3),
-    updatedAt: now, notes: ''
+    updatedAt: now, notes: '',
+    assignedTo: '', assignedName: '', assignedAt: null, assignedNote: '',
+    transferHistory: []
   });
   saveSLARequests(reqs);
   closeNewReqModal();
@@ -9805,6 +10031,275 @@ function sendViaOutlook(fromPreview){
 
 // kept for backward-compatibility (preview modal still calls sendEmailAction)
 function sendEmailAction(fromPreview){ sendViaOutlook(fromPreview); }
+
+// ─── Transfer / Assign Modal ─────────────────────────────────────────────────
+let _transferReqId = null;
+let _transferSelectedStaff = null;
+
+function openTransferModal(id){
+  _transferReqId = id;
+  _transferSelectedStaff = null;
+  const reqs = getSLARequests();
+  const req = reqs.find(r=>r.id===id);
+  if(!req) return;
+
+  // Update header label
+  const lbl = document.getElementById('transferReqLabel');
+  if(lbl) lbl.textContent = req.id + ' — ' + req.emp;
+
+  // Reset note
+  const noteEl = document.getElementById('transferNote');
+  if(noteEl) noteEl.value = '';
+
+  // Disable confirm button
+  const btn = document.getElementById('transferConfirmBtn');
+  if(btn) btn.disabled = true;
+
+  // Render staff cards
+  const workload = getStaffWorkload();
+  const grid = document.getElementById('transferStaffGrid');
+  if(grid){
+    grid.innerHTML = workload.map(s=>{
+      const isCurrent = req.assignedTo === s.id;
+      const isSpec = s.specializations.includes(req.type);
+      return \`<div id="tcard_\${s.id}" onclick="selectTransferStaff('\${s.id}')"
+        class="rounded-xl p-4 cursor-pointer border-2 transition-all \${isCurrent?'border-indigo-400 bg-indigo-50':'border-gray-100 bg-gray-50 hover:border-indigo-200 hover:bg-indigo-50/40'}"
+        style="\${isCurrent?'border-color:#818CF8':''}">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:\${s.color}">\${s.avatar}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <p class="font-bold text-gray-800 text-sm">\${s.name}</p>
+              \${isSpec?'<span class="text-xs px-1.5 py-0.5 rounded-full font-semibold" style="background:#D1FAE5;color:#065F46"><i class="fas fa-star" style="font-size:9px"></i> '+(IS_RTL?'مختص':'Specialist')+'</span>':''}
+              \${isCurrent?'<span class="text-xs px-1.5 py-0.5 rounded-full font-semibold" style="background:#EEF2FF;color:#4338CA">'+(IS_RTL?'الحالي':'Current')+'</span>':''}
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">\${s.role}</p>
+            <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+              <span class="text-xs flex items-center gap-1"><span class="w-2 h-2 rounded-full inline-block" style="background:#F59E0B"></span>\${IS_RTL?'مفتوح:':'Open:'} <b>\${s.open}</b></span>
+              <span class="text-xs flex items-center gap-1"><span class="w-2 h-2 rounded-full inline-block" style="background:#10B981"></span>\${IS_RTL?'مكتمل:':'Done:'} <b>\${s.done}</b></span>
+              \${s.breach>0?'<span class="text-xs flex items-center gap-1"><span class="w-2 h-2 rounded-full inline-block" style="background:#EF4444"></span>'+(IS_RTL?'خرق:':'Breach:')+'<b>'+s.breach+'</b></span>':''}
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            <div id="tcheck_\${s.id}" class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all" style="\${isCurrent?'background:#4F46E5;border-color:#4F46E5':''}">
+              \${isCurrent?'<i class="fas fa-check text-white" style="font-size:9px"></i>':''}
+            </div>
+          </div>
+        </div>
+      </div>\`;
+    }).join('');
+  }
+
+  // Render transfer history
+  const hist = req.transferHistory||[];
+  const histBox = document.getElementById('transferHistoryBox');
+  const histList = document.getElementById('transferHistoryList');
+  if(histBox && histList){
+    if(hist.length>0){
+      histBox.classList.remove('hidden');
+      histList.innerHTML = hist.slice().reverse().map((h,i)=>\`
+        <div class="flex items-start gap-2 p-2 rounded-lg \${i===0?'bg-indigo-50':'bg-gray-50'}">
+          <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:\${i===0?'#4F46E5':'#9CA3AF'}">
+            <i class="fas fa-\${i===0?'share-nodes':'history'} text-white" style="font-size:9px"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-xs font-semibold text-gray-700">\${h.from} → \${h.to}</p>
+            \${h.note?'<p class="text-xs text-gray-500 italic mt-0.5">'+h.note+'</p>':''}
+            <p class="text-xs text-gray-400 mt-0.5">\${fmtDate(h.at)}</p>
+          </div>
+        </div>\`).join('');
+    } else {
+      histBox.classList.add('hidden');
+    }
+  }
+
+  document.getElementById('transferModal').classList.remove('hidden');
+}
+
+function selectTransferStaff(staffId){
+  _transferSelectedStaff = staffId;
+  // Reset all cards
+  DEPT_STAFF.forEach(s=>{
+    const card = document.getElementById('tcard_'+s.id);
+    const check = document.getElementById('tcheck_'+s.id);
+    if(card){
+      card.style.borderColor = '';
+      card.classList.remove('border-indigo-400','bg-indigo-50');
+      card.classList.add('border-gray-100','bg-gray-50');
+    }
+    if(check){
+      check.style.background='';
+      check.style.borderColor='';
+      check.innerHTML='';
+    }
+  });
+  // Highlight selected
+  const selCard = document.getElementById('tcard_'+staffId);
+  const selCheck = document.getElementById('tcheck_'+staffId);
+  if(selCard){
+    selCard.classList.remove('border-gray-100','bg-gray-50');
+    selCard.classList.add('border-indigo-400','bg-indigo-50');
+    selCard.style.borderColor = '#6366F1';
+  }
+  if(selCheck){
+    selCheck.style.background='#4F46E5';
+    selCheck.style.borderColor='#4F46E5';
+    selCheck.innerHTML='<i class="fas fa-check text-white" style="font-size:9px"></i>';
+  }
+  // Enable confirm button
+  const btn = document.getElementById('transferConfirmBtn');
+  if(btn) btn.disabled = false;
+}
+
+function confirmTransfer(){
+  if(!_transferReqId || !_transferSelectedStaff) return;
+  const reqs = getSLARequests();
+  const idx = reqs.findIndex(r=>r.id===_transferReqId);
+  if(idx===-1) return;
+
+  const staff = DEPT_STAFF.find(s=>s.id===_transferSelectedStaff);
+  if(!staff) return;
+
+  const note = (document.getElementById('transferNote')?.value||'').trim();
+  const now = new Date().toISOString();
+  const prevAssignedName = reqs[idx].assignedName || (IS_RTL?'غير مكلَّف':'Unassigned');
+
+  // Update request assignment fields
+  reqs[idx].assignedTo   = staff.id;
+  reqs[idx].assignedName = staff.name;
+  reqs[idx].assignedAt   = now;
+  reqs[idx].assignedNote = note || (IS_RTL?'تم التحويل من لوحة رئيس القسم':'Transferred from dept. head panel');
+  reqs[idx].updatedAt    = now;
+  if(reqs[idx].status === 'open') reqs[idx].status = 'inprogress';
+
+  // Log to transfer history
+  if(!reqs[idx].transferHistory) reqs[idx].transferHistory = [];
+  reqs[idx].transferHistory.push({
+    from: prevAssignedName,
+    to: staff.name,
+    toId: staff.id,
+    note: reqs[idx].assignedNote,
+    at: now
+  });
+
+  saveSLARequests(reqs);
+  closeTransferModal();
+  renderSLATable();
+  showToast(
+    (IS_RTL?'تم تحويل الطلب إلى ':'Request assigned to ') + staff.name,
+    'success'
+  );
+}
+
+function closeTransferModal(){
+  document.getElementById('transferModal').classList.add('hidden');
+  _transferReqId = null;
+  _transferSelectedStaff = null;
+}
+
+// ─── Department Head Tracking Panel ─────────────────────────────────────────
+function openTrackingPanel(){
+  const workload = getStaffWorkload();
+  const reqs = getSLARequests();
+
+  // Build staff workload rows
+  const rows = workload.map(s=>{
+    const pct = s.total > 0 ? Math.round((s.done/s.total)*100) : 0;
+    const assignedReqs = reqs.filter(r=>r.assignedTo===s.id);
+    const reqRows = assignedReqs.map(r=>{
+      const breach = isBreach(r);
+      const statusMap = {open:IS_RTL?'مفتوح':'Open',inprogress:IS_RTL?'قيد التنفيذ':'In Progress',done:IS_RTL?'مكتمل':'Done',needs_revision:IS_RTL?'يحتاج تعديل':'Needs Revision'};
+      const st = breach?'breach':r.status;
+      return \`<tr class="border-b border-gray-50 text-xs hover:bg-gray-50">
+        <td class="px-3 py-2 font-mono font-bold text-gray-600">\${r.id}</td>
+        <td class="px-3 py-2 text-gray-700">\${r.emp}</td>
+        <td class="px-3 py-2 text-gray-500">\${SERVICE_LABELS[r.type]||r.type}</td>
+        <td class="px-3 py-2"><span class="badge-\${st} px-2 py-0.5 rounded-full text-xs font-semibold">\${breach?(IS_RTL?'تجاوز SLA':'SLA Breach'):(statusMap[r.status]||r.status)}</span></td>
+        <td class="px-3 py-2 \${breach?'text-red-600 font-bold':'text-gray-400'}">\${fmtDate(r.slaDue)}</td>
+        <td class="px-3 py-2">
+          <button onclick="closeTrackingPanel();openTransferModal('\${r.id}')" class="text-indigo-500 hover:text-indigo-700 transition" title="\${IS_RTL?'إعادة تحويل':'Reassign'}"><i class="fas fa-share-nodes text-xs"></i></button>
+        </td>
+      </tr>\`;
+    }).join('');
+
+    return \`<div class="border border-gray-100 rounded-xl overflow-hidden mb-4">
+      <div class="flex items-center gap-3 px-4 py-3 \${IS_RTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,\${s.color}18,\${s.color}08)">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:\${s.color}">\${s.avatar}</div>
+        <div class="flex-1 \${IS_RTL?'text-right':''}">
+          <p class="font-bold text-gray-800 text-sm">\${s.name}</p>
+          <p class="text-xs text-gray-500">\${s.role}</p>
+        </div>
+        <div class="flex items-center gap-4 text-xs \${IS_RTL?'flex-row-reverse':''}">
+          <div class="text-center">
+            <p class="font-bold text-amber-600 text-base">\${s.open}</p>
+            <p class="text-gray-400">\${IS_RTL?'مفتوح':'Open'}</p>
+          </div>
+          <div class="text-center">
+            <p class="font-bold text-green-600 text-base">\${s.done}</p>
+            <p class="text-gray-400">\${IS_RTL?'مكتمل':'Done'}</p>
+          </div>
+          \${s.breach>0?\`<div class="text-center"><p class="font-bold text-red-600 text-base">\${s.breach}</p><p class="text-gray-400">\${IS_RTL?'خرق':'Breach'}</p></div>\`:''}
+          <div class="text-center min-w-16">
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+              <div class="h-1.5 rounded-full transition-all" style="width:\${pct}%;background:\${s.color}"></div>
+            </div>
+            <p class="text-gray-400 mt-0.5">\${pct}% \${IS_RTL?'إنجاز':'done'}</p>
+          </div>
+        </div>
+      </div>
+      \${assignedReqs.length>0?\`
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs">
+          <thead><tr class="bg-gray-50 border-b border-gray-100">
+            <th class="px-3 py-2 text-gray-400 font-semibold \${IS_RTL?'text-right':'text-left'}">\${IS_RTL?'رقم الطلب':'Req. ID'}</th>
+            <th class="px-3 py-2 text-gray-400 font-semibold \${IS_RTL?'text-right':'text-left'}">\${IS_RTL?'الموظف':'Employee'}</th>
+            <th class="px-3 py-2 text-gray-400 font-semibold \${IS_RTL?'text-right':'text-left'}">\${IS_RTL?'الخدمة':'Service'}</th>
+            <th class="px-3 py-2 text-gray-400 font-semibold \${IS_RTL?'text-right':'text-left'}">\${IS_RTL?'الحالة':'Status'}</th>
+            <th class="px-3 py-2 text-gray-400 font-semibold \${IS_RTL?'text-right':'text-left'}">\${IS_RTL?'الموعد النهائي':'SLA Due'}</th>
+            <th class="px-3 py-2 text-gray-400 font-semibold \${IS_RTL?'text-right':'text-left'}"></th>
+          </tr></thead>
+          <tbody>\${reqRows}</tbody>
+        </table>
+      </div>\`:\`<p class="text-xs text-gray-400 italic py-3 px-4 \${IS_RTL?'text-right':''}">\${IS_RTL?'لا توجد طلبات مكلَّفة حالياً':'No requests currently assigned'}</p>\`}
+    </div>\`;
+  }).join('');
+
+  // Unassigned summary
+  const unassigned = reqs.filter(r=>!r.assignedTo && r.status!=='done');
+  const unassignedHTML = unassigned.length>0?\`
+    <div class="rounded-xl p-4 mb-4" style="background:#FFF7ED;border:1px solid #FED7AA">
+      <p class="text-sm font-bold text-orange-700 mb-2 flex items-center gap-2">
+        <i class="fas fa-exclamation-triangle"></i>
+        \${IS_RTL?'طلبات غير مكلَّفة ('+ unassigned.length +')':'Unassigned Requests ('+ unassigned.length +')'}
+      </p>
+      <div class="space-y-1">
+        \${unassigned.map(r=>\`<div class="flex items-center justify-between gap-2 text-xs">
+          <span class="font-mono font-bold text-orange-600">\${r.id}</span>
+          <span class="text-gray-600 truncate">\${r.emp}</span>
+          <button onclick="closeTrackingPanel();openTransferModal('\${r.id}')" class="text-indigo-600 hover:text-indigo-800 font-semibold flex-shrink-0 transition"><i class="fas fa-share-nodes me-1"></i>\${IS_RTL?'تكليف':'Assign'}</button>
+        </div>\`).join('')}
+      </div>
+    </div>\`:'';
+
+  document.getElementById('trackingBody').innerHTML = unassignedHTML + rows;
+
+  // Update Quick Stats Bar
+  const allOpen   = workload.reduce((a,s)=>a+s.open,0);
+  const allDone   = workload.reduce((a,s)=>a+s.done,0);
+  const allBreach = workload.reduce((a,s)=>a+s.breach,0);
+  const tpOpen   = document.getElementById('tp_openVal');
+  const tpDone   = document.getElementById('tp_doneVal');
+  const tpBreach = document.getElementById('tp_breachVal');
+  if(tpOpen)   tpOpen.textContent   = allOpen;
+  if(tpDone)   tpDone.textContent   = allDone;
+  if(tpBreach) tpBreach.textContent = allBreach;
+
+  document.getElementById('trackingPanel').classList.remove('hidden');
+}
+
+function closeTrackingPanel(){
+  document.getElementById('trackingPanel').classList.add('hidden');
+}
 
 // Init
 _lastCount = getSLARequests().filter(r=>r.source==='staff').length;
