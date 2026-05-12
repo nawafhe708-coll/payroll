@@ -3703,23 +3703,22 @@ app.get('/promotions', (c) => {
   }
 
   function printPromotionReport() {
-    const content = document.getElementById('promotionReportModal').querySelector('.bg-white').innerHTML;
-    const printWin = window.open('', '_blank', 'width=900,height=700');
-    printWin.document.write(\`<!DOCTYPE html><html dir="\${isRTL_PR?'rtl':'ltr'}">
-    <head>
-      <meta charset="UTF-8">
-      <title>\${isRTL_PR ? 'تقرير الترقيات الإدارية' : 'Promotions Report'} - Qatar University</title>
-      <script src="https://cdn.tailwindcss.com"><\/script>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-      <style>
-        @media print { body { margin: 0; } button { display:none!important; } }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background:#fff; padding:24px; }
-        :root { --qu-maroon:#8B1A2F; }
-      </style>
-    </head>
-    <body>\${content}</body></html>\`);
-    printWin.document.close();
-    setTimeout(() => { printWin.focus(); printWin.print(); }, 600);
+    const reportContent = document.getElementById('promotionReportModal').querySelector('.bg-white').innerHTML;
+    const dir = isRTL_PR ? 'rtl' : 'ltr';
+    const title = isRTL_PR ? 'تقرير الترقيات الإدارية - جامعة قطر' : 'Promotions Report - Qatar University';
+    const parts = [
+      '<!DOCTYPE html><html dir="' + dir + '"><head><meta charset="UTF-8"><title>' + title + '</title>',
+      '<link rel="stylesheet" href="https://cdn.tailwindcss.com/3.4.1/tailwind.min.css">',
+      '<style>@media print{body{margin:0}button,a{display:none!important}}',
+      'body{font-family:Segoe UI,Arial,sans-serif;background:#fff;padding:24px}',
+      ':root{--qu-maroon:#8B1A2F}</style></head><body>',
+      reportContent,
+      '</body></html>'
+    ];
+    const blob = new Blob([parts.join('')], { type: 'text/html;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const printWin = window.open(url, '_blank', 'width=900,height=700');
+    if (printWin) { setTimeout(() => { printWin.focus(); printWin.print(); URL.revokeObjectURL(url); }, 800); }
   }
 
   function exportPromotionCSV() {
@@ -6106,23 +6105,22 @@ app.get('/end-of-service', (c) => {
   }
 
   function printEosReport() {
-    const content = document.getElementById('eosReportModal').querySelector('.bg-white').innerHTML;
-    const printWin = window.open('', '_blank', 'width=900,height=700');
-    printWin.document.write(\`<!DOCTYPE html><html dir="${isRTL ? 'rtl' : 'ltr'}">
-    <head>
-      <meta charset="UTF-8">
-      <title>${isRTL ? 'تقرير نهاية الخدمة' : 'End-of-Service Report'} - Qatar University</title>
-      <script src="https://cdn.tailwindcss.com"><\/script>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-      <style>
-        @media print { body { margin:0; } button,a { display:none!important; } }
-        body { font-family:'Segoe UI',Arial,sans-serif; background:#fff; padding:24px; }
-        :root { --qu-maroon:#8B1A2F; }
-      </style>
-    </head>
-    <body>\${content}</body></html>\`);
-    printWin.document.close();
-    setTimeout(() => { printWin.focus(); printWin.print(); }, 600);
+    const reportContent = document.getElementById('eosReportModal').querySelector('.bg-white').innerHTML;
+    const dir   = '${isRTL ? 'rtl' : 'ltr'}';
+    const title = '${isRTL ? 'تقرير نهاية الخدمة - جامعة قطر' : 'End-of-Service Report - Qatar University'}';
+    const parts = [
+      '<!DOCTYPE html><html dir="' + dir + '"><head><meta charset="UTF-8"><title>' + title + '</title>',
+      '<link rel="stylesheet" href="https://cdn.tailwindcss.com/3.4.1/tailwind.min.css">',
+      '<style>@media print{body{margin:0}button,a{display:none!important}}',
+      'body{font-family:Segoe UI,Arial,sans-serif;background:#fff;padding:24px}',
+      ':root{--qu-maroon:#8B1A2F}</style></head><body>',
+      reportContent,
+      '</body></html>'
+    ];
+    const blob = new Blob([parts.join('')], { type: 'text/html;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const printWin = window.open(url, '_blank', 'width=900,height=700');
+    if (printWin) { setTimeout(() => { printWin.focus(); printWin.print(); URL.revokeObjectURL(url); }, 800); }
   }
 
   function exportEosCSV() {
