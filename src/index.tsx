@@ -6864,40 +6864,43 @@ app.get('/staff', (c) => {
   const t     = T[lang]
   const isRTL = lang === 'ar'
 
-  // تقويم الرواتب – مواعيد ثابتة
-  const calRows = isRTL ? [
-    { month:'يناير 2025',   date:'28 يناير',   status:'done',    statusLabel:'تم الصرف' },
-    { month:'فبراير 2025',  date:'27 فبراير',  status:'done',    statusLabel:'تم الصرف' },
-    { month:'مارس 2025',    date:'27 مارس',    status:'done',    statusLabel:'تم الصرف' },
-    { month:'أبريل 2025',   date:'28 أبريل',   status:'done',    statusLabel:'تم الصرف' },
-    { month:'مايو 2025',    date:'27 مايو',    status:'current', statusLabel:'هذا الشهر' },
-    { month:'يونيو 2025',   date:'26 يونيو',   status:'upcoming',statusLabel:'قادم' },
-    { month:'يوليو 2025',   date:'28 يوليو',   status:'upcoming',statusLabel:'قادم' },
-    { month:'أغسطس 2025',   date:'27 أغسطس',   status:'upcoming',statusLabel:'قادم' },
-    { month:'سبتمبر 2025',  date:'28 سبتمبر',  status:'upcoming',statusLabel:'قادم' },
-    { month:'أكتوبر 2025',  date:'28 أكتوبر',  status:'upcoming',statusLabel:'قادم' },
-    { month:'نوفمبر 2025',  date:'27 نوفمبر',  status:'upcoming',statusLabel:'قادم' },
-    { month:'ديسمبر 2025',  date:'25 ديسمبر',  status:'upcoming',statusLabel:'قادم' },
-  ] : [
-    { month:'January 2025',  date:'Jan 28',  status:'done',    statusLabel:'Paid' },
-    { month:'February 2025', date:'Feb 27',  status:'done',    statusLabel:'Paid' },
-    { month:'March 2025',    date:'Mar 27',  status:'done',    statusLabel:'Paid' },
-    { month:'April 2025',    date:'Apr 28',  status:'done',    statusLabel:'Paid' },
-    { month:'May 2025',      date:'May 27',  status:'current', statusLabel:'This Month' },
-    { month:'June 2025',     date:'Jun 26',  status:'upcoming',statusLabel:'Upcoming' },
-    { month:'July 2025',     date:'Jul 28',  status:'upcoming',statusLabel:'Upcoming' },
-    { month:'August 2025',   date:'Aug 27',  status:'upcoming',statusLabel:'Upcoming' },
-    { month:'September 2025',date:'Sep 28',  status:'upcoming',statusLabel:'Upcoming' },
-    { month:'October 2025',  date:'Oct 28',  status:'upcoming',statusLabel:'Upcoming' },
-    { month:'November 2025', date:'Nov 27',  status:'upcoming',statusLabel:'Upcoming' },
-    { month:'December 2025', date:'Dec 25',  status:'upcoming',statusLabel:'Upcoming' },
+  // ─── أحداث الجامعة الثابتة 2025 ───────────────────────────────────────────
+  // النوع: university=جامعة، salary=راتب، advance=سلفة، mission=مهمة، holiday=إجازة
+  const QU_EVENTS = [
+    // ─ إجازات رسمية وأعياد
+    { date:'2025-01-01', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'رأس السنة الميلادية':'New Year\'s Day' },
+    { date:'2025-03-30', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الفطر (يوم 1)':'Eid Al-Fitr Day 1' },
+    { date:'2025-03-31', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الفطر (يوم 2)':'Eid Al-Fitr Day 2' },
+    { date:'2025-04-01', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الفطر (يوم 3)':'Eid Al-Fitr Day 3' },
+    { date:'2025-06-06', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'يوم عيد الأضحى':'Eid Al-Adha Day 1' },
+    { date:'2025-06-07', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الأضحى (يوم 2)':'Eid Al-Adha Day 2' },
+    { date:'2025-06-08', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الأضحى (يوم 3)':'Eid Al-Adha Day 3' },
+    { date:'2025-12-18', type:'holiday', color:'#6B7280', icon:'fa-flag',          title: isRTL?'اليوم الوطني القطري':'Qatar National Day' },
+    // ─ تقويم جامعة قطر الأكاديمي
+    { date:'2025-01-19', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'بداية الفصل الدراسي الثاني 2025':'Spring Semester 2025 Begins' },
+    { date:'2025-05-15', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'نهاية الفصل الدراسي الثاني':'Spring Semester Ends' },
+    { date:'2025-05-25', type:'university', color:'#7C3AED', icon:'fa-graduation-cap', title: isRTL?'حفل التخرج 2025':'Graduation Ceremony 2025' },
+    { date:'2025-08-24', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'بداية الفصل الأول 2025-2026':'Fall Semester 2025-2026 Begins' },
+    { date:'2025-12-20', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'نهاية الفصل الأول 2025-2026':'Fall Semester 2025-2026 Ends' },
+    { date:'2025-03-01', type:'university', color:'#7C3AED', icon:'fa-calendar-check', title: isRTL?'موعد تقديم طلبات القبول':'Admission Application Deadline' },
+    { date:'2025-09-01', type:'university', color:'#7C3AED', icon:'fa-chalkboard-teacher', title: isRTL?'اجتماع أعضاء هيئة التدريس':'Faculty Assembly Meeting' },
+    // ─ مواعيد صرف الرواتب
+    { date:'2025-01-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يناير 2025':'January 2025 Salary' },
+    { date:'2025-02-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب فبراير 2025':'February 2025 Salary' },
+    { date:'2025-03-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب مارس 2025':'March 2025 Salary' },
+    { date:'2025-04-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أبريل 2025':'April 2025 Salary' },
+    { date:'2025-05-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب مايو 2025':'May 2025 Salary' },
+    { date:'2025-06-26', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يونيو 2025':'June 2025 Salary' },
+    { date:'2025-07-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يوليو 2025':'July 2025 Salary' },
+    { date:'2025-08-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أغسطس 2025':'August 2025 Salary' },
+    { date:'2025-09-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب سبتمبر 2025':'September 2025 Salary' },
+    { date:'2025-10-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أكتوبر 2025':'October 2025 Salary' },
+    { date:'2025-11-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب نوفمبر 2025':'November 2025 Salary' },
+    { date:'2025-12-25', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب ديسمبر 2025':'December 2025 Salary' },
+    // ─ مواعيد السلف الافتراضية
+    { date:'2025-03-25', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'موعد صرف سلفة عيد الفطر':'Eid Al-Fitr Advance Payment' },
+    { date:'2025-06-04', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'موعد صرف سلفة عيد الأضحى':'Eid Al-Adha Advance Payment' },
   ]
-
-  const statusStyle = {
-    done:    'background:#ECFDF5;color:#059669',
-    current: 'background:#FEF3C7;color:#D97706',
-    upcoming:'background:#F3F4F6;color:#6B7280',
-  }
 
   // إعلانات افتراضية – تُستبدل من localStorage
   const defaultAnn = isRTL ? [
@@ -7019,32 +7022,94 @@ app.get('/staff', (c) => {
         </div>
       </div>
 
-      <!-- ── تقويم الرواتب ─────────────────────────────────────────── -->
+      <!-- ── التقويم المصغّر (الشهر الحالي) ───────────────────────── -->
+      <div class="card p-4" id="miniCalCard">
+        <div class="flex items-center justify-between mb-3">
+          <button onclick="calPrev()" class="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition text-xs"><i class="fas fa-chevron-${isRTL?'right':'left'}"></i></button>
+          <span class="text-sm font-bold text-gray-800" id="miniCalTitle"></span>
+          <button onclick="calNext()" class="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition text-xs"><i class="fas fa-chevron-${isRTL?'left':'right'}"></i></button>
+        </div>
+        <div class="grid grid-cols-7 gap-0.5 mb-1" id="miniCalDayNames"></div>
+        <div class="grid grid-cols-7 gap-0.5" id="miniCalGrid"></div>
+        <div class="mt-2.5 pt-2.5 border-t border-gray-100 flex flex-wrap gap-1.5">
+          <span class="text-xs flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:var(--qu-maroon)"></span>${isRTL?'راتب':'Salary'}</span>
+          <span class="text-xs flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#D97706"></span>${isRTL?'سلفة/مهمة':'Advance'}</span>
+          <span class="text-xs flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#7C3AED"></span>${isRTL?'جامعة':'Univ.'}</span>
+          <span class="text-xs flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#6B7280"></span>${isRTL?'إجازة':'Holiday'}</span>
+        </div>
+        <button onclick="openFullCal()" class="mt-2 w-full py-2 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 transition hover:opacity-90" style="background:linear-gradient(135deg,var(--qu-maroon),#6B0A22)">
+          <i class="fas fa-expand-alt"></i>${isRTL?'عرض التقويم الكامل':'Full Calendar'}
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ FULL CALENDAR SECTION ═══════════════════════════════════════════ -->
+    <div id="fullCalSection" class="hidden">
       <div class="card p-5">
-        <h2 class="font-bold text-gray-800 flex items-center gap-2 mb-4 ${isRTL?'flex-row-reverse':''}">
-          <span class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(196,146,42,0.1)">
-            <i class="fas fa-calendar-alt text-sm" style="color:var(--qu-gold)"></i>
-          </span>
-          ${isRTL?'تقويم الرواتب 2025':'Payroll Calendar 2025'}
-        </h2>
-        <div class="space-y-1">
-          ${calRows.map(r=>`
-          <div class="flex items-center justify-between px-3 py-2 rounded-xl ${r.status==='current'?'cal-row-current':'hover:bg-gray-50'} transition">
-            <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
-              <span class="badge-dot" style="background:${r.status==='done'?'#10B981':r.status==='current'?'#F59E0B':'#D1D5DB'}"></span>
-              <span class="text-xs font-medium text-gray-700 ${r.status==='current'?'font-bold':''}">${r.month}</span>
+        <!-- Header -->
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4 ${isRTL?'flex-row-reverse':''}">
+          <div class="${isRTL?'text-right':''}">
+            <h2 class="font-bold text-gray-800 text-lg flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+              <span class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,26,47,0.08)">
+                <i class="fas fa-calendar-days text-base" style="color:var(--qu-maroon)"></i>
+              </span>
+              ${isRTL?'تقويم الأحداث والمواعيد':'Events & Appointments Calendar'}
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 ${isRTL?'text-right':''}">${isRTL?'مواعيد الجامعة، الرواتب، طلباتي الشخصية':'University events, payroll dates & my requests'}</p>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap ${isRTL?'flex-row-reverse':''}">
+            <!-- Filter Tabs -->
+            <div class="flex rounded-xl overflow-hidden border border-gray-200 text-xs font-semibold" id="calFilterBtns">
+              <button onclick="setCalFilter('all')" id="calF_all" class="px-3 py-1.5 transition bg-gray-800 text-white">${isRTL?'الكل':'All'}</button>
+              <button onclick="setCalFilter('salary')" id="calF_salary" class="px-3 py-1.5 transition bg-white text-gray-600 hover:bg-gray-50 border-${isRTL?'r':'l'} border-gray-200">${isRTL?'رواتب':'Salary'}</button>
+              <button onclick="setCalFilter('advance')" id="calF_advance" class="px-3 py-1.5 transition bg-white text-gray-600 hover:bg-gray-50 border-${isRTL?'r':'l'} border-gray-200">${isRTL?'سلف/مهام':'Advances'}</button>
+              <button onclick="setCalFilter('university')" id="calF_university" class="px-3 py-1.5 transition bg-white text-gray-600 hover:bg-gray-50 border-${isRTL?'r':'l'} border-gray-200">${isRTL?'الجامعة':'University'}</button>
+              <button onclick="setCalFilter('my')" id="calF_my" class="px-3 py-1.5 transition bg-white text-gray-600 hover:bg-gray-50 border-${isRTL?'r':'l'} border-gray-200">${isRTL?'طلباتي':'My Requests'}</button>
             </div>
-            <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
-              <span class="text-xs font-bold text-gray-800">${r.date}</span>
-              <span class="text-xs px-2 py-0.5 rounded-full font-semibold" style="${statusStyle[r.status]}">${r.statusLabel}</span>
+            <!-- Nav -->
+            <div class="flex items-center gap-1">
+              <button onclick="fullCalPrev()" class="w-8 h-8 rounded-xl flex items-center justify-center text-gray-500 hover:bg-gray-100 border border-gray-200 transition"><i class="fas fa-chevron-${isRTL?'right':'left'} text-xs"></i></button>
+              <span class="text-sm font-bold text-gray-800 min-w-36 text-center" id="fullCalTitle"></span>
+              <button onclick="fullCalNext()" class="w-8 h-8 rounded-xl flex items-center justify-center text-gray-500 hover:bg-gray-100 border border-gray-200 transition"><i class="fas fa-chevron-${isRTL?'left':'right'} text-xs"></i></button>
             </div>
-          </div>`).join('')}
+            <button onclick="goToToday()" class="px-3 py-1.5 rounded-xl text-xs font-bold border border-gray-200 text-gray-600 hover:bg-gray-50 transition">${isRTL?'اليوم':'Today'}</button>
+            <button onclick="closeFullCal()" class="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition"><i class="fas fa-compress-alt text-xs"></i></button>
+          </div>
         </div>
-        <div class="mt-3 pt-3 border-t border-gray-100 flex items-center gap-4 text-xs text-gray-400 flex-wrap ${isRTL?'flex-row-reverse':''}">
-          <span class="flex items-center gap-1"><span class="badge-dot" style="background:#10B981"></span>${isRTL?'تم الصرف':'Paid'}</span>
-          <span class="flex items-center gap-1"><span class="badge-dot" style="background:#F59E0B"></span>${isRTL?'هذا الشهر':'Current'}</span>
-          <span class="flex items-center gap-1"><span class="badge-dot" style="background:#D1D5DB"></span>${isRTL?'قادم':'Upcoming'}</span>
+
+        <!-- Day names row -->
+        <div class="grid grid-cols-7 gap-1 mb-1" id="fullCalDayNames"></div>
+        <!-- Calendar grid -->
+        <div class="grid grid-cols-7 gap-1" id="fullCalGrid" style="min-height:340px"></div>
+
+        <!-- Legend -->
+        <div class="mt-3 pt-3 border-t border-gray-100 flex items-center flex-wrap gap-3 text-xs ${isRTL?'flex-row-reverse':''}">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:var(--qu-maroon)"></span>${isRTL?'صرف راتب':'Salary'}</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:#D97706"></span>${isRTL?'سلفة / مهمة علمية':'Advance / Mission'}</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:#7C3AED"></span>${isRTL?'حدث جامعي':'University Event'}</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:#6B7280"></span>${isRTL?'إجازة رسمية':'Public Holiday'}</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:#0891B2"></span>${isRTL?'طلباتي':'My Requests'}</span>
         </div>
+      </div>
+
+      <!-- Upcoming Events List -->
+      <div class="card p-5 mt-4">
+        <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse text-right':''}">
+          <i class="fas fa-list-ul text-sm" style="color:var(--qu-maroon)"></i>
+          ${isRTL?'الأحداث القادمة (30 يوم)':'Upcoming Events (Next 30 Days)'}
+        </h3>
+        <div id="upcomingEventsList" class="space-y-2"></div>
+      </div>
+    </div>
+
+    <!-- ══ EVENT DETAIL MODAL ════════════════════════════════════════════ -->
+    <div id="eventModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.5)">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm" dir="${isRTL?'rtl':'ltr'}">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between ${isRTL?'flex-row-reverse':''}">
+          <h3 class="font-bold text-gray-800 text-base" id="evModalTitle">${isRTL?'تفاصيل الحدث':'Event Details'}</h3>
+          <button onclick="closeEventModal()" class="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition">×</button>
+        </div>
+        <div class="p-5 space-y-3" id="evModalBody"></div>
       </div>
     </div>
 
@@ -7147,6 +7212,294 @@ app.get('/staff', (c) => {
       }
     }catch(e){}
   })();
+  </script>
+
+  <script>
+  // ═══════════════════════════════════════════════════════════════════
+  //   INTERACTIVE CALENDAR — بوابة الموظف
+  // ═══════════════════════════════════════════════════════════════════
+  const IS_RTL_CAL = ${isRTL};
+  const DAY_NAMES_AR = ['أحد','اثن','ثلا','أرب','خمي','جمع','سبت'];
+  const DAY_NAMES_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTH_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  // ─── أحداث الجامعة الثابتة المُمرَّرة من الخادم ───────────────────
+  const QU_EVENTS_DATA = ${JSON.stringify(QU_EVENTS)};
+
+  let _calYear  = new Date().getFullYear();
+  let _calMonth = new Date().getMonth();
+  let _calFilter = 'all';
+  let _fullCalYear  = _calYear;
+  let _fullCalMonth = _calMonth;
+
+  // ─── جمع كل الأحداث (ثابتة + طلبات الموظف من localStorage) ───────
+  function getAllEvents(){
+    const events = [...QU_EVENTS_DATA];
+    // جلب طلبات الموظف من sla_requests
+    try{
+      const reqs = JSON.parse(localStorage.getItem('sla_requests')||'[]');
+      reqs.forEach(function(r){
+        // موعد الراتب / السلفة / المهمة من slaDue
+        const typeColor = {salary:'var(--qu-maroon)',advance:'#D97706',mission:'#D97706',certificate:'#0891B2',allowance:'#0891B2',eos:'#DC2626',scholarship:'#7C3AED',other:'#6B7280'};
+        const typeIcon  = {salary:'fa-money-bill-wave',advance:'fa-hand-holding-usd',mission:'fa-plane',certificate:'fa-file-certificate',allowance:'fa-house',eos:'fa-door-open',scholarship:'fa-graduation-cap',other:'fa-bell'};
+        const typeLabel = {
+          salary: IS_RTL_CAL?'صرف راتب':'Salary Payment',
+          advance: IS_RTL_CAL?'سلفة':'Advance',
+          mission: IS_RTL_CAL?'مهمة علمية':'Scientific Mission',
+          certificate: IS_RTL_CAL?'شهادة راتب':'Salary Certificate',
+          allowance: IS_RTL_CAL?'طلب بدل':'Allowance',
+          eos: IS_RTL_CAL?'نهاية خدمة':'End of Service',
+          scholarship: IS_RTL_CAL?'ابتعاث':'Scholarship',
+          other: IS_RTL_CAL?'طلب خدمة':'Service Request'
+        };
+        if(r.slaDue){
+          events.push({
+            date: r.slaDue.substring(0,10),
+            type: 'my',
+            subtype: r.type,
+            color: '#0891B2',
+            icon: typeIcon[r.type]||'fa-bell',
+            title: (IS_RTL_CAL?'طلب: ':'Request: ') + (typeLabel[r.type]||r.type) + ' — ' + r.id,
+            reqId: r.id, status: r.status, emp: r.emp
+          });
+        }
+        // إذا كان نوعه صرف راتب أو سلفة نضيف أيضاً تاريخ التقديم
+        if((r.type==='advance'||r.type==='mission') && r.submittedAt){
+          events.push({
+            date: r.submittedAt.substring(0,10),
+            type: 'my',
+            subtype: r.type,
+            color: '#D97706',
+            icon: typeIcon[r.type]||'fa-bell',
+            title: (IS_RTL_CAL?'تقديم طلب: ':'Submitted: ') + (typeLabel[r.type]||r.type) + ' — ' + r.id,
+            reqId: r.id, status: r.status, emp: r.emp
+          });
+        }
+      });
+    }catch(e){}
+    return events;
+  }
+
+  function eventsForDate(dateStr, filter){
+    return getAllEvents().filter(function(ev){
+      if(ev.date !== dateStr) return false;
+      if(filter==='all') return true;
+      if(filter==='my') return ev.type==='my';
+      if(filter==='university') return ev.type==='university';
+      if(filter==='salary') return ev.type==='salary';
+      if(filter==='advance') return ev.type==='advance' || ev.subtype==='advance' || ev.subtype==='mission';
+      return ev.type===filter;
+    });
+  }
+
+  // ─── ألوان الأنواع ─────────────────────────────────────────────────
+  function typeColorOf(ev){
+    if(ev.type==='salary')     return 'var(--qu-maroon)';
+    if(ev.type==='advance')    return '#D97706';
+    if(ev.type==='university') return '#7C3AED';
+    if(ev.type==='holiday')    return '#6B7280';
+    if(ev.type==='my')         return '#0891B2';
+    return '#9CA3AF';
+  }
+
+  // ─── رسم أسماء الأيام ─────────────────────────────────────────────
+  function renderDayNames(containerId){
+    const names = IS_RTL_CAL ? DAY_NAMES_AR : DAY_NAMES_EN;
+    document.getElementById(containerId).innerHTML = names.map(function(n){
+      return '<div class="text-center text-xs font-semibold text-gray-400 py-1">'+n+'</div>';
+    }).join('');
+  }
+
+  // ─── رسم التقويم المصغّر (الشهر الحالي في البطاقة الجانبية) ─────
+  function renderMiniCal(){
+    const year = _calYear, month = _calMonth;
+    const title = (IS_RTL_CAL ? MONTH_AR : MONTH_EN)[month] + ' ' + year;
+    document.getElementById('miniCalTitle').textContent = title;
+    renderDayNames('miniCalDayNames');
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const today = new Date();
+    const todayStr = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    const allEv = getAllEvents();
+
+    let cells = '';
+    for(let i=0; i<firstDay; i++) cells += '<div></div>';
+    for(let d=1; d<=daysInMonth; d++){
+      const dateStr = year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      const dayEvs = allEv.filter(function(ev){ return ev.date===dateStr; });
+      const isToday = dateStr===todayStr;
+      const dots = dayEvs.slice(0,3).map(function(ev){
+        return '<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:'+typeColorOf(ev)+'"></span>';
+      }).join('');
+      cells += '<div data-d="'+dateStr+'" onclick="calDayClick(this)" class="cursor-pointer rounded-lg p-0.5 text-center transition hover:bg-indigo-50 '+(isToday?'ring-2 ring-offset-1':'')+(isToday?' ring-offset-white':'')+'" style="'+(isToday?'background:rgba(139,26,47,0.08);ring-color:var(--qu-maroon)':'')+'">'
+        + '<span class="text-xs '+(isToday?'font-black text-red-800':'font-medium text-gray-700')+'">'+d+'</span>'
+        + (dots?'<div class="flex justify-center gap-0.5 mt-0.5">'+dots+'</div>':'')
+        + '</div>';
+    }
+    document.getElementById('miniCalGrid').innerHTML = cells;
+  }
+
+  function calPrev(){ _calMonth--; if(_calMonth<0){_calMonth=11;_calYear--;} renderMiniCal(); }
+  function calNext(){ _calMonth++; if(_calMonth>11){_calMonth=0;_calYear++;} renderMiniCal(); }
+
+  // ─── رسم التقويم الكامل ────────────────────────────────────────────
+  function renderFullCal(){
+    const year = _fullCalYear, month = _fullCalMonth;
+    const title = (IS_RTL_CAL ? MONTH_AR : MONTH_EN)[month] + ' ' + year;
+    document.getElementById('fullCalTitle').textContent = title;
+    renderDayNames('fullCalDayNames');
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const today = new Date();
+    const todayStr = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    const allEv = getAllEvents();
+
+    let cells = '';
+    for(let i=0; i<firstDay; i++)
+      cells += '<div class="rounded-xl border border-transparent min-h-20"></div>';
+
+    for(let d=1; d<=daysInMonth; d++){
+      const dateStr = year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      const dayEvs = allEv.filter(function(ev){
+        if(ev.date!==dateStr) return false;
+        if(_calFilter==='all') return true;
+        if(_calFilter==='my') return ev.type==='my';
+        if(_calFilter==='university') return ev.type==='university';
+        if(_calFilter==='salary') return ev.type==='salary';
+        if(_calFilter==='advance') return ev.type==='advance' || ev.subtype==='advance' || ev.subtype==='mission';
+        return ev.type===_calFilter;
+      });
+      const isToday = dateStr===todayStr;
+      const isWeekend = [5,6].includes(new Date(year,month,d).getDay()); // جمعة وسبت
+
+      const evPills = dayEvs.slice(0,3).map(function(ev){
+        return '<div class="text-white text-xs rounded px-1 py-0.5 truncate leading-tight mt-0.5 cursor-pointer hover:opacity-80" '
+          + 'style="background:'+typeColorOf(ev)+';font-size:10px" '
+          + 'onclick="event.stopPropagation();showEventDetail('+JSON.stringify(ev).replace(/"/g,'&quot;')+')">'
+          + '<i class="fas '+ev.icon+' me-0.5" style="font-size:8px"></i>'+ev.title
+          + '</div>';
+      }).join('');
+      const more = dayEvs.length>3 ? '<div class="text-xs text-gray-400 mt-0.5">+' + (dayEvs.length-3) + (IS_RTL_CAL?' أخرى':' more') + '</div>' : '';
+
+      cells += '<div data-d="'+dateStr+'" onclick="calDayClick(this)" class="rounded-xl border min-h-20 p-1.5 cursor-pointer transition '
+        + (isToday?'border-red-300 ':'border-gray-100 hover:border-indigo-200 ')
+        + (isWeekend?'bg-gray-50/60 ':isToday?'bg-red-50 ':'bg-white hover:bg-indigo-50/30 ')
+        + '">'
+        + '<span class="text-xs font-bold '+(isToday?'text-red-700':'text-gray-600')+(isWeekend?' opacity-50':'')+' block text-center mb-0.5">'+d+'</span>'
+        + evPills + more
+        + '</div>';
+    }
+    document.getElementById('fullCalGrid').innerHTML = cells;
+    renderUpcoming();
+  }
+
+  // ─── قائمة الأحداث القادمة (30 يوم) ─────────────────────────────
+  function renderUpcoming(){
+    const today = new Date();
+    const next30 = new Date(today); next30.setDate(next30.getDate()+30);
+    const allEv = getAllEvents().filter(function(ev){
+      const d = new Date(ev.date);
+      return d>=today && d<=next30 && (_calFilter==='all'||ev.type===_calFilter||(ev.subtype&&(_calFilter==='advance'?(ev.subtype==='advance'||ev.subtype==='mission'):ev.subtype===_calFilter)));
+    }).sort(function(a,b){ return a.date.localeCompare(b.date); });
+
+    const el = document.getElementById('upcomingEventsList');
+    if(!el) return;
+    if(allEv.length===0){
+      el.innerHTML = '<p class="text-sm text-gray-400 italic text-center py-4">'+(IS_RTL_CAL?'لا توجد أحداث قادمة في هذه الفترة':'No upcoming events in this period')+'</p>';
+      return;
+    }
+    el.innerHTML = allEv.map(function(ev){
+      const d = new Date(ev.date);
+      const diffDays = Math.ceil((d-today)/(1000*60*60*24));
+      const dayLabel = diffDays===0?(IS_RTL_CAL?'اليوم':'Today'):diffDays===1?(IS_RTL_CAL?'غداً':'Tomorrow'):(IS_RTL_CAL?'خلال '+diffDays+' أيام':'In '+diffDays+' days');
+      return '<div class="flex items-center gap-3 p-3 rounded-xl border border-gray-50 hover:border-indigo-100 hover:bg-indigo-50/30 transition cursor-pointer '+(IS_RTL_CAL?'flex-row-reverse':'')+'" onclick="showEventDetail('+JSON.stringify(ev).replace(/"/g,'&quot;')+')">'
+        + '<div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-white" style="background:'+typeColorOf(ev)+'">'
+        + '<i class="fas '+ev.icon+' text-sm"></i></div>'
+        + '<div class="flex-1 min-w-0 '+(IS_RTL_CAL?'text-right':'')+'">'
+        + '<p class="text-sm font-semibold text-gray-800 truncate">'+ev.title+'</p>'
+        + '<p class="text-xs text-gray-400 mt-0.5">'+ev.date+'</p>'
+        + '</div>'
+        + '<span class="text-xs font-bold px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap" style="background:'+typeColorOf(ev)+'22;color:'+typeColorOf(ev)+'">'+dayLabel+'</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  function fullCalPrev(){ _fullCalMonth--; if(_fullCalMonth<0){_fullCalMonth=11;_fullCalYear--;} renderFullCal(); }
+  function fullCalNext(){ _fullCalMonth++; if(_fullCalMonth>11){_fullCalMonth=0;_fullCalYear++;} renderFullCal(); }
+  function goToToday(){
+    const t=new Date(); _fullCalYear=t.getFullYear(); _fullCalMonth=t.getMonth();
+    renderFullCal();
+  }
+
+  // ─── فتح/إغلاق التقويم الكامل ─────────────────────────────────────
+  function openFullCal(){
+    _fullCalYear=_calYear; _fullCalMonth=_calMonth;
+    document.getElementById('fullCalSection').classList.remove('hidden');
+    renderFullCal();
+    document.getElementById('fullCalSection').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function closeFullCal(){
+    document.getElementById('fullCalSection').classList.add('hidden');
+  }
+
+  // ─── فلتر الأحداث ─────────────────────────────────────────────────
+  function setCalFilter(f){
+    _calFilter = f;
+    ['all','salary','advance','university','my'].forEach(function(k){
+      const btn = document.getElementById('calF_'+k);
+      if(!btn) return;
+      if(k===f){
+        btn.style.background='#1F2937'; btn.style.color='white';
+      } else {
+        btn.style.background='white'; btn.style.color='#4B5563';
+      }
+    });
+    renderFullCal();
+  }
+
+  // ─── wrapper لتجنب مشكلة الـ single-quote داخل onclick ──────────
+  function calDayClick(el){ openDayEvents(el.getAttribute('data-d')); }
+
+  // ─── عرض أحداث يوم محدد (modal) ──────────────────────────────────
+  function openDayEvents(dateStr){
+    const evs = getAllEvents().filter(function(ev){ return ev.date===dateStr; });
+    const d = new Date(dateStr);
+    const dayNum = d.getDate();
+    const monthName = (IS_RTL_CAL?MONTH_AR:MONTH_EN)[d.getMonth()];
+    document.getElementById('evModalTitle').textContent = dayNum + ' ' + monthName + ' ' + d.getFullYear();
+
+    if(evs.length===0){
+      document.getElementById('evModalBody').innerHTML =
+        '<p class="text-sm text-gray-400 italic text-center py-4">'+(IS_RTL_CAL?'لا توجد أحداث في هذا اليوم':'No events on this day')+'</p>';
+    } else {
+      document.getElementById('evModalBody').innerHTML = evs.map(function(ev){
+        const typeLabel = {salary:IS_RTL_CAL?'صرف راتب':'Salary',advance:IS_RTL_CAL?'سلفة':'Advance',university:IS_RTL_CAL?'حدث جامعي':'University',holiday:IS_RTL_CAL?'إجازة رسمية':'Holiday',my:IS_RTL_CAL?'طلبي':'My Request'};
+        const statusLabel = {open:IS_RTL_CAL?'مفتوح':'Open',inprogress:IS_RTL_CAL?'قيد التنفيذ':'In Progress',done:IS_RTL_CAL?'مكتمل':'Done'};
+        return '<div class="flex items-start gap-3 p-3 rounded-xl '+(IS_RTL_CAL?'flex-row-reverse':'')+'" style="background:'+typeColorOf(ev)+'11;border:1px solid '+typeColorOf(ev)+'33">'
+          + '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 text-white mt-0.5" style="background:'+typeColorOf(ev)+'">'
+          + '<i class="fas '+ev.icon+' text-sm"></i></div>'
+          + '<div class="flex-1 '+(IS_RTL_CAL?'text-right':'')+'">'
+          + '<p class="font-bold text-gray-800 text-sm">'+ev.title+'</p>'
+          + '<p class="text-xs mt-0.5 font-semibold" style="color:'+typeColorOf(ev)+'">'+( typeLabel[ev.type]||ev.type )+'</p>'
+          + (ev.reqId?'<p class="text-xs text-gray-400 mt-0.5 font-mono">'+ev.reqId+(ev.status?' · '+(statusLabel[ev.status]||ev.status):'')+'</p>':'')
+          + '</div></div>';
+      }).join('');
+    }
+    document.getElementById('eventModal').classList.remove('hidden');
+  }
+
+  // ─── عرض تفاصيل حدث واحد مباشرة ──────────────────────────────────
+  function showEventDetail(ev){
+    if(typeof ev === 'string') ev = JSON.parse(ev);
+    openDayEvents(ev.date);
+  }
+  function closeEventModal(){ document.getElementById('eventModal').classList.add('hidden'); }
+
+  // ─── Init ─────────────────────────────────────────────────────────
+  renderMiniCal();
   </script>`
 
   return c.html(staffLayout(isRTL?'الرئيسية':'Home', content, 'home', lang))
