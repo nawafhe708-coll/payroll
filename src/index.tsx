@@ -3180,9 +3180,113 @@ app.get('/promotions', (c) => {
   <div dir="${isRTL ? 'rtl' : 'ltr'}">
 
   <!-- Header -->
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">${lbl.title}</h1>
-    <p class="text-gray-500 mt-1 text-sm">${lbl.subtitle}</p>
+  <div class="mb-6 flex items-start justify-between flex-wrap gap-3 ${isRTL ? 'flex-row-reverse' : ''}">
+    <div class="${isRTL ? 'text-right' : ''}">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}">
+        <i class="fas fa-arrow-trend-up" style="color:var(--qu-maroon)"></i> ${lbl.title}
+      </h1>
+      <p class="text-gray-500 mt-1 text-sm">${lbl.subtitle}</p>
+    </div>
+    <button onclick="openPromotionReport()" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-all" style="background:var(--qu-maroon)">
+      <i class="fas fa-chart-bar"></i>
+      ${isRTL ? 'إصدار التقارير' : 'Generate Report'}
+    </button>
+  </div>
+
+  <!-- ══ PROMOTIONS REPORT MODAL ══ -->
+  <div id="promotionReportModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" style="background:rgba(0,0,0,0.55)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" dir="${isRTL ? 'rtl' : 'ltr'}">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 rounded-t-2xl ${isRTL ? 'flex-row-reverse' : ''}" style="background:linear-gradient(135deg,var(--qu-maroon),#6b1222)">
+        <div class="flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}">
+          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+            <i class="fas fa-chart-bar text-white text-lg"></i>
+          </div>
+          <div class="${isRTL ? 'text-right' : ''}">
+            <h2 class="text-white font-bold text-lg">${isRTL ? 'تقرير الترقيات الإدارية' : 'Administrative Promotions Report'}</h2>
+            <p class="text-white/70 text-xs">${isRTL ? 'جامعة قطر — قسم الرواتب' : 'Qatar University — Payroll Department'}</p>
+          </div>
+        </div>
+        <button onclick="closePromotionReport()" class="text-white/80 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-all">✕</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6">
+
+        <!-- Report Date & Info -->
+        <div class="flex items-center justify-between flex-wrap gap-2 text-xs text-gray-500 border-b pb-3 ${isRTL ? 'flex-row-reverse' : ''}">
+          <span><i class="fas fa-calendar-alt mr-1"></i> <span id="prReportDate"></span></span>
+          <span class="font-semibold text-gray-700">${isRTL ? 'السنة المالية: 2025' : 'Fiscal Year: 2025'}</span>
+        </div>
+
+        <!-- KPI Summary Cards -->
+        <div>
+          <h3 class="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}">
+            <i class="fas fa-tachometer-alt" style="color:var(--qu-maroon)"></i>
+            ${isRTL ? 'ملخص المؤشرات' : 'Key Indicators Summary'}
+          </h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="prKpiCards"></div>
+        </div>
+
+        <!-- Department Breakdown -->
+        <div>
+          <h3 class="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}">
+            <i class="fas fa-sitemap" style="color:var(--qu-maroon)"></i>
+            ${isRTL ? 'توزيع المرشحين حسب القسم' : 'Candidates by Department'}
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-xs text-gray-500 uppercase" style="background:#faf0f2">
+                  <th class="px-4 py-2 ${isRTL ? 'text-right' : 'text-left'}">${isRTL ? 'القسم' : 'Department'}</th>
+                  <th class="px-4 py-2 text-center">${isRTL ? 'المرشحون' : 'Candidates'}</th>
+                  <th class="px-4 py-2 text-center">${isRTL ? 'مستوفون' : 'Eligible'}</th>
+                  <th class="px-4 py-2 text-center">${isRTL ? 'قيد المراجعة' : 'Under Review'}</th>
+                  <th class="px-4 py-2 text-center">${isRTL ? 'نسبة الأهلية' : 'Eligibility %'}</th>
+                </tr>
+              </thead>
+              <tbody id="prDeptTable" class="divide-y divide-gray-50"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Employees Table -->
+        <div>
+          <h3 class="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}">
+            <i class="fas fa-users" style="color:var(--qu-maroon)"></i>
+            ${isRTL ? 'قائمة المرشحين للترقية' : 'Promotion Candidates List'}
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="text-xs text-gray-500 uppercase" style="background:#faf0f2">
+                  <th class="px-3 py-2 ${isRTL ? 'text-right' : 'text-left'}">${isRTL ? 'الاسم' : 'Name'}</th>
+                  <th class="px-3 py-2 ${isRTL ? 'text-right' : 'text-left'}">${isRTL ? 'القسم' : 'Dept'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL ? 'الدرجة' : 'Grade'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL ? 'السنوات' : 'Years'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL ? 'شهر الترقية' : 'Month'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL ? 'الحالة' : 'Status'}</th>
+                </tr>
+              </thead>
+              <tbody id="prEmpTable" class="divide-y divide-gray-50"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3 pt-2 flex-wrap ${isRTL ? 'flex-row-reverse' : ''}">
+          <button onclick="printPromotionReport()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-semibold hover:opacity-90 transition-all" style="background:var(--qu-maroon)">
+            <i class="fas fa-print"></i> ${isRTL ? 'طباعة التقرير' : 'Print Report'}
+          </button>
+          <button onclick="exportPromotionCSV()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:bg-gray-50 transition-all" style="border-color:var(--qu-maroon);color:var(--qu-maroon)">
+            <i class="fas fa-file-csv"></i> ${isRTL ? 'تصدير CSV' : 'Export CSV'}
+          </button>
+          <button onclick="closePromotionReport()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all ${isRTL ? 'mr-auto' : 'ml-auto'}">
+            ${isRTL ? 'إغلاق' : 'Close'}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- KPI Cards -->
@@ -3507,6 +3611,144 @@ app.get('/promotions', (c) => {
   renderChart(ALL_EMP);
   renderGradeLegend(ALL_EMP);
   renderConditions();
+
+  // ══════════════════════════════════════════════════
+  //  PROMOTIONS REPORT MODAL
+  // ══════════════════════════════════════════════════
+  const isRTL_PR = ${isRTL};
+
+  function openPromotionReport() {
+    // Set report date
+    const now = new Date();
+    const dateStr = now.toLocaleDateString(isRTL_PR ? 'ar-QA' : 'en-GB', { year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('prReportDate').textContent = dateStr;
+
+    // KPI cards
+    const total    = ALL_EMP.length;
+    const eligible = ALL_EMP.filter(e => e.status === 'eligible').length;
+    const review   = ALL_EMP.filter(e => e.status === 'review').length;
+    const avgYrs   = total ? (ALL_EMP.reduce((s,e)=>s+e.years,0)/total).toFixed(1) : 0;
+    const kpis = [
+      { val: total,    label: isRTL_PR ? 'إجمالي المرشحين'     : 'Total Candidates',    color:'#8B1A2F', icon:'fa-users' },
+      { val: eligible, label: isRTL_PR ? 'مستوفون للشروط'      : 'Fully Eligible',      color:'#10B981', icon:'fa-circle-check' },
+      { val: review,   label: isRTL_PR ? 'قيد المراجعة'        : 'Under Review',        color:'#F59E0B', icon:'fa-clock' },
+      { val: avgYrs,   label: isRTL_PR ? 'متوسط سنوات الخدمة'  : 'Avg. Service Years',  color:'#3B82F6', icon:'fa-calendar' },
+    ];
+    document.getElementById('prKpiCards').innerHTML = kpis.map(k => \`
+      <div class="rounded-xl p-4 text-center border border-gray-100 bg-gray-50">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-2" style="background:\${k.color}22">
+          <i class="fas \${k.icon} text-sm" style="color:\${k.color}"></i>
+        </div>
+        <div class="text-2xl font-black" style="color:\${k.color}">\${k.val}</div>
+        <div class="text-xs text-gray-500 mt-1 leading-tight">\${k.label}</div>
+      </div>\`).join('');
+
+    // Department breakdown
+    const deptMap = {};
+    ALL_EMP.forEach(e => {
+      if (!deptMap[e.dept]) deptMap[e.dept] = { total:0, eligible:0, review:0 };
+      deptMap[e.dept].total++;
+      if (e.status === 'eligible') deptMap[e.dept].eligible++;
+      if (e.status === 'review')   deptMap[e.dept].review++;
+    });
+    const depts = Object.keys(deptMap).sort();
+    document.getElementById('prDeptTable').innerHTML = depts.map((d,i) => {
+      const r = deptMap[d];
+      const pct = Math.round((r.eligible / r.total) * 100);
+      const bg  = i % 2 === 0 ? '#fff' : '#fafafa';
+      return \`<tr style="background:\${bg}">
+        <td class="px-4 py-2 font-medium text-gray-800">\${d}</td>
+        <td class="px-4 py-2 text-center text-gray-600">\${r.total}</td>
+        <td class="px-4 py-2 text-center font-semibold text-emerald-600">\${r.eligible}</td>
+        <td class="px-4 py-2 text-center font-semibold text-amber-500">\${r.review}</td>
+        <td class="px-4 py-2 text-center">
+          <div class="flex items-center gap-2 justify-center">
+            <div class="h-1.5 w-16 rounded-full bg-gray-200 overflow-hidden">
+              <div class="h-full rounded-full" style="width:\${pct}%;background:#10B981"></div>
+            </div>
+            <span class="text-xs font-bold text-emerald-600">\${pct}%</span>
+          </div>
+        </td>
+      </tr>\`;
+    }).join('');
+
+    // Status badge helper
+    const statusBadge = (s) => {
+      if (s === 'eligible')    return \`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">\${isRTL_PR ? 'مستوفٍ' : 'Eligible'}</span>\`;
+      if (s === 'review')      return \`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">\${isRTL_PR ? 'مراجعة' : 'Review'}</span>\`;
+      if (s === 'partial')     return \`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">\${isRTL_PR ? 'جزئي' : 'Partial'}</span>\`;
+      return \`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">\${isRTL_PR ? 'غير مستوفٍ' : 'Not Eligible'}</span>\`;
+    };
+    const monthNames = isRTL_PR
+      ? ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+      : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    document.getElementById('prEmpTable').innerHTML = ALL_EMP.map((e,i) => \`
+      <tr style="background:\${i%2===0?'#fff':'#fafafa'}">
+        <td class="px-3 py-2 font-medium text-gray-800">\${e.name}</td>
+        <td class="px-3 py-2 text-gray-500 text-xs">\${e.dept}</td>
+        <td class="px-3 py-2 text-center font-bold" style="color:var(--qu-maroon)">\${e.grade}</td>
+        <td class="px-3 py-2 text-center text-gray-600">\${e.years}</td>
+        <td class="px-3 py-2 text-center text-gray-600">\${monthNames[(e.month||1)-1]}</td>
+        <td class="px-3 py-2 text-center">\${statusBadge(e.status)}</td>
+      </tr>\`).join('');
+
+    document.getElementById('promotionReportModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePromotionReport() {
+    document.getElementById('promotionReportModal').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function printPromotionReport() {
+    const content = document.getElementById('promotionReportModal').querySelector('.bg-white').innerHTML;
+    const printWin = window.open('', '_blank', 'width=900,height=700');
+    printWin.document.write(\`<!DOCTYPE html><html dir="\${isRTL_PR?'rtl':'ltr'}">
+    <head>
+      <meta charset="UTF-8">
+      <title>\${isRTL_PR ? 'تقرير الترقيات الإدارية' : 'Promotions Report'} - Qatar University</title>
+      <script src="https://cdn.tailwindcss.com"><\/script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+      <style>
+        @media print { body { margin: 0; } button { display:none!important; } }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background:#fff; padding:24px; }
+        :root { --qu-maroon:#8B1A2F; }
+      </style>
+    </head>
+    <body>\${content}</body></html>\`);
+    printWin.document.close();
+    setTimeout(() => { printWin.focus(); printWin.print(); }, 600);
+  }
+
+  function exportPromotionCSV() {
+    const headers = isRTL_PR
+      ? ['الاسم','الرقم الوظيفي','القسم','الدرجة الحالية','الدرجة المتوقعة','الراتب الحالي','الراتب المتوقع','الزيادة','شهر الترقية','سنوات الخدمة','الحالة']
+      : ['Name','ID','Department','Current Grade','Expected Grade','Current Salary','Expected Salary','Increase','Promotion Month','Years','Status'];
+    const monthNames = isRTL_PR
+      ? ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+      : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const rows = ALL_EMP.map(e => [
+      e.name, e.id, e.dept, e.grade, e.newGrade || (e.grade+1),
+      e.salary, e.newSalary || '', e.increase || '',
+      monthNames[(e.month||1)-1], e.years, e.status
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => \`"\${String(v||'').replace(/"/g,'""')}"\`).join(',')).join('\\n');
+    const bom  = '\\uFEFF';
+    const blob = new Blob([bom + csv], { type:'text/csv;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = isRTL_PR ? 'تقرير_الترقيات_2025.csv' : 'Promotions_Report_2025.csv';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('promotionReportModal').addEventListener('click', function(e) {
+    if (e.target === this) closePromotionReport();
+  });
   </script>`
 
   return c.html(layout(lbl.title, content, 'promotions', lang))
@@ -5077,13 +5319,225 @@ app.get('/end-of-service', (c) => {
       </h1>
       <p class="text-gray-500 mt-1 text-sm">${lbl.subtitle}</p>
     </div>
-    <div class="flex gap-2 ${isRTL?'flex-row-reverse':''}">
+    <div class="flex gap-2 flex-wrap ${isRTL?'flex-row-reverse':''}">
+      <button onclick="openEosReport()" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-all" style="background:var(--qu-maroon)">
+        <i class="fas fa-chart-bar"></i>
+        ${isRTL?'إصدار التقارير':'Generate Report'}
+      </button>
       <button onclick="window.print()" class="btn-outline px-3 py-2 rounded-lg text-sm flex items-center gap-2">
         <i class="fas fa-print"></i> ${isRTL?'طباعة':'Print'}
       </button>
       <a href="/forms?lang=${lang}" class="btn-gold px-3 py-2 rounded-lg text-sm flex items-center gap-2 text-white">
         <i class="fas fa-file-alt"></i> ${isRTL?'النماذج':'Forms'}
       </a>
+    </div>
+  </div>
+
+  <!-- ══ EOS REPORT MODAL ══ -->
+  <div id="eosReportModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" style="background:rgba(0,0,0,0.55)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" dir="${isRTL?'rtl':'ltr'}">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 rounded-t-2xl ${isRTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,var(--qu-maroon),#6b1222)">
+        <div class="flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+            <i class="fas fa-person-walking-arrow-right text-white text-lg"></i>
+          </div>
+          <div class="${isRTL?'text-right':''}">
+            <h2 class="text-white font-bold text-lg">${isRTL?'تقرير نهاية الخدمة':'End-of-Service Report'}</h2>
+            <p class="text-white/70 text-xs">${isRTL?'جامعة قطر — قسم الرواتب':'Qatar University — Payroll Department'}</p>
+          </div>
+        </div>
+        <button onclick="closeEosReport()" class="text-white/80 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-all">✕</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6">
+
+        <!-- Report Date -->
+        <div class="flex items-center justify-between flex-wrap gap-2 text-xs text-gray-500 border-b pb-3 ${isRTL?'flex-row-reverse':''}">
+          <span><i class="fas fa-calendar-alt mr-1"></i> <span id="eosReportDate"></span></span>
+          <span class="font-semibold text-gray-700">${isRTL?'السنة المالية: 2025':'Fiscal Year: 2025'}</span>
+        </div>
+
+        <!-- KPI Summary -->
+        <div>
+          <h3 class="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-tachometer-alt" style="color:var(--qu-maroon)"></i>
+            ${isRTL?'ملخص الإحصائيات':'Statistics Summary'}
+          </h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            ${[
+              { val: stats.totalFormer,      label: isRTL?'إجمالي المنتهية خدمتهم':'Total Former Employees', color:'#8B1A2F', icon:'fa-users' },
+              { val: stats.pendingThisYear,  label: isRTL?'متوقعون هذا العام':'Expected This Year',        color:'#F59E0B', icon:'fa-hourglass-half' },
+              { val: stats.pendingNextYear,  label: isRTL?'متوقعون العام القادم':'Expected Next Year',      color:'#3B82F6', icon:'fa-calendar-plus' },
+              { val: stats.avgGratuity,      label: isRTL?'متوسط المكافأة':'Average Gratuity',             color:'#10B981', icon:'fa-coins' },
+              { val: stats.totalPaid,        label: isRTL?'إجمالي المدفوع':'Total Paid Out',               color:'#6366F1', icon:'fa-file-invoice-dollar' },
+              { val: stats.clearanceAvgDays+'d', label: isRTL?'متوسط أيام إخلاء الطرف':'Avg. Clearance Days', color:'#0891B2', icon:'fa-clipboard-check' },
+            ].map(k=>`
+              <div class="rounded-xl p-4 text-center border border-gray-100 bg-gray-50">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-2" style="background:${k.color}22">
+                  <i class="fas ${k.icon} text-sm" style="color:${k.color}"></i>
+                </div>
+                <div class="text-lg font-black" style="color:${k.color}">${k.val}</div>
+                <div class="text-xs text-gray-500 mt-1 leading-tight">${k.label}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- By Type -->
+          <div class="border border-gray-100 rounded-xl p-4">
+            <h4 class="font-bold text-gray-600 text-xs uppercase mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+              <i class="fas fa-briefcase" style="color:var(--qu-maroon)"></i>
+              ${isRTL?'التوزيع حسب النوع':'By Employment Type'}
+            </h4>
+            <div class="space-y-2">
+              ${[
+                { label: isRTL?'إداري (منتهية)':'Admin (Former)',       val: stats.adminFormer,    color:'#8B1A2F' },
+                { label: isRTL?'أكاديمي (منتهية)':'Academic (Former)',  val: stats.academicFormer, color:'#C4922A' },
+                { label: isRTL?'إداري (متوقع)':'Admin (Pending)',        val: stats.adminPending,   color:'#F59E0B' },
+                { label: isRTL?'أكاديمي (متوقع)':'Academic (Pending)',  val: stats.academicPending,color:'#3B82F6' },
+              ].map(r=>{
+                const max = Math.max(stats.adminFormer,stats.academicFormer,stats.adminPending,stats.academicPending,1);
+                const pct = Math.round((r.val/max)*100);
+                return `<div>
+                  <div class="flex justify-between text-xs mb-1 ${isRTL?'flex-row-reverse':''}">
+                    <span class="text-gray-600">${r.label}</span>
+                    <span class="font-bold" style="color:${r.color}">${r.val}</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                    <div class="h-full rounded-full" style="width:${pct}%;background:${r.color}"></div>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+          <!-- By Nationality -->
+          <div class="border border-gray-100 rounded-xl p-4">
+            <h4 class="font-bold text-gray-600 text-xs uppercase mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+              <i class="fas fa-flag" style="color:var(--qu-maroon)"></i>
+              ${isRTL?'التوزيع حسب الجنسية':'By Nationality'}
+            </h4>
+            <div class="space-y-2">
+              ${[
+                { label: isRTL?'قطري (منتهية)':'Qatari (Former)',          val: stats.qatariFormer,    color:'#8B1A2F' },
+                { label: isRTL?'غير قطري (منتهية)':'Non-Qatari (Former)',  val: stats.nonQatariFormer, color:'#C4922A' },
+                { label: isRTL?'قطري (متوقع)':'Qatari (Pending)',           val: stats.qatariPending,   color:'#10B981' },
+                { label: isRTL?'غير قطري (متوقع)':'Non-Qatari (Pending)',  val: stats.nonQatariPending,color:'#3B82F6' },
+              ].map(r=>{
+                const max = Math.max(stats.qatariFormer,stats.nonQatariFormer,stats.qatariPending,stats.nonQatariPending,1);
+                const pct = Math.round((r.val/max)*100);
+                return `<div>
+                  <div class="flex justify-between text-xs mb-1 ${isRTL?'flex-row-reverse':''}">
+                    <span class="text-gray-600">${r.label}</span>
+                    <span class="font-bold" style="color:${r.color}">${r.val}</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                    <div class="h-full rounded-full" style="width:${pct}%;background:${r.color}"></div>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Employees Table -->
+        <div>
+          <h3 class="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-hourglass-half" style="color:#F59E0B"></i>
+            ${isRTL?'الموظفون المتوقع انتهاء خدمتهم':'Upcoming End-of-Service Employees'}
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="text-xs text-gray-500 uppercase" style="background:#faf0f2">
+                  <th class="px-3 py-2 ${isRTL?'text-right':'text-left'}">${isRTL?'الاسم':'Name'}</th>
+                  <th class="px-3 py-2 ${isRTL?'text-right':'text-left'}">${isRTL?'القسم':'Department'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'تاريخ الانتهاء':'Exit Date'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'السنوات':'Years'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'الإنجاز':'Clearance'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'الحالة':'Status'}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${pendingEmployees.map((e,i)=>{
+                  const bg = i%2===0?'#fff':'#fafafa';
+                  const clrColor = e.clearance>=80?'#10B981':e.clearance>=40?'#F59E0B':'#EF4444';
+                  const stBadge  = e.status==='active'
+                    ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-semibold">${isRTL?'نشط':'Active'}</span>`
+                    : e.status==='notice'
+                    ? `<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-semibold">${isRTL?'إشعار':'Notice'}</span>`
+                    : `<span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-semibold">${isRTL?'معالجة':'Processing'}</span>`;
+                  return `<tr style="background:${bg}">
+                    <td class="px-3 py-2 font-medium text-gray-800">${e.name}</td>
+                    <td class="px-3 py-2 text-gray-500">${e.dept}</td>
+                    <td class="px-3 py-2 text-center text-gray-600">${e.expDate}</td>
+                    <td class="px-3 py-2 text-center font-bold" style="color:var(--qu-maroon)">${e.years}</td>
+                    <td class="px-3 py-2 text-center">
+                      <div class="flex items-center gap-1 justify-center">
+                        <div class="h-1.5 w-12 rounded-full bg-gray-200 overflow-hidden">
+                          <div class="h-full rounded-full" style="width:${e.clearance}%;background:${clrColor}"></div>
+                        </div>
+                        <span class="text-xs font-bold" style="color:${clrColor}">${e.clearance}%</span>
+                      </div>
+                    </td>
+                    <td class="px-3 py-2 text-center">${stBadge}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Former Employees Table -->
+        <div>
+          <h3 class="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-users" style="color:#6366F1"></i>
+            ${isRTL?'سجل الموظفين السابقين':'Former Employees Record'}
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="text-xs text-gray-500 uppercase" style="background:#faf0f2">
+                  <th class="px-3 py-2 ${isRTL?'text-right':'text-left'}">${isRTL?'الاسم':'Name'}</th>
+                  <th class="px-3 py-2 ${isRTL?'text-right':'text-left'}">${isRTL?'القسم':'Department'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'تاريخ الخروج':'Exit Date'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'السنوات':'Years'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'المكافأة':'Gratuity'}</th>
+                  <th class="px-3 py-2 text-center">${isRTL?'السبب':'Reason'}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${formerEmployees.map((e,i)=>{
+                  const bg = i%2===0?'#fff':'#fafafa';
+                  return `<tr style="background:${bg}">
+                    <td class="px-3 py-2 font-medium text-gray-800">${e.name}</td>
+                    <td class="px-3 py-2 text-gray-500">${e.dept}</td>
+                    <td class="px-3 py-2 text-center text-gray-600">${e.exitDate}</td>
+                    <td class="px-3 py-2 text-center font-bold" style="color:var(--qu-maroon)">${e.years}</td>
+                    <td class="px-3 py-2 text-center font-semibold text-emerald-600">${e.gratuity}</td>
+                    <td class="px-3 py-2 text-center text-gray-500">${e.reason}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3 pt-2 flex-wrap ${isRTL?'flex-row-reverse':''}">
+          <button onclick="printEosReport()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-semibold hover:opacity-90 transition-all" style="background:var(--qu-maroon)">
+            <i class="fas fa-print"></i> ${isRTL?'طباعة التقرير':'Print Report'}
+          </button>
+          <button onclick="exportEosCSV()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:bg-gray-50 transition-all" style="border-color:var(--qu-maroon);color:var(--qu-maroon)">
+            <i class="fas fa-file-csv"></i> ${isRTL?'تصدير CSV':'Export CSV'}
+          </button>
+          <button onclick="closeEosReport()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all ${isRTL?'mr-auto':'ml-auto'}">
+            ${isRTL?'إغلاق':'Close'}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -5634,6 +6088,93 @@ app.get('/end-of-service', (c) => {
     saveEOSChecklists(all);
     openEOSChecklist(_currentEmpId, document.getElementById('eosModalTitle').textContent, 0);
   }
+
+  // ══════════════════════════════════════════════════
+  //  EOS REPORT MODAL
+  // ══════════════════════════════════════════════════
+  function openEosReport() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString(${isRTL} ? 'ar-QA' : 'en-GB', { year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('eosReportDate').textContent = dateStr;
+    document.getElementById('eosReportModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEosReport() {
+    document.getElementById('eosReportModal').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function printEosReport() {
+    const content = document.getElementById('eosReportModal').querySelector('.bg-white').innerHTML;
+    const printWin = window.open('', '_blank', 'width=900,height=700');
+    printWin.document.write(\`<!DOCTYPE html><html dir="${isRTL ? 'rtl' : 'ltr'}">
+    <head>
+      <meta charset="UTF-8">
+      <title>${isRTL ? 'تقرير نهاية الخدمة' : 'End-of-Service Report'} - Qatar University</title>
+      <script src="https://cdn.tailwindcss.com"><\/script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+      <style>
+        @media print { body { margin:0; } button,a { display:none!important; } }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#fff; padding:24px; }
+        :root { --qu-maroon:#8B1A2F; }
+      </style>
+    </head>
+    <body>\${content}</body></html>\`);
+    printWin.document.close();
+    setTimeout(() => { printWin.focus(); printWin.print(); }, 600);
+  }
+
+  function exportEosCSV() {
+    const isAr = ${isRTL};
+    // Pending employees CSV
+    const pendingHeaders = isAr
+      ? ['رقم الموظف','الاسم','القسم','النوع','الجنسية','تاريخ الانتهاء','سنوات الخدمة','الراتب الأساسي','الحالة','نسبة إخلاء الطرف']
+      : ['ID','Name','Department','Type','Nationality','Exit Date','Years','Basic Salary','Status','Clearance %'];
+    const pending = ${JSON.stringify(pendingEmployees)};
+    const pendingRows = pending.map(e => [
+      e.id, e.name, e.dept,
+      e.type === 'admin' ? (isAr ? 'إداري' : 'Admin') : (isAr ? 'أكاديمي' : 'Academic'),
+      e.nat === 'qatari' ? (isAr ? 'قطري' : 'Qatari') : (isAr ? 'غير قطري' : 'Non-Qatari'),
+      e.expDate, e.years, e.basic,
+      e.status === 'active' ? (isAr ? 'نشط' : 'Active') : e.status === 'notice' ? (isAr ? 'إشعار' : 'Notice') : (isAr ? 'معالجة' : 'Processing'),
+      e.clearance + '%'
+    ]);
+    // Former employees CSV
+    const formerHeaders = isAr
+      ? ['رقم الموظف','الاسم','القسم','النوع','الجنسية','تاريخ الخروج','سنوات الخدمة','المكافأة','السبب']
+      : ['ID','Name','Department','Type','Nationality','Exit Date','Years','Gratuity','Reason'];
+    const former = ${JSON.stringify(formerEmployees)};
+    const formerRows = former.map(e => [
+      e.id, e.name, e.dept,
+      e.type === 'admin' ? (isAr ? 'إداري' : 'Admin') : (isAr ? 'أكاديمي' : 'Academic'),
+      e.nat === 'qatari' ? (isAr ? 'قطري' : 'Qatari') : (isAr ? 'غير قطري' : 'Non-Qatari'),
+      e.exitDate, e.years, e.gratuity, e.reason
+    ]);
+
+    const toCSV = (headers, rows) =>
+      [headers, ...rows].map(r => r.map(v => \`"\${String(v||'').replace(/"/g,'""')}"\`).join(',')).join('\\n');
+
+    const bom = '\\uFEFF';
+    const sep = isAr ? '\\n\\n\\n' : '\\n\\n\\n';
+    const sectionPending = (isAr ? '# الموظفون المتوقع انتهاء خدمتهم' : '# Upcoming Separations');
+    const sectionFormer  = (isAr ? '# سجل الموظفين السابقين'          : '# Former Employees Record');
+    const csv = bom + sectionPending + '\\n' + toCSV(pendingHeaders, pendingRows)
+              + '\\n\\n' + sectionFormer  + '\\n' + toCSV(formerHeaders, formerRows);
+
+    const blob = new Blob([csv], { type:'text/csv;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = isAr ? 'تقرير_نهاية_الخدمة_2025.csv' : 'EOS_Report_2025.csv';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  // Close EOS report modal on backdrop click
+  document.getElementById('eosReportModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEosReport();
+  });
   </script>
 
   <!-- EOS CHECKLIST MODAL -->
