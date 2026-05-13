@@ -5761,7 +5761,7 @@ app.get('/missions', (c) => {
   function getMissions(){ try{return JSON.parse(localStorage.getItem(MISSIONS_KEY)||'[]')}catch(e){return[]} }
   function saveMissions(d){ localStorage.setItem(MISSIONS_KEY, JSON.stringify(d)) }
   function genId(){ return 'MS-'+Date.now().toString(36).toUpperCase(); }
-  function fmtDate(iso){ if(!iso) return '\u2013'; var d=new Date(iso); return d.toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'2-digit'}); }
+  function fmtDate(iso){ if(!iso) return '-'; var d=new Date(iso); return d.toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'2-digit'}); }
   function numDays(from,to){ if(!from||!to) return 0; return Math.max(0,Math.round((new Date(to)-new Date(from))/(1000*60*60*24))+1); }
 
   var typeLabel = {
@@ -5816,8 +5816,8 @@ app.get('/missions', (c) => {
         +'</div></div>'
         +'<div class="flex items-center gap-2">'
         +'<span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span>'
-        +'<button onclick="editMission(\''+m.id+'\')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#064E3B"><i class="fas fa-edit"></i></button>'
-        +'<button onclick="sendEmailTo(\''+m.id+'\')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
+        +'<button onclick="editMission(this.dataset.id)" data-id="'+m.id+'" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#064E3B"><i class="fas fa-edit"></i></button>'
+        +'<button onclick="sendEmailTo(this.dataset.id)" data-id="'+m.id+'" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
         +'</div>'
         +'</div>';
     }).join('');
@@ -5845,9 +5845,9 @@ app.get('/missions', (c) => {
         +'<td class="px-4 py-3"><span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span></td>'
         +'<td class="px-4 py-3">'
           +'<div class="flex gap-1 flex-wrap">'
-          +'<button onclick="editMission(\''+m.id+'\')" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#1e3a5f"><i class="fas fa-edit"></i></button>'
-          +'<button onclick="sendEmailTo(\''+m.id+'\')" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
-          +'<button onclick="deleteMission(\''+m.id+'\')" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white bg-red-500 hover:bg-red-600"><i class="fas fa-trash"></i></button>'
+          +'<button onclick="editMission(this.dataset.id)" data-id="'+m.id+'" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#1e3a5f"><i class="fas fa-edit"></i></button>'
+          +'<button onclick="sendEmailTo(this.dataset.id)" data-id="'+m.id+'" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
+          +'<button onclick="deleteMission(this.dataset.id)" data-id="'+m.id+'" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white bg-red-500 hover:bg-red-600"><i class="fas fa-trash"></i></button>'
           +'</div>'
         +'</td>'
         +'</tr>';
@@ -6087,7 +6087,7 @@ app.get('/missions', (c) => {
       +'</head><body><h2>'+(IS_RTL_MS?'\u062a\u0642\u0631\u064a\u0631 \u0627\u0644\u0645\u0647\u0627\u0645 \u0627\u0644\u0631\u0633\u0645\u064a\u0629 \u0648\u0627\u0644\u0639\u0644\u0645\u064a\u0629':'Official & Academic Missions Report')+'</h2>'
       +'<p style="color:#666;font-size:.9rem">'+new Date().toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB')+'</p>'
       +content
-      +'<script>window.print();<\/script></body></html>');
+      +'<script>window.print();<'+'/script></body></html>');
     w.document.close();
   }
 
