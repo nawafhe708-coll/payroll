@@ -26,6 +26,7 @@ const T = {
     navContact: 'Contact Us',
     navEOS: 'End of Service',
     navPromotions: 'Promotions',
+    navMissions: 'Official Missions',
     navEmailTemplates: 'Email Templates',
     navScholarship: 'Scholarship Program',
     navScholarshipRules: 'Scholarship Rules',
@@ -460,6 +461,7 @@ const T = {
     navContact: 'تواصل معنا',
     navEOS: 'نهاية الخدمة',
     navPromotions: 'الترقيات الإدارية',
+    navMissions: 'المهام الرسمية والعلمية',
     navScholarship: 'برنامج الابتعاث',
     navScholarshipRules: 'قوانين وشروط الابتعاث',
     navScholarshipProcedures: 'إجراءات التقديم',
@@ -1117,6 +1119,7 @@ const layout = (title: string, content: string, activePage: string, lang: Lang) 
       { href: '/contact', icon: 'fa-envelope', label: t.navContact, page: 'contact' },
       { href: '/end-of-service', icon: 'fa-person-walking-arrow-right', label: t.navEOS, page: 'eos' },
       { href: '/promotions', icon: 'fa-ranking-star', label: t.navPromotions, page: 'promotions' },
+      { href: '/missions', icon: 'fa-plane-departure', label: t.navMissions, page: 'missions' },
       { href: '/email-templates', icon: 'fa-envelope-open-text', label: t.navEmailTemplates, page: 'email-templates' },
       { href: '/scholarship', icon: 'fa-graduation-cap', label: t.navScholarship, page: 'scholarship' },
       { href: '/sla', icon: 'fa-chart-gantt', label: isRTL ? 'إدارة طلبات SLA' : 'SLA Management', page: 'sla' },
@@ -1164,6 +1167,7 @@ const layout = (title: string, content: string, activePage: string, lang: Lang) 
           activePage === 'contact'    ? t.navContact :
           activePage === 'email-templates' ? t.navEmailTemplates :
           activePage === 'promotions'     ? t.navPromotions :
+          activePage === 'missions'       ? t.navMissions :
           activePage === 'eos'            ? t.navEOS :
           activePage === 'sla'            ? (lang === 'ar' ? 'إدارة طلبات SLA' : 'SLA Management') :
           activePage === 'login'      ? t.navLogin : activePage
@@ -5201,6 +5205,235 @@ Phone: Ext. 4100 / 4101 | Email: scholarship@qu.edu.qa
   `
 
   return c.html(layout(pageTitle, content, 'scholarship', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  MISSIONS PUBLIC PAGE  /missions
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/missions', (c) => {
+  const lang  = getLang(c)
+  const t     = T[lang]
+  const isRTL = lang === 'ar'
+  const pageTitle = isRTL ? 'المهام الرسمية والعلمية' : 'Official & Academic Missions'
+
+  const content = `
+  <!-- ══ HEADER ══ -->
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold mb-1" style="color:var(--qu-maroon)">
+      <i class="fas fa-plane-departure ${isRTL?'ml-2':'mr-2'}"></i>${isRTL?'المهام الرسمية والعلمية':'Official & Academic Missions'}
+    </h1>
+    <p class="text-gray-500 text-sm">${isRTL?'تتبع الطلبات • الإجراءات • التكاليف • الربط مع قسم التدريب والتطوير':'Track Requests • Procedures • Costs • Linked with Training & Development'}</p>
+  </div>
+
+  <!-- ══ INFO CARDS ══ -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+    <div class="card p-5 flex gap-4 items-start form-card">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#EFF6FF">
+        <i class="fas fa-briefcase text-blue-700 text-lg"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-gray-800 mb-1">${isRTL?'المهمة الرسمية':'Official Mission'}</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">${isRTL?'سفر رسمي بتكليف من الجامعة لأغراض إدارية أو تمثيلية، ويشمل بدل يومي وتذاكر سفر وإقامة على حساب الجامعة.':'Official travel assigned by the university for administrative or representative purposes, including daily allowance, flight tickets, and accommodation.'}</p>
+      </div>
+    </div>
+    <div class="card p-5 flex gap-4 items-start form-card">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#F0FDF4">
+        <i class="fas fa-flask text-green-700 text-lg"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-gray-800 mb-1">${isRTL?'المهمة العلمية':'Academic Mission'}</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">${isRTL?'مشاركة في مؤتمرات علمية أو تقديم أبحاث أكاديمية خارج الدولة، وتشمل رسوم التسجيل ونفقات السفر والإقامة.':'Participation in scientific conferences or presenting academic research abroad, covering registration fees, travel, and accommodation.'}</p>
+      </div>
+    </div>
+    <div class="card p-5 flex gap-4 items-start form-card">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#FFFBEB">
+        <i class="fas fa-chalkboard-teacher text-yellow-700 text-lg"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-gray-800 mb-1">${isRTL?'التدريب الخارجي':'External Training'}</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">${isRTL?'دورات تدريبية وورش عمل خارج الدولة بتنسيق من قسم التدريب والتطوير، وتُمنح وفق خطة التدريب السنوية المعتمدة.':'Training courses and workshops abroad coordinated by the Training & Development Dept., granted according to the approved annual training plan.'}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FINANCIAL ENTITLEMENTS ══ -->
+  <div class="card p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <i class="fas fa-coins" style="color:var(--qu-gold)"></i>
+      ${isRTL?'المستحقات المالية للمهام':'Financial Entitlements for Missions'}
+    </h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b-2" style="border-color:var(--qu-maroon)">
+            <th class="py-3 px-4 ${isRTL?'text-right':'text-left'} font-bold text-gray-700">${isRTL?'البند':'Item'}</th>
+            <th class="py-3 px-4 text-center font-bold text-gray-700">${isRTL?'داخل الدولة':'Within Qatar'}</th>
+            <th class="py-3 px-4 text-center font-bold text-gray-700">${isRTL?'خارج الدولة (خليج)':'GCC Countries'}</th>
+            <th class="py-3 px-4 text-center font-bold text-gray-700">${isRTL?'خارج الدولة (دولي)':'International'}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="py-3 px-4 font-semibold text-gray-700">${isRTL?'البدل اليومي':'Daily Allowance'}</td>
+            <td class="py-3 px-4 text-center font-bold" style="color:var(--qu-maroon)">${isRTL?'200 ريال':'QR 200'}</td>
+            <td class="py-3 px-4 text-center font-bold" style="color:var(--qu-maroon)">${isRTL?'600 ريال':'QR 600'}</td>
+            <td class="py-3 px-4 text-center font-bold" style="color:var(--qu-maroon)">${isRTL?'800–1,500 ريال':'QR 800–1,500'}</td>
+          </tr>
+          <tr class="hover:bg-gray-50 bg-gray-50">
+            <td class="py-3 px-4 font-semibold text-gray-700">${isRTL?'تذاكر السفر':'Flight Tickets'}</td>
+            <td class="py-3 px-4 text-center text-gray-500">—</td>
+            <td class="py-3 px-4 text-center text-green-700 font-bold">${isRTL?'درجة اقتصادية':'Economy Class'}</td>
+            <td class="py-3 px-4 text-center text-green-700 font-bold">${isRTL?'حسب المسافة':'By Distance'}</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="py-3 px-4 font-semibold text-gray-700">${isRTL?'الإقامة / الفندق':'Accommodation'}</td>
+            <td class="py-3 px-4 text-center text-gray-500">—</td>
+            <td class="py-3 px-4 text-center font-bold" style="color:var(--qu-maroon)">${isRTL?'حتى 400 ريال/ليلة':'Up to QR 400/night'}</td>
+            <td class="py-3 px-4 text-center font-bold" style="color:var(--qu-maroon)">${isRTL?'حتى 800 ريال/ليلة':'Up to QR 800/night'}</td>
+          </tr>
+          <tr class="hover:bg-gray-50 bg-gray-50">
+            <td class="py-3 px-4 font-semibold text-gray-700">${isRTL?'رسوم المؤتمر / التسجيل':'Conference / Registration Fees'}</td>
+            <td class="py-3 px-4 text-center text-gray-500">—</td>
+            <td class="py-3 px-4 text-center text-green-700 font-bold">${isRTL?'كاملة (بعد اعتماد)':'Full (post-approval)'}</td>
+            <td class="py-3 px-4 text-center text-green-700 font-bold">${isRTL?'كاملة (بعد اعتماد)':'Full (post-approval)'}</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="py-3 px-4 font-semibold text-gray-700">${isRTL?'مصاريف أخرى':'Other Expenses'}</td>
+            <td class="py-3 px-4 text-center text-gray-500">—</td>
+            <td class="py-3 px-4 text-center text-gray-600">${isRTL?'بإيصالات':'With receipts'}</td>
+            <td class="py-3 px-4 text-center text-gray-600">${isRTL?'بإيصالات':'With receipts'}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-400 mt-3 ${isRTL?'text-right':''}">
+      <i class="fas fa-info-circle ${isRTL?'ml-1':'mr-1'}"></i>
+      ${isRTL?'تخضع جميع المبالغ لسياسة الجامعة المعتمدة وقد تتغير وفق قرارات الإدارة العليا.':'All amounts are subject to the university\'s approved policy and may change per senior management decisions.'}
+    </p>
+  </div>
+
+  <!-- ══ PROCEDURES ══ -->
+  <div class="card p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-5 flex items-center gap-2">
+      <i class="fas fa-list-ol" style="color:var(--qu-maroon)"></i>
+      ${isRTL?'إجراءات طلب المهمة':'Mission Request Procedures'}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- الخطوات -->
+      <div class="space-y-4">
+        ${[
+          { n:'1', icon:'fa-file-alt',        ar:'تعبئة نموذج طلب المهمة',           en:'Fill the mission request form',                      ar2:'نموذج MIS-F-001 متاح في صفحة النماذج',              en2:'Form MIS-F-001 available on Forms page' },
+          { n:'2', icon:'fa-user-check',      ar:'اعتماد المشرف المباشر',             en:'Direct supervisor approval',                          ar2:'توقيع المشرف على النموذج قبل الرفع',                en2:'Supervisor signature on form before submission' },
+          { n:'3', icon:'fa-chalkboard-teacher', ar:'إحالة لقسم التدريب (إن كان تدريباً)', en:'Referral to Training Dept. (if training)',            ar2:'يراجع القسم الخطة التدريبية السنوية',               en2:'Dept. reviews the annual training plan' },
+          { n:'4', icon:'fa-coins',           ar:'موافقة إدارة الرواتب على الميزانية', en:'Payroll dept. budget approval',                       ar2:'مراجعة التكاليف وإصدار الموافقة المالية',            en2:'Cost review and financial approval issued' },
+          { n:'5', icon:'fa-plane',           ar:'تنفيذ المهمة',                      en:'Mission execution',                                   ar2:'يلتزم الموظف بتقديم تقرير نهائي بعد العودة',        en2:'Employee must submit final report upon return' },
+          { n:'6', icon:'fa-receipt',         ar:'تسوية المصاريف',                    en:'Expense settlement',                                  ar2:'تقديم الإيصالات خلال 5 أيام عمل من تاريخ العودة',   en2:'Submit receipts within 5 working days of return' },
+        ].map(s => `
+        <div class="flex gap-3 items-start">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-black" style="background:var(--qu-maroon)">${s.n}</div>
+          <div>
+            <p class="font-bold text-gray-800 text-sm"><i class="fas ${s.icon} ${isRTL?'ml-1':'mr-1'} text-gray-400"></i>${isRTL?s.ar:s.en}</p>
+            <p class="text-xs text-gray-500 mt-0.5">${isRTL?s.ar2:s.en2}</p>
+          </div>
+        </div>`).join('')}
+      </div>
+      <!-- ملاحظات مهمة -->
+      <div class="rounded-xl p-5 space-y-3" style="background:#FEF9E7;border:1px solid #F0C040">
+        <h3 class="font-bold text-yellow-800 flex items-center gap-2">
+          <i class="fas fa-exclamation-triangle"></i>${isRTL?'ملاحظات مهمة':'Important Notes'}
+        </h3>
+        ${[
+          { ar:'يجب تقديم الطلب قبل 15 يوم عمل على الأقل من موعد السفر.', en:'Request must be submitted at least 15 working days before travel.' },
+          { ar:'لا تُصرف أي مستحقات مالية بدون موافقة مسبقة من إدارة الرواتب.', en:'No financial entitlements are paid without prior Payroll dept. approval.' },
+          { ar:'طلبات التدريب الخارجي تمر حصراً عبر قسم التدريب والتطوير.', en:'External training requests go exclusively through Training & Development.' },
+          { ar:'في حال الإلغاء، يُبلَّغ مكتب الرواتب فوراً لاسترداد أي مدفوعات.', en:'In case of cancellation, Payroll office must be notified immediately.' },
+          { ar:'يُلزم الموظف بتقديم تقرير مهمة خلال أسبوع من العودة.', en:'Employee must submit mission report within one week of return.' },
+        ].map(n=>`<p class="text-yellow-900 text-xs flex gap-2"><i class="fas fa-circle-dot mt-0.5 flex-shrink-0" style="color:var(--qu-gold)"></i><span>${isRTL?n.ar:n.en}</span></p>`).join('')}
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LINK TO STAFF PORTAL + TRAINING DEPT ══ -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+    <div class="card p-5" style="border-top:4px solid var(--qu-maroon)">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:var(--qu-maroon)">
+          <i class="fas fa-portal-enter text-white" style="font-size:1rem"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800">${isRTL?'بوابة الموظفين':'Staff Portal'}</h3>
+          <p class="text-xs text-gray-500">${isRTL?'لمتابعة طلباتك وإدارة المهام':'Track your requests & manage missions'}</p>
+        </div>
+      </div>
+      <p class="text-gray-600 text-sm mb-4">${isRTL?'من خلال بوابة الموظفين يمكنك تتبع حالة طلبك، الاطلاع على التكاليف المعتمدة، واستقبال إشعارات المهمة عبر البريد الإلكتروني.':'Through the Staff Portal you can track your request status, view approved costs, and receive mission notifications by email.'}</p>
+      <a href="/staff-missions?lang=${lang}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white btn-primary">
+        <i class="fas fa-plane-departure"></i>${isRTL?'إدارة المهام':'Manage Missions'}
+      </a>
+    </div>
+    <div class="card p-5" style="border-top:4px solid #064E3B">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#064E3B">
+          <i class="fas fa-chalkboard-teacher text-white" style="font-size:1rem"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800">${isRTL?'قسم التدريب والتطوير':'Training & Development'}</h3>
+          <p class="text-xs text-gray-500">${isRTL?'للمهام والدورات التدريبية الخارجية':'For external training missions & courses'}</p>
+        </div>
+      </div>
+      <p class="text-gray-600 text-sm mb-4">${isRTL?'جميع طلبات التدريب الخارجي تُرفع أولاً لقسم التدريب والتطوير، ثم تُحال تلقائياً لإدارة الرواتب للاعتماد المالي.':'All external training requests are submitted first to Training & Development, then automatically referred to Payroll for financial approval.'}</p>
+      <div class="flex gap-2 flex-wrap">
+        <a href="mailto:training@qu.edu.qa" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#064E3B">
+          <i class="fas fa-envelope"></i>training@qu.edu.qa
+        </a>
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-gray-700 bg-gray-100">
+          <i class="fas fa-phone"></i>${isRTL?'داخلي 4300':'Ext. 4300'}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REQUIRED DOCUMENTS ══ -->
+  <div class="card p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <i class="fas fa-folder-open" style="color:var(--qu-gold)"></i>
+      ${isRTL?'المستندات المطلوبة':'Required Documents'}
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      ${[
+        { icon:'fa-file-alt',       ar:'نموذج طلب المهمة MIS-F-001',          en:'Mission Request Form MIS-F-001' },
+        { icon:'fa-signature',      ar:'توقيع المشرف المباشر والمدير',         en:'Direct supervisor & manager signature' },
+        { icon:'fa-calendar-check', ar:'جدول المؤتمر أو برنامج التدريب',       en:'Conference schedule or training programme' },
+        { icon:'fa-ticket-alt',     ar:'عروض أسعار التذاكر والفندق',          en:'Flight & hotel price quotations' },
+        { icon:'fa-id-card',        ar:'صورة جواز السفر (سارية المفعول)',       en:'Valid passport copy' },
+        { icon:'fa-receipt',        ar:'إيصالات المصاريف (بعد العودة)',         en:'Expense receipts (upon return)' },
+      ].map(d=>`
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition">
+        <i class="fas ${d.icon} text-gray-400 w-5 text-center"></i>
+        <span class="text-sm text-gray-700">${isRTL?d.ar:d.en}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- ══ CONTACT ══ -->
+  <div class="card p-5" style="background:linear-gradient(135deg,#1e3a5f,#1a4a7a)">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="${isRTL?'text-right':''}">
+        <h3 class="font-bold text-white mb-1">${isRTL?'مكتب الرواتب — المهام الرسمية':'Payroll Office — Official Missions'}</h3>
+        <p class="text-white/70 text-sm">${isRTL?'للاستفسار عن طلبات المهام والمستحقات المالية':'For inquiries about mission requests and financial entitlements'}</p>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <a href="mailto:missions@qu.edu.qa" class="px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2" style="background:var(--qu-gold);color:white">
+          <i class="fas fa-envelope"></i>missions@qu.edu.qa
+        </a>
+        <span class="px-4 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2" style="background:rgba(255,255,255,.15)">
+          <i class="fas fa-phone"></i>${isRTL?'داخلي 4200 / 4201':'Ext. 4200 / 4201'}
+        </span>
+      </div>
+    </div>
+  </div>
+  `
+
+  return c.html(layout(pageTitle, content, 'missions', lang))
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
