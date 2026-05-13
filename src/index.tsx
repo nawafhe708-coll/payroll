@@ -6965,486 +6965,143 @@ app.get('/staff', (c) => {
     .badge-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-inline-end:5px}
     .ann-item:hover{background:#FAFAFA}
 
-    /* ══════════ THEME ENGINE v2 ══════════ */
-    @keyframes th-slidein{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes th-shimmer{0%,100%{opacity:.6}50%{opacity:1}}
-    @keyframes th-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
-    @keyframes th-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-    @keyframes th-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    @keyframes th-sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-    @keyframes th-ticker{0%{transform:translateX(110%)}100%{transform:translateX(-110%)}}
-    @keyframes th-tickerR{0%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
-    @keyframes th-confetti{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(140px) rotate(720deg);opacity:0}}
-    @keyframes th-stars{0%,100%{opacity:.3;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
-    @keyframes th-moon-glow{0%,100%{text-shadow:0 0 8px #F0C04099}50%{text-shadow:0 0 28px #F0C040EE,0 0 48px #F0C04066}}
-    @keyframes th-lantern{0%,100%{transform:rotate(-8deg) translateY(0)}50%{transform:rotate(8deg) translateY(-6px)}}
-    @keyframes th-snow{0%{transform:translateY(-10px) rotate(0deg);opacity:.9}100%{transform:translateY(150px) rotate(360deg);opacity:0}}
-    @keyframes th-glow-nd {0%,100%{box-shadow:0 0 18px #8B1A2F66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #C41E3ABB,0 4px 48px #00000066}}
-    @keyframes th-glow-eid{0%,100%{box-shadow:0 0 18px #05966988,0 4px 32px #00000044}50%{box-shadow:0 0 40px #10B981BB,0 4px 48px #00000066}}
-    @keyframes th-glow-ram{0%,100%{box-shadow:0 0 18px #4338CA88,0 4px 32px #00000044}50%{box-shadow:0 0 40px #6366F1BB,0 4px 48px #00000066}}
-    @keyframes th-glow-spr{0%,100%{box-shadow:0 0 18px #16A34A66,0 4px 32px #00000033}50%{box-shadow:0 0 40px #22C55E99,0 4px 48px #00000055}}
-    @keyframes th-glow-sum{0%,100%{box-shadow:0 0 18px #D9770666,0 4px 32px #00000044}50%{box-shadow:0 0 40px #F9731688,0 4px 48px #00000066}}
-    @keyframes th-glow-aut{0%,100%{box-shadow:0 0 18px #92400E66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #B4540077,0 4px 48px #00000066}}
-    @keyframes th-glow-win{0%,100%{box-shadow:0 0 18px #1E3A5F66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #2563EB88,0 4px 48px #00000066}}
-    @keyframes th-glow-nb {0%,100%{box-shadow:0 0 18px #14532D66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #16A34A88,0 4px 48px #00000066}}
 
-    #themeBanner{animation:th-slidein .65s cubic-bezier(.22,.68,0,1.2) both}
-    .th-particle{position:absolute;pointer-events:none;font-size:1.4rem;animation:th-confetti 3.2s ease-in infinite}
-    .th-star{position:absolute;pointer-events:none;animation:th-stars 2s ease-in-out infinite}
-    .th-snow-p{position:absolute;pointer-events:none;font-size:1rem;animation:th-snow 4s linear infinite}
-    .th-ticker-wrap{overflow:hidden;white-space:nowrap;width:100%}
-    .th-ticker-inner{display:inline-block;padding-inline-start:100%;animation:th-ticker 26s linear infinite}
-    .th-ticker-innerR{display:inline-block;padding-inline-end:100%;animation:th-tickerR 26s linear infinite}
+    /* ═══ اليوم الوطني القطري ═══ */
+    @keyframes nd-shimmer{0%,100%{opacity:.55}50%{opacity:1}}
+    @keyframes nd-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+    @keyframes nd-pulse-ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.55);opacity:0}}
+    @keyframes nd-star-spin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
+    @keyframes nd-slide-in{0%{opacity:0;transform:translateY(-22px)}100%{opacity:1;transform:translateY(0)}}
+    @keyframes nd-ticker{0%{transform:translateX(100%)}100%{transform:translateX(-110%)}}
+    @keyframes nd-ticker-rtl{0%{transform:translateX(-100%)}100%{transform:translateX(110%)}}
+    @keyframes confetti-fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(120px) rotate(720deg);opacity:0}}
+    @keyframes nd-glow{0%,100%{box-shadow:0 0 18px rgba(139,26,47,.35),0 0 40px rgba(196,146,42,.2)}50%{box-shadow:0 0 32px rgba(139,26,47,.55),0 0 64px rgba(196,146,42,.4)}}
+
+    #ndBanner{animation:nd-slide-in .6s ease both, nd-glow 3s ease-in-out infinite}
+    .nd-flag-float{animation:nd-float 3.5s ease-in-out infinite}
+    .nd-star{animation:nd-star-spin 6s linear infinite}
+    .nd-shimmer{animation:nd-shimmer 2.5s ease-in-out infinite}
+    .nd-ticker-wrap{overflow:hidden;white-space:nowrap}
+    .nd-ticker-inner{display:inline-block;animation:${isRTL?'nd-ticker-rtl':'nd-ticker'} 18s linear infinite}
+    .nd-confetti-wrap{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:inherit}
+    .nd-confetti-piece{position:absolute;top:-8px;width:7px;height:7px;border-radius:1px;opacity:0;animation:confetti-fall linear infinite}
+    .nd-pulse{position:absolute;inset:0;border-radius:inherit;border:2px solid rgba(196,146,42,.5);animation:nd-pulse-ring 2s ease-out infinite}
+    .nd-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px)}
   </style>
 
-    <!-- ══ THEME BTN ══ -->
-    <div id="thBtnRow" class="flex justify-end mb-1">
-      <button onclick="_thToggleStaff()" id="thInlineBtnStaff"
-        style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
-        onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
-        <i class="fas fa-palette"></i> Theme
-      </button>
-    </div>
-    <!-- ══ THEME BANNER (filled by JS) ══════════════════════════════════════ -->
-    <div id="themeBanner" class="hidden relative rounded-2xl overflow-hidden" style="min-height:155px"></div>
+  <div dir="${isRTL?'rtl':'ltr'}" class="space-y-6">
+
+    <!-- ══ NATIONAL DAY BANNER (18 Dec only) ══════════════════════════════ -->
+    <div id="ndBanner" class="hidden relative rounded-2xl overflow-hidden"
+         style="background:linear-gradient(135deg,#8B1A2F 0%,#5C0F1E 40%,#1a0a0e 100%);min-height:160px">
+
+      <!-- confetti pieces -->
+      <div class="nd-confetti-wrap" id="ndConfetti"></div>
+      <!-- pulse ring -->
+      <div class="nd-pulse"></div>
+
+      <!-- الخط الذهبي السفلي -->
+      <div class="absolute bottom-0 left-0 right-0 h-1.5"
+           style="background:linear-gradient(90deg,transparent,#C4922A,#F0C040,#C4922A,transparent)"></div>
+
+      <!-- محتوى البانر -->
+      <div class="relative z-10 p-6 flex items-center gap-5 flex-wrap ${isRTL?'flex-row-reverse':''}">
+
+        <!-- أيقونة العلم + تأثير -->
+        <div class="relative flex-shrink-0">
+          <div class="w-20 h-20 rounded-2xl flex items-center justify-center nd-flag-float"
+               style="background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2)">
+            <span class="text-5xl select-none">🇶🇦</span>
+          </div>
+          <div class="absolute -top-1 -${isRTL?'left':'right'}-1 w-5 h-5 rounded-full flex items-center justify-center"
+               style="background:var(--qu-gold)">
+            <i class="fas fa-star text-white nd-star" style="font-size:8px"></i>
+          </div>
+        </div>
+
+        <!-- النص الرئيسي -->
+        <div class="flex-1 min-w-0 ${isRTL?'text-right':''}">
+          <div class="flex items-center gap-2 mb-1 flex-wrap ${isRTL?'flex-row-reverse justify-end':''}">
+            <span class="nd-badge text-white text-xs font-bold px-3 py-1 rounded-full nd-shimmer">
+              ${isRTL?'🎉 اليوم الوطني 2025':'🎉 National Day 2025'}
+            </span>
+            <span class="text-white/60 text-xs">${isRTL?'18 ديسمبر':'December 18'}</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight tracking-wide"
+              style="text-shadow:0 2px 12px rgba(0,0,0,.5)">
+            ${isRTL
+              ? '🇶🇦 كل عام وقطر بخير'
+              : '🇶🇦 Happy National Day Qatar'}
+          </h2>
+          <p class="text-white/75 text-sm mt-1.5 nd-shimmer" style="animation-delay:.4s">
+            ${isRTL
+              ? 'تهنئ إدارة الرواتب والموارد البشرية جميع الموظفين بمناسبة اليوم الوطني الخامس والخمسين'
+              : 'HR & Payroll warmly congratulates all staff on Qatar\'s 55th National Day'}
+          </p>
+          <!-- شريط نص متحرك -->
+          <div class="nd-ticker-wrap mt-3" style="max-width:480px">
+            <span class="nd-ticker-inner text-xs font-semibold"
+                  style="color:var(--qu-gold);letter-spacing:.5px">
+              ${isRTL
+                ? '★ مكتب الرواتب مغلق يوم 18 و19 ديسمبر بمناسبة اليوم الوطني &nbsp;★&nbsp; سيتم صرف سلفة اليوم الوطني في 15 ديسمبر &nbsp;★&nbsp; عيد وطن ومسيرة عز &nbsp;★'
+                : '★ Payroll office closed Dec 18–19 for National Day &nbsp;★&nbsp; National Day advance credited Dec 15 &nbsp;★&nbsp; Proud to serve Qatar &nbsp;★'}
+            </span>
+          </div>
+        </div>
+
+        <!-- زر التقويم -->
+        <div class="flex-shrink-0 flex flex-col items-center gap-2 ${isRTL?'items-end':'items-start'}">
+          <button onclick="jumpToNationalDay()"
+                  class="px-5 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition"
+                  style="background:rgba(196,146,42,.85);border:1px solid rgba(255,255,255,.25)">
+            <i class="fas fa-calendar-day"></i>
+            ${isRTL?'عرض في التقويم':'View in Calendar'}
+          </button>
+          <span class="text-white/50 text-xs text-center">
+            ${isRTL?'اليوم الوطني الـ 55':'55th National Day'}
+          </span>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /ndBanner -->
 
     <script>
-    /* ══════════ THEME ENGINE v2 ══════════ */
-    function _getNow(){
-      try{
-        var ov=localStorage.getItem('nd_test_date');
-        if(ov){var p=ov.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
-      }catch(e){}
-      return new Date();
-    }
+    (function(){
+      /* ── هل اليوم 18 ديسمبر؟ ── */
+      var now = new Date();
+      var isNatDay = (now.getMonth()===11 && now.getDate()===18);
+      if(!isNatDay) return;
 
-    var THEMES=[
-      /* 1 ── Qatar National Day (18 Dec) */
-      {id:'national', glow:'th-glow-nd',
-       match:function(d){return d.getMonth()===11&&d.getDate()===18;},
-       bg:'linear-gradient(135deg,#8B1A2F 0%,#6B0A22 40%,#1a1a2e 100%)',
-       emoji:'🇶🇦',
-       titleAr:'🇶🇦 كل عام وقطر بخير',
-       titleEn:'🇶🇦 Happy Qatar National Day',
-       subtitleAr:'اليوم الوطني القطري — ١٨ ديسمبر',
-       subtitleEn:'Qatar National Day — December 18',
-       tickerAr:'🇶🇦 يوم المجد والعطاء • تحيا قطر • دولة قطر تحتفل باليوم الوطني • ١٨ ديسمبر يوم العز والكرامة • الله يحفظ قطر وقيادتها 🇶🇦',
-       tickerEn:'🇶🇦 Glory & Pride • Long Live Qatar • Qatar National Day Celebration • December 18 • God Bless Qatar 🇶🇦',
-       particles:['🇶🇦','⭐','✨','🌟','🎊','🎉','🏅','💫'],
-       colors:['#C41E3A','#F0C040','#ffffff','#FFD700'],
-       calDate:'2025-12-18'},
-
-      /* 2 ── Eid Al-Fitr (approx late-Mar / early-Apr) */
-      {id:'eid_fitr', glow:'th-glow-eid',
-       match:function(d){var m=d.getMonth(),dt=d.getDate();
-         return (m===2&&dt>=29)||(m===3&&dt<=3);},
-       bg:'linear-gradient(135deg,#064E3B 0%,#065F46 45%,#0D2B1F 100%)',
-       emoji:'🌙',
-       titleAr:'🌙 عيد الفطر المبارك',
-       titleEn:'🌙 Eid Al-Fitr Mubarak',
-       subtitleAr:'كل عام وأنتم بخير • تقبّل الله صيامكم',
-       subtitleEn:'May your fast be accepted • Happy Eid',
-       tickerAr:'🌙 عيد الفطر المبارك • تقبّل الله منا ومنكم • كل عام وأنتم بخير • أعاده الله علينا باليُمن والبركات 🌙',
-       tickerEn:'🌙 Eid Al-Fitr Mubarak • May Allah accept our deeds • Happy Eid to all 🌙',
-       particles:['🌙','⭐','✨','🌟','🎊','💚','🕌','🤲'],
-       colors:['#10B981','#34D399','#F0C040','#ffffff'],
-       calDate:'2025-03-30'},
-
-      /* 3 ── Eid Al-Adha (approx 6–9 Jun) */
-      {id:'eid_adha', glow:'th-glow-eid',
-       match:function(d){return d.getMonth()===5&&d.getDate()>=5&&d.getDate()<=10;},
-       bg:'linear-gradient(135deg,#1E3A5F 0%,#1a4a7a 45%,#0f1f36 100%)',
-       emoji:'🕌',
-       titleAr:'🕌 عيد الأضحى المبارك',
-       titleEn:'🕌 Eid Al-Adha Mubarak',
-       subtitleAr:'كل عام وأنتم بخير • تقبّل الله طاعتكم',
-       subtitleEn:'May your worship be accepted • Happy Eid',
-       tickerAr:'🕌 عيد الأضحى المبارك • إبراهيم الخليل • تقبّل الله منا ومنكم صالح الأعمال • كل عام وأنتم بخير 🕌',
-       tickerEn:'🕌 Eid Al-Adha Mubarak • May Allah accept our sacrifices • Happy Eid to all 🕌',
-       particles:['🕌','🌙','⭐','✨','💙','🤲','🌟','🎊'],
-       colors:['#3B82F6','#60A5FA','#F0C040','#ffffff'],
-       calDate:'2025-06-06'},
-
-      /* 4 ── Ramadan (approx 1–29 Mar) */
-      {id:'ramadan', glow:'th-glow-ram',
-       match:function(d){return d.getMonth()===2&&d.getDate()>=1&&d.getDate()<=28;},
-       bg:'linear-gradient(135deg,#1E1B4B 0%,#312E81 45%,#0D0B2E 100%)',
-       emoji:'🌙',
-       titleAr:'🌙 رمضان كريم',
-       titleEn:'🌙 Ramadan Kareem',
-       subtitleAr:'شهر الخير والبركة والعبادة',
-       subtitleEn:'Month of Blessings & Worship',
-       tickerAr:'🌙 رمضان كريم • شهر القرآن والخير • رمضان مبارك على الجميع • تقبّل الله صيامكم وقيامكم • كل رمضان وأنتم بخير 🌙',
-       tickerEn:'🌙 Ramadan Kareem • Month of Quran • May Allah accept your fasting • Blessed Ramadan 🌙',
-       particles:['🌙','⭐','🌟','✨','📿','🕌','🤲','💜'],
-       colors:['#6366F1','#818CF8','#F0C040','#ffffff'],
-       calDate:'2025-03-01'},
-
-      /* 5 ── Mawlid Al-Nabawi (approx 29 Jan) */
-      {id:'mawlid', glow:'th-glow-nb',
-       match:function(d){return d.getMonth()===0&&d.getDate()>=28&&d.getDate()<=30;},
-       bg:'linear-gradient(135deg,#14532D 0%,#166534 45%,#052E16 100%)',
-       emoji:'🌿',
-       titleAr:'🌿 المولد النبوي الشريف',
-       titleEn:'🌿 Prophet\'s Birthday (Mawlid)',
-       subtitleAr:'ذكرى مولد سيدنا محمد ﷺ',
-       subtitleEn:'Birthday of Prophet Muhammad ﷺ',
-       tickerAr:'🌿 بمناسبة المولد النبوي الشريف • صلِّ على النبي محمد ﷺ • اللهم صلِّ وسلّم وبارك عليه 🌿',
-       tickerEn:'🌿 Happy Mawlid Al-Nabawi • Blessings upon Prophet Muhammad ﷺ 🌿',
-       particles:['🌿','🌟','⭐','✨','💚','🤲','📿','🕌'],
-       colors:['#22C55E','#4ADE80','#F0C040','#ffffff'],
-       calDate:'2025-01-29'},
-
-      /* 6 ── Hijri New Year (approx 26 Jun) */
-      {id:'hijri_new', glow:'th-glow-ram',
-       match:function(d){return d.getMonth()===5&&d.getDate()>=25&&d.getDate()<=27;},
-       bg:'linear-gradient(135deg,#44337A 0%,#553C9A 45%,#231942 100%)',
-       emoji:'🌙',
-       titleAr:'🌙 رأس السنة الهجرية',
-       titleEn:'🌙 Islamic New Year',
-       subtitleAr:'عام هجري جديد مبارك',
-       subtitleEn:'Blessed Islamic New Year',
-       tickerAr:'🌙 رأس السنة الهجرية الجديدة • عام مبارك • كل عام وأنتم بخير • اللهم اجعله عام خير وبركة 🌙',
-       tickerEn:'🌙 Happy Islamic New Year • May this year be full of blessings 🌙',
-       particles:['🌙','⭐','✨','🌟','💜','🎊','📿','🕌'],
-       colors:['#8B5CF6','#A78BFA','#F0C040','#ffffff'],
-       calDate:'2025-06-26'},
-
-      /* 7 ── Spring (Apr 1 – May 31) */
-      {id:'spring', glow:'th-glow-spr',
-       match:function(d){return d.getMonth()===3||(d.getMonth()===4&&d.getDate()<=31);},
-       bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#052e16 100%)',
-       emoji:'🌸',
-       titleAr:'🌸 فصل الربيع',
-       titleEn:'🌸 Spring Season',
-       subtitleAr:'الطبيعة تتجدّد والأمل يزهر',
-       subtitleEn:'Nature renews & hope blossoms',
-       tickerAr:'🌸 مرحباً بالربيع • الأزهار والجمال • فصل الخير والتجديد • الطبيعة تزهر من حولنا 🌸',
-       tickerEn:'🌸 Welcome Spring • Flowers & Beauty • Season of renewal & hope 🌸',
-       particles:['🌸','🌺','🌻','🦋','🌿','🌱','🌼','🍀'],
-       colors:['#22C55E','#4ADE80','#FCD34D','#F9A8D4'],
-       calDate:''},
-
-      /* 8 ── Summer (Jun 10 – Aug 31) */
-      {id:'summer', glow:'th-glow-sum',
-       match:function(d){
-         var m=d.getMonth(),dt=d.getDate();
-         return (m===5&&dt>=10)||m===6||m===7;},
-       bg:'linear-gradient(135deg,#7C2D12 0%,#9A3412 40%,#431407 100%)',
-       emoji:'☀️',
-       titleAr:'☀️ فصل الصيف',
-       titleEn:'☀️ Summer Season',
-       subtitleAr:'الحرارة والنشاط والإجازات',
-       subtitleEn:'Heat, energy & summer holidays',
-       tickerAr:'☀️ مرحباً بالصيف • موسم الإجازات • استمتع بأيامك • الشمس تُشرق للجميع ☀️',
-       tickerEn:'☀️ Welcome Summer • Vacation season • Enjoy the sunny days ☀️',
-       particles:['☀️','🌞','🌊','🏖️','🌴','🍹','🌻','⭐'],
-       colors:['#F97316','#FB923C','#FCD34D','#ffffff'],
-       calDate:''},
-
-      /* 9 ── Autumn (Sep – Nov) */
-      {id:'autumn', glow:'th-glow-aut',
-       match:function(d){return d.getMonth()>=8&&d.getMonth()<=10;},
-       bg:'linear-gradient(135deg,#78350F 0%,#92400E 40%,#3B1A08 100%)',
-       emoji:'🍂',
-       titleAr:'🍂 فصل الخريف',
-       titleEn:'🍂 Autumn Season',
-       subtitleAr:'تتساقط الأوراق وتتجدد الأيام',
-       subtitleEn:'Leaves fall, days refresh',
-       tickerAr:'🍂 مرحباً بالخريف • موسم التغيير والجمال • الألوان الذهبية تزيّن الطبيعة 🍂',
-       tickerEn:'🍂 Welcome Autumn • Season of change & golden colors 🍂',
-       particles:['🍂','🍁','🌾','🍄','🌰','🦔','🍃','🌙'],
-       colors:['#D97706','#F59E0B','#92400E','#FCD34D'],
-       calDate:''},
-
-      /* 10 ── Winter (Dec 1–17 + Dec 20–31 + Jan–Feb) */
-      {id:'winter', glow:'th-glow-win',
-       match:function(d){
-         var m=d.getMonth(),dt=d.getDate();
-         return m===0||m===1||(m===11&&dt>=20)||(m===11&&dt<=17&&dt>=1);},
-       bg:'linear-gradient(135deg,#0F172A 0%,#1E3A5F 45%,#0a0f1e 100%)',
-       emoji:'❄️',
-       titleAr:'❄️ فصل الشتاء',
-       titleEn:'❄️ Winter Season',
-       subtitleAr:'البرد والهدوء وجمال الليالي',
-       subtitleEn:'Cool nights & peaceful days',
-       tickerAr:'❄️ مرحباً بالشتاء • موسم الدفء والقهوة • ليالٍ هادئة وجميلة • الشتاء في قطر 🌌',
-       tickerEn:'❄️ Welcome Winter • Cozy season • Beautiful quiet nights in Qatar 🌌',
-       particles:['❄️','⛄','🌨️','✨','💙','🌟','🌙','⭐'],
-       colors:['#3B82F6','#60A5FA','#93C5FD','#ffffff'],
-       calDate:''},
-
-      /* 11 ── New Year's Day (Jan 1) */
-      {id:'new_year', glow:'th-glow-nd',
-       match:function(d){return d.getMonth()===0&&d.getDate()===1;},
-       bg:'linear-gradient(135deg,#4C1D95 0%,#6D28D9 45%,#1e0a3c 100%)',
-       emoji:'🎆',
-       titleAr:'🎆 كل عام وأنتم بخير',
-       titleEn:'🎆 Happy New Year!',
-       subtitleAr:'عام جديد مبارك • ٢٠٢٦',
-       subtitleEn:'Wishing you a wonderful New Year 2026',
-       tickerAr:'🎆 سنة جديدة سعيدة • كل عام وأنتم بخير • عام مليء بالخير والسعادة • ٢٠٢٦ عام التميز والإنجاز 🎆',
-       tickerEn:'🎆 Happy New Year 2026 • Wishing you joy, health & success • A wonderful year ahead 🎆',
-       particles:['🎆','🎇','✨','🎊','🎉','⭐','💜','🌟'],
-       colors:['#8B5CF6','#A78BFA','#FCD34D','#ffffff'],
-       calDate:'2026-01-01'},
-
-      /* 12 ── Qatar Sport Day (3rd Tue Feb → approx 11 Feb, or Dec 19 emergency) */
-      {id:'sport_day', glow:'th-glow-spr',
-       match:function(d){return d.getMonth()===11&&d.getDate()===19;},
-       bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#022c22 100%)',
-       emoji:'🏃',
-       titleAr:'🏃 اليوم الوطني للرياضة',
-       titleEn:'🏃 Qatar National Sport Day',
-       subtitleAr:'الرياضة حياة • قطر تتحرك',
-       subtitleEn:'Sport is Life • Qatar Moves',
-       tickerAr:'🏃 اليوم الوطني للرياضة • الرياضة صحة وحياة • قطر تتحرك للأمام • كن نشيطاً كن صحياً 🏃',
-       tickerEn:'🏃 Qatar National Sport Day • Sport is Health & Life • Stay Active Stay Healthy 🏃',
-       particles:['🏃','⚽','🏅','🎽','💪','🌟','🏆','⭐'],
-       colors:['#10B981','#34D399','#FCD34D','#ffffff'],
-       calDate:'2025-12-19'}
-    ];
-
-    function detectTheme(now){
-      for(var i=0;i<THEMES.length;i++){
-        if(THEMES[i].match(now)) return THEMES[i];
-      }
-      return null;
-    }
-
-    function thJumpCal(dateStr){
-      if(!dateStr) return;
-      var p=dateStr.split('-');
-      var targetDate=new Date(+p[0],+p[1]-1,+p[2]);
-      var targetMonth=+p[1]-1;
-      var targetYear=+p[0];
-      var cur=window._calCurrentMonth;
-      if(cur===undefined){
-        var td=new Date();
-        cur={m:td.getMonth(),y:td.getFullYear()};
-      }
-      if(window.renderCalendar){
-        var diff=(targetYear-cur.y)*12+(targetMonth-cur.m);
-        for(var i=0;i<Math.abs(diff);i++){
-          if(diff>0) window.nextMonth&&window.nextMonth();
-          else window.prevMonth&&window.prevMonth();
-        }
-        setTimeout(function(){
-          var rows=document.querySelectorAll('.cal-row');
-          rows.forEach(function(r){
-            if(r.getAttribute('data-date')===dateStr){
-              r.scrollIntoView({behavior:'smooth',block:'center'});
-              r.style.outline='3px solid #F0C040';
-              setTimeout(function(){r.style.outline='';},2000);
-            }
-          });
-        },300);
-      }
-    }
-
-    function spawnParticles(wrap, particles, colors){
-      for(var i=0;i<26;i++){
-        (function(i){
-          setTimeout(function(){
-            var p=document.createElement('span');
-            p.className='th-particle';
-            p.textContent=particles[i%particles.length];
-            p.style.left=Math.random()*100+'%';
-            p.style.top='-20px';
-            p.style.animationDelay=(Math.random()*2.5)+'s';
-            p.style.animationDuration=(2.5+Math.random()*2)+'s';
-            p.style.fontSize=(1+Math.random()*0.8)+'rem';
-            wrap.appendChild(p);
-            setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},5500);
-          },i*180);
-        })(i);
-      }
-    }
-
-    function renderBanner(th){
-      var banner=document.getElementById('themeBanner');
-      if(!banner) return;
-      var isRTL=${isRTL};
+      /* ── أظهر البانر ── */
+      var banner = document.getElementById('ndBanner');
       banner.classList.remove('hidden');
-      banner.style.background=th.bg;
-      banner.style.animation='th-slidein .65s cubic-bezier(.22,.68,0,1.2) both';
-      banner.style.animationName=th.glow+',th-slidein';
-      var title=isRTL?th.titleAr:th.titleEn;
-      var subtitle=isRTL?th.subtitleAr:th.subtitleEn;
-      var ticker=isRTL?th.tickerAr:th.tickerEn;
-      var tickerClass=isRTL?'th-ticker-innerR':'th-ticker-inner';
-      var calBtn='';
-      if(th.calDate){
-        calBtn='<button onclick="thJumpCal(\''+th.calDate+'\')" '
-          +'style="margin-top:10px;padding:7px 18px;border:none;border-radius:12px;'
-          +'background:rgba(255,255,255,0.18);color:#fff;font-size:.82rem;cursor:pointer;'
-          +'backdrop-filter:blur(4px);transition:.2s" '
-          +'onmouseover="this.style.background=\'rgba(255,255,255,0.3)\'" '
-          +'onmouseout="this.style.background=\'rgba(255,255,255,0.18)\'">'
-          +'<i class="fas fa-calendar-day" style="margin-inline-end:6px"></i>'
-          +(isRTL?'اذهب للتقويم':'Go to Calendar')+'</button>';
-      }
-      banner.innerHTML=
-        '<div style="position:relative;z-index:2;padding:22px 24px 14px;display:flex;flex-direction:column;gap:4px">'
-          +'<div style="font-size:clamp(1.35rem,3vw,1.75rem);font-weight:800;color:#fff;'
-          +'text-shadow:0 2px 12px rgba(0,0,0,.4);animation:th-float 3.5s ease-in-out infinite;display:inline-block">'
-          +title+'</div>'
-          +'<div style="font-size:.88rem;color:rgba(255,255,255,.8);margin-top:2px">'+subtitle+'</div>'
-          +calBtn
-          +'</div>'
-          +'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.25);'
-          +'padding:7px 0;overflow:hidden;z-index:3">'
-          +'<div class="th-ticker-wrap">'
-          +'<span class="'+tickerClass+'" style="color:rgba(255,255,255,.9);font-size:.8rem;letter-spacing:.03em">'+ticker+'</span>'
-          +'</div></div>';
-      // spawn particles loop
-      (function loop(){
-        spawnParticles(banner, th.particles, th.colors);
-        setTimeout(loop, 5600);
-      })();
-    }
 
-    // ── Auto-detect and render ──
-    (function(){
-      var th=detectTheme(_getNow());
-      if(th) renderBanner(th);
+      /* ── confetti ── */
+      var wrap = document.getElementById('ndConfetti');
+      var colors = ['#C4922A','#F0C040','#8B1A2F','#ffffff','#e8d5a0','#a0522d'];
+      var shapes = ['◆','★','●','▲','■'];
+      for(var i=0;i<28;i++){
+        var el = document.createElement('span');
+        el.className = 'nd-confetti-piece';
+        el.textContent = shapes[i%shapes.length];
+        el.style.left  = (Math.random()*100)+'%';
+        el.style.color = colors[i%colors.length];
+        el.style.fontSize = (8+Math.random()*7)+'px';
+        el.style.animationDuration  = (3+Math.random()*5)+'s';
+        el.style.animationDelay     = (Math.random()*6)+'s';
+        wrap.appendChild(el);
+      }
     })();
 
-    /* ══════════ DEV PANEL v2 (palette) ══════════ */
-    (function(){
-      // Floating button
-      var btn=document.createElement('button');
-      btn.id='thDevBtn';
-      btn.innerHTML='<i class="fas fa-palette"></i>';
-      btn.title='Theme Dev Panel';
-      btn.style.cssText='position:fixed;bottom:22px;'+(${isRTL?'left:22px':'right:22px'})
-        +';z-index:9998;width:48px;height:48px;border-radius:50%;border:none;'
-        +'background:rgba(55,65,81,.85);color:#F0C040;font-size:1.2rem;cursor:pointer;'
-        +'box-shadow:0 4px 16px rgba(0,0,0,.4);backdrop-filter:blur(6px);transition:.2s';
-      btn.onmouseover=function(){this.style.background='rgba(79,70,229,.9)';};
-      btn.onmouseout=function(){this.style.background='rgba(55,65,81,.85)';};
-      document.body.appendChild(btn);
-
-      // Panel
-      var panel=document.createElement('div');
-      panel.id='thDevPanel';
-      panel.style.cssText='display:none;position:fixed;bottom:80px;'+(${isRTL?'left:12px':'right:12px'})
-        +';z-index:9999;width:310px;background:rgba(15,23,42,.95);'
-        +'border-radius:16px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.6);'
-        +'backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);'
-        +'color:#e2e8f0;font-size:.83rem';
-
-      var quick=[
-        {label:'🇶🇦 اليوم الوطني', date:'2025-12-18', c:'rgba(139,26,47,.8)'},
-        {label:'🌙 عيد الفطر',      date:'2025-03-30', c:'rgba(5,150,105,.8)'},
-        {label:'🕌 عيد الأضحى',     date:'2025-06-07', c:'rgba(30,58,95,.9)'},
-        {label:'🌙 رمضان',           date:'2025-03-05', c:'rgba(67,56,202,.8)'},
-        {label:'🌿 المولد النبوي',   date:'2025-01-29', c:'rgba(20,83,45,.8)'},
-        {label:'🌸 الربيع',          date:'2025-04-15', c:'rgba(5,150,105,.7)'},
-        {label:'☀️ الصيف',           date:'2025-07-10', c:'rgba(194,65,12,.8)'},
-        {label:'🍂 الخريف',          date:'2025-10-01', c:'rgba(120,53,15,.8)'},
-        {label:'❄️ الشتاء',          date:'2025-01-15', c:'rgba(30,58,95,.9)'},
-        {label:'🎆 رأس السنة',        date:'2026-01-01', c:'rgba(76,29,149,.8)'},
-        {label:'🏃 يوم الرياضة',      date:'2025-12-19', c:'rgba(6,78,59,.8)'},
-        {label:'📅 اليوم الحقيقي',    date:'',           c:'rgba(55,65,81,.8)'}
-      ];
-
-      var qBtns=quick.map(function(q){
-        return '<button onclick="thSetDate(\''+q.date+'\')" '
-          +'style="padding:5px 8px;border:none;border-radius:8px;cursor:pointer;font-size:.75rem;'
-          +'background:'+q.c+';color:#fff;transition:.15s" '
-          +'onmouseover="this.style.filter=\'brightness(1.25)\'" '
-          +'onmouseout="this.style.filter=\'\'">'+q.label+'</button>';
-      }).join('');
-
-      panel.innerHTML=
-        '<div style="font-weight:700;margin-bottom:10px;color:#F0C040;font-size:.9rem">'
-        +'<i class="fas fa-palette" style="margin-inline-end:6px"></i>Theme Dev Panel</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px">'+qBtns+'</div>'
-        +'<div style="margin-bottom:8px">'
-        +'<label style="display:block;margin-bottom:4px;color:#94a3b8">تاريخ مخصص:</label>'
-        +'<input type="date" id="thDateInput" style="width:100%;padding:6px 8px;border-radius:8px;'
-        +'border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.82rem">'
-        +'</div>'
-        +'<div style="display:flex;gap:8px;margin-bottom:10px">'
-        +'<button onclick="thApply()" style="flex:1;padding:7px;border:none;border-radius:8px;'
-        +'background:rgba(99,102,241,.8);color:#fff;cursor:pointer;font-size:.8rem">'
-        +'<i class="fas fa-play" style="margin-inline-end:4px"></i>تطبيق</button>'
-        +'<button onclick="thReset()" style="flex:1;padding:7px;border:none;border-radius:8px;'
-        +'background:rgba(239,68,68,.7);color:#fff;cursor:pointer;font-size:.8rem">'
-        +'<i class="fas fa-times" style="margin-inline-end:4px"></i>إلغاء</button>'
-        +'</div>'
-        +'<div id="thDevStatus" style="font-size:.75rem;color:#94a3b8;text-align:center;'
-        +'padding:4px;background:rgba(255,255,255,.05);border-radius:6px"></div>';
-
-      document.body.appendChild(panel);
-
-      btn.onclick=function(){
-        panel.style.display=panel.style.display==='none'?'block':'none';
-        _updateDevStatus();
-      };
-
-      function thApply(){
-        var inp=document.getElementById('thDateInput');
-        if(inp&&inp.value){
-          localStorage.setItem('nd_test_date',inp.value);
-          _updateDevStatus();
-          // Instantly re-render banner
-          var th=detectTheme(_getNow());
-          var banner=document.getElementById('themeBanner');
-          if(banner){
-            banner.innerHTML='';
-            banner.classList.add('hidden');
-          }
-          if(th) renderBanner(th);
-          else if(banner) banner.classList.add('hidden');
-        }
-      }
-
-      function thReset(){
-        localStorage.removeItem('nd_test_date');
-        var inp=document.getElementById('thDateInput');
-        if(inp) inp.value='';
-        _updateDevStatus();
-        var th=detectTheme(_getNow());
-        var banner=document.getElementById('themeBanner');
-        if(banner){banner.innerHTML='';banner.classList.add('hidden');}
-        if(th) renderBanner(th);
-      }
-
-      window.thSetDate=function(dateStr){
-        if(dateStr){
-          localStorage.setItem('nd_test_date',dateStr);
-        } else {
-          localStorage.removeItem('nd_test_date');
-        }
-        var inp=document.getElementById('thDateInput');
-        if(inp) inp.value=dateStr||'';
-        _updateDevStatus();
-        var th=detectTheme(_getNow());
-        var banner=document.getElementById('themeBanner');
-        if(banner){banner.innerHTML='';banner.classList.add('hidden');}
-        if(th) renderBanner(th);
-      };
-    })();
-
-    window._thToggleStaff=function(){
-      var p=document.getElementById('thDevPanel');
-      if(!p) return;
-      p.style.display=p.style.display==='none'?'block':'none';
-      if(p.style.display==='block') _updateDevStatus();
-    };
-    function _updateDevStatus(){
-      var s=document.getElementById('thDevStatus');
-      if(!s) return;
-      var cur=localStorage.getItem('nd_test_date');
-      if(cur){
-        s.innerHTML='<i class="fas fa-vial" style="color:#A78BFA;margin-inline-end:4px"></i>'
-          +'${isRTL?'تاريخ الاختبار:':'Testing:'} <strong style="color:#F0C040">'+cur+'</strong>';
-      } else {
-        s.innerHTML='<i class="fas fa-check-circle" style="color:#34D399;margin-inline-end:4px"></i>'
-          +'${isRTL?'يستخدم التاريخ الحقيقي':'Using real date'}';
-      }
+    /* ── اقفز لتاريخ 18 ديسمبر في التقويم ── */
+    function jumpToNationalDay(){
+      _fullCalYear  = 2025;
+      _fullCalMonth = 11;
+      openFullCal();
+      setTimeout(function(){
+        renderFullCal();
+        setTimeout(function(){ openDayEvents('2025-12-18'); }, 350);
+      }, 120);
     }
     </script>
 
@@ -13724,6 +13381,167 @@ function showSRToast(msg, type='success'){
 app.notFound((c) => {
   const lang = getLang(c)
   return c.redirect(`/?lang=${lang}`, 302)
+})
+
+// ── THEME PREVIEW (no auth needed) ──
+app.get('/theme-preview', (c) => {
+  return c.html(`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Theme Preview</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@keyframes th-slidein{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes th-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+@keyframes th-ticker{0%{transform:translateX(110%)}100%{transform:translateX(-110%)}}
+@keyframes th-confetti{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(140px) rotate(720deg);opacity:0}}
+@keyframes th-glow-nd{0%,100%{box-shadow:0 0 18px #8B1A2F66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #C41E3ABB,0 4px 48px #00000066}}
+.th-ticker-wrap{overflow:hidden;white-space:nowrap}
+.th-ticker-inner{display:inline-block;animation:th-ticker 22s linear infinite}
+.th-particle{position:absolute;pointer-events:none;font-size:1.4rem;animation:th-confetti 3.5s ease-in forwards;z-index:1}
+#banner{animation:th-slidein .65s cubic-bezier(.22,.68,0,1.2) both,th-glow-nd 2.5s ease-in-out infinite}
+</style>
+</head>
+<body class="bg-gray-900 min-h-screen flex flex-col items-center justify-start p-6 gap-6">
+  <h1 class="text-white text-2xl font-bold mt-4">🎨 معاينة الثيمات</h1>
+
+  <!-- NATIONAL DAY BANNER -->
+  <div id="banner" class="w-full max-w-2xl relative rounded-2xl overflow-hidden" style="min-height:155px;background:linear-gradient(135deg,#8B1A2F 0%,#6B0A22 40%,#1a1a2e 100%)">
+    <div style="position:relative;z-index:2;padding:22px 24px 14px;display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:clamp(1.35rem,3vw,1.75rem);font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.4);animation:th-float 3.5s ease-in-out infinite;display:inline-block">🇶🇦 كل عام وقطر بخير</div>
+      <div style="font-size:.88rem;color:rgba(255,255,255,.8);margin-top:2px">اليوم الوطني القطري — ١٨ ديسمبر</div>
+      <div style="font-size:.78rem;color:rgba(255,255,255,.6);margin-top:4px">يوم الوحدة الوطنية القطرية • عيد الاستقلال</div>
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.25);padding:7px 0;overflow:hidden;z-index:3">
+      <div class="th-ticker-wrap">
+        <span class="th-ticker-inner" style="color:rgba(255,255,255,.9);font-size:.8rem;letter-spacing:.03em">🇶🇦 يوم المجد والعطاء • تحيا قطر • دولة قطر تحتفل باليوم الوطني • ١٨ ديسمبر يوم العز والكرامة • الله يحفظ قطر وقيادتها الرشيدة 🇶🇦</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK THEME BUTTONS -->
+  <div class="flex flex-wrap gap-2 justify-center">
+    <button onclick="setTheme('national')"  class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#8B1A2F">🇶🇦 اليوم الوطني</button>
+    <button onclick="setTheme('eid_fitr')"  class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#064E3B">🌙 عيد الفطر</button>
+    <button onclick="setTheme('eid_adha')"  class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#1E3A5F">🕌 عيد الأضحى</button>
+    <button onclick="setTheme('ramadan')"   class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#312E81">🌙 رمضان</button>
+    <button onclick="setTheme('spring')"    class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#166534">🌸 الربيع</button>
+    <button onclick="setTheme('summer')"    class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#C2410C">☀️ الصيف</button>
+    <button onclick="setTheme('autumn')"    class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#92400E">🍂 الخريف</button>
+    <button onclick="setTheme('winter')"    class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#1E3A5F">❄️ الشتاء</button>
+    <button onclick="setTheme('new_year')"  class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#5B21B6">🎆 رأس السنة</button>
+    <button onclick="setTheme('sport_day')" class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#0F766E">🏅 اليوم الرياضي</button>
+    <button onclick="setTheme('mawlid')"    class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#14532D">🌿 المولد النبوي</button>
+    <button onclick="setTheme('hijri_new')" class="px-4 py-2 rounded-xl text-sm font-bold text-white" style="background:#4C1D95">🌙 رأس السنة الهجرية</button>
+  </div>
+
+  <p class="text-gray-400 text-sm">على الصفحات الفعلية: سجّل دخول ثم اضغط زر 🎨 Theme</p>
+
+<script>
+const THEMES = {
+  national:  {bg:'linear-gradient(135deg,#8B1A2F 0%,#6B0A22 40%,#1a1a2e 100%)', glow:'th-glow-nd',
+               title:'🇶🇦 كل عام وقطر بخير', sub:'اليوم الوطني القطري — ١٨ ديسمبر',
+               ticker:'🇶🇦 يوم المجد والعطاء • تحيا قطر • ١٨ ديسمبر يوم العز والكرامة • الله يحفظ قطر وقيادتها 🇶🇦',
+               p:['🇶🇦','⭐','✨','🌟','🎊','🎉','🏅','💫'], c:['#C41E3A','#F0C040','#fff','#FFD700']},
+  eid_fitr:  {bg:'linear-gradient(135deg,#064E3B 0%,#065F46 45%,#0D2B1F 100%)', glow:'th-glow-eid',
+               title:'🌙 عيد الفطر المبارك', sub:'كل عام وأنتم بخير • تقبّل الله صيامكم',
+               ticker:'🌙 عيد الفطر المبارك • تقبّل الله منا ومنكم • كل عام وأنتم بخير 🌙',
+               p:['🌙','⭐','✨','🌟','🎊','💚','🕌','🤲'], c:['#10B981','#34D399','#F0C040','#fff']},
+  eid_adha:  {bg:'linear-gradient(135deg,#1E3A5F 0%,#1a4a7a 45%,#0f1f36 100%)', glow:'th-glow-eid',
+               title:'🕌 عيد الأضحى المبارك', sub:'كل عام وأنتم بخير • تقبّل الله طاعتكم',
+               ticker:'🕌 عيد الأضحى المبارك • تقبّل الله منا ومنكم صالح الأعمال 🕌',
+               p:['🕌','🌙','⭐','✨','💙','🤲','🌟','🎊'], c:['#3B82F6','#60A5FA','#F0C040','#fff']},
+  ramadan:   {bg:'linear-gradient(135deg,#1E1B4B 0%,#312E81 45%,#0D0B2E 100%)', glow:'th-glow-ram',
+               title:'🌙 رمضان كريم', sub:'شهر الخير والبركة والعبادة',
+               ticker:'🌙 رمضان كريم • شهر القرآن والخير • تقبّل الله صيامكم وقيامكم 🌙',
+               p:['🌙','⭐','✨','🌟','🕌','🤲','💜','🌙'], c:['#6366F1','#818CF8','#F0C040','#fff']},
+  spring:    {bg:'linear-gradient(135deg,#166534 0%,#15803D 45%,#052e16 100%)', glow:'th-glow-spr',
+               title:'🌸 مرحباً بالربيع', sub:'فصل الأزهار والجمال',
+               ticker:'🌸 مرحباً بالربيع • فصل الأزهار والأمل • طبيعة جميلة وأجواء رائعة 🌸',
+               p:['🌸','🌺','🌷','🌻','🍀','🌿','💐','🌱'], c:['#22C55E','#4ADE80','#FDE68A','#fff']},
+  summer:    {bg:'linear-gradient(135deg,#7C2D12 0%,#C2410C 45%,#431407 100%)', glow:'th-glow-sum',
+               title:'☀️ أهلاً بالصيف', sub:'فصل الحرارة والإجازات',
+               ticker:'☀️ أهلاً بالصيف • أجواء حارة ومليئة بالنشاط • استمتع بإجازتك 🏖️',
+               p:['☀️','🌊','🏖️','🌴','🍉','⭐','🌟','🔆'], c:['#F97316','#FB923C','#FDE68A','#fff']},
+  autumn:    {bg:'linear-gradient(135deg,#78350F 0%,#92400E 45%,#2D1500 100%)', glow:'th-glow-aut',
+               title:'🍂 مرحباً بالخريف', sub:'فصل الألوان الدافئة',
+               ticker:'🍂 مرحباً بالخريف • ألوان الطبيعة الدافئة • فصل الهدوء والتأمل 🍁',
+               p:['🍂','🍁','🌰','🎃','🍄','🌾','🦊','🍎'], c:['#D97706','#F59E0B','#DC2626','#fff']},
+  winter:    {bg:'linear-gradient(135deg,#1E3A5F 0%,#1e40af 45%,#0A1628 100%)', glow:'th-glow-win',
+               title:'❄️ مرحباً بالشتاء', sub:'فصل البرودة والهدوء',
+               ticker:'❄️ مرحباً بالشتاء • أجواء باردة ومنعشة • استمتع بدفء المنزل والعائلة ⛄',
+               p:['❄️','⛄','🌨️','💙','🌟','✨','🎿','🏔️'], c:['#3B82F6','#93C5FD','#fff','#BFDBFE']},
+  new_year:  {bg:'linear-gradient(135deg,#4C1D95 0%,#5B21B6 45%,#1A0533 100%)', glow:'th-glow-nd',
+               title:'🎆 كل عام وأنتم بخير', sub:'عام جديد مليء بالخير والبركة',
+               ticker:'🎆 كل عام وأنتم بخير • عام جديد سعيد • أتمنى لكم عاماً مليئاً بالنجاح والسعادة 🎇',
+               p:['🎆','🎇','✨','🌟','🎊','🎉','💫','⭐'], c:['#8B5CF6','#A78BFA','#F0C040','#fff']},
+  sport_day: {bg:'linear-gradient(135deg,#134E4A 0%,#0F766E 45%,#042F2E 100%)', glow:'th-glow-nb',
+               title:'🏅 اليوم الرياضي الوطني', sub:'قطر تحتفل بالرياضة والصحة',
+               ticker:'🏅 اليوم الرياضي الوطني • الرياضة صحة وحيوية • قطر نشيطة وبطلة 🏆',
+               p:['🏅','🏆','⚽','🏃','💪','🌟','🎯','🥇'], c:['#14B8A6','#2DD4BF','#F0C040','#fff']},
+  mawlid:    {bg:'linear-gradient(135deg,#14532D 0%,#166534 45%,#052E16 100%)', glow:'th-glow-nb',
+               title:'🌿 المولد النبوي الشريف', sub:'ذكرى مولد سيد الخلق ﷺ',
+               ticker:'🌿 المولد النبوي الشريف • اللهم صلّ وسلّم على سيدنا محمد ﷺ • كل عام وأنتم بخير 🌿',
+               p:['🌿','🌙','⭐','✨','💚','🕌','🤲','📿'], c:['#22C55E','#4ADE80','#F0C040','#fff']},
+  hijri_new: {bg:'linear-gradient(135deg,#4C1D95 0%,#6D28D9 45%,#1E0A3C 100%)', glow:'th-glow-ram',
+               title:'🌙 رأس السنة الهجرية', sub:'عام هجري جديد مبارك',
+               ticker:'🌙 رأس السنة الهجرية • عام هجري جديد مبارك • أعاده الله علينا باليُمن والبركات 🌙',
+               p:['🌙','⭐','✨','🌟','💜','🕌','🤲','📿'], c:['#7C3AED','#A78BFA','#F0C040','#fff']},
+};
+
+const GLOWS = {
+  'th-glow-nd':  '0 0 40px #C41E3ABB,0 4px 48px #00000066',
+  'th-glow-eid': '0 0 40px #10B981BB,0 4px 48px #00000066',
+  'th-glow-ram': '0 0 40px #6366F1BB,0 4px 48px #00000066',
+  'th-glow-spr': '0 0 40px #22C55E99,0 4px 48px #00000055',
+  'th-glow-sum': '0 0 40px #F9731688,0 4px 48px #00000066',
+  'th-glow-aut': '0 0 40px #B4540077,0 4px 48px #00000066',
+  'th-glow-win': '0 0 40px #2563EB88,0 4px 48px #00000066',
+  'th-glow-nb':  '0 0 40px #16A34A88,0 4px 48px #00000066',
+};
+
+function spawnParticles(wrap, particles, colors){
+  for(var i=0;i<7;i++){
+    (function(i){
+      setTimeout(function(){
+        var el=document.createElement('span');
+        el.className='th-particle';
+        el.textContent=particles[Math.floor(Math.random()*particles.length)];
+        el.style.left=Math.random()*90+'%';
+        el.style.top='-10px';
+        el.style.animationDuration=(2.5+Math.random()*2)+'s';
+        el.style.animationDelay=(Math.random()*.5)+'s';
+        el.style.color=colors[Math.floor(Math.random()*colors.length)];
+        wrap.appendChild(el);
+        setTimeout(function(){el.remove()},4500);
+      },i*220);
+    })(i);
+  }
+}
+
+function setTheme(id){
+  var th=THEMES[id];
+  if(!th) return;
+  var b=document.getElementById('banner');
+  b.style.background=th.bg;
+  b.style.boxShadow=GLOWS[th.glow]||'';
+  b.style.animation='th-slidein .65s cubic-bezier(.22,.68,0,1.2) both';
+  b.innerHTML=
+    '<div style="position:relative;z-index:2;padding:22px 24px 14px;display:flex;flex-direction:column;gap:4px">'
+    +'<div style="font-size:clamp(1.35rem,3vw,1.75rem);font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.4);animation:th-float 3.5s ease-in-out infinite;display:inline-block">'+th.title+'</div>'
+    +'<div style="font-size:.88rem;color:rgba(255,255,255,.8);margin-top:2px">'+th.sub+'</div>'
+    +'</div>'
+    +'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.25);padding:7px 0;overflow:hidden;z-index:3">'
+    +'<div class="th-ticker-wrap"><span class="th-ticker-inner" style="color:rgba(255,255,255,.9);font-size:.8rem;letter-spacing:.03em">'+th.ticker+'</span>'
+    +'</div></div>';
+  (function loop(){ spawnParticles(b,th.p,th.c); setTimeout(loop,5600); })();
+}
+</script>
+</body>
+</html>`)
 })
 
 export default app
