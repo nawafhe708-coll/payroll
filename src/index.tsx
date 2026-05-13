@@ -5353,22 +5353,22 @@ app.get('/missions', (c) => {
     </div>
   </div>
 
-  <!-- ══ LINK TO STAFF PORTAL + TRAINING DEPT ══ -->
+  <!-- ══ LINK TO MANAGEMENT + TRAINING DEPT ══ -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
     <div class="card p-5" style="border-top:4px solid var(--qu-maroon)">
       <div class="flex items-center gap-3 mb-3">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:var(--qu-maroon)">
-          <i class="fas fa-portal-enter text-white" style="font-size:1rem"></i>
+          <i class="fas fa-table-list text-white" style="font-size:1rem"></i>
         </div>
         <div>
-          <h3 class="font-bold text-gray-800">${isRTL?'بوابة الموظفين':'Staff Portal'}</h3>
-          <p class="text-xs text-gray-500">${isRTL?'لمتابعة طلباتك وإدارة المهام':'Track your requests & manage missions'}</p>
+          <h3 class="font-bold text-gray-800">${isRTL?'إدارة المهام':'Missions Management'}</h3>
+          <p class="text-xs text-gray-500">${isRTL?'تسجيل وتتبع المهام وإصدار التقارير':'Register, track missions and generate reports'}</p>
         </div>
       </div>
-      <p class="text-gray-600 text-sm mb-4">${isRTL?'من خلال بوابة الموظفين يمكنك تتبع حالة طلبك، الاطلاع على التكاليف المعتمدة، واستقبال إشعارات المهمة عبر البريد الإلكتروني.':'Through the Staff Portal you can track your request status, view approved costs, and receive mission notifications by email.'}</p>
-      <a href="/staff-missions?lang=${lang}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white btn-primary">
-        <i class="fas fa-plane-departure"></i>${isRTL?'إدارة المهام':'Manage Missions'}
-      </a>
+      <p class="text-gray-600 text-sm mb-4">${isRTL?'يمكنك من خلال هذه الصفحة إدارة جميع المهام الرسمية والعلمية وتتبع حالة الطلبات والتكاليف وإرسال الإشعارات للموظفين.':'Through this page you can manage all official and academic missions, track request status, costs, and send notifications to employees.'}</p>
+      <button onclick="openNewMission()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white btn-primary">
+        <i class="fas fa-plus-circle"></i>${isRTL?'إضافة مهمة جديدة':'Add New Mission'}
+      </button>
     </div>
     <div class="card p-5" style="border-top:4px solid #064E3B">
       <div class="flex items-center gap-3 mb-3">
@@ -5431,6 +5431,704 @@ app.get('/missions', (c) => {
       </div>
     </div>
   </div>
+
+  <!-- ══ DIVIDER ══ -->
+  <div class="my-8 flex items-center gap-4">
+    <div class="flex-1 h-px" style="background:linear-gradient(90deg,var(--qu-maroon),transparent)"></div>
+    <div class="px-4 py-2 rounded-xl text-sm font-bold text-white flex items-center gap-2" style="background:var(--qu-maroon)">
+      <i class="fas fa-cogs"></i>${isRTL?'إدارة المهام — النظام الداخلي':'Missions Management — Internal System'}
+    </div>
+    <div class="flex-1 h-px" style="background:linear-gradient(270deg,var(--qu-maroon),transparent)"></div>
+  </div>
+
+  <!-- ══ MANAGEMENT HEADER ══ -->
+  <div class="rounded-2xl p-6 flex items-center justify-between gap-4 flex-wrap mb-6"
+       style="background:linear-gradient(135deg,#1e3a5f 0%,#1a4a7a 60%,#0f2d50 100%)">
+    <div class="${isRTL?'text-right':''}">
+      <p class="text-white/70 text-sm mb-1">
+        <i class="fas fa-building ${isRTL?'ml-1':'mr-1'}"></i>
+        ${isRTL?'إدارة الرواتب والموارد البشرية':'Payroll & HR Department'}
+      </p>
+      <h2 class="text-xl font-bold text-white">
+        <i class="fas fa-table ${isRTL?'ml-2':'mr-2'}"></i>
+        ${isRTL?'سجل وإدارة المهام':'Mission Records & Management'}
+      </h2>
+      <p class="text-white/60 text-sm mt-1">
+        ${isRTL?'تتبع طلبات المهام • استخراج التقارير • إشعارات الموظفين':'Track Mission Requests • Generate Reports • Employee Notifications'}
+      </p>
+    </div>
+    <div class="flex gap-3 flex-wrap">
+      <button onclick="openNewMission()"
+        class="px-4 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition"
+        style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3)">
+        <i class="fas fa-plus-circle"></i>${isRTL?'مهمة جديدة':'New Mission'}
+      </button>
+      <button onclick="exportReport()"
+        class="px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:opacity-90 transition"
+        style="background:var(--qu-gold);color:white">
+        <i class="fas fa-file-export"></i>${isRTL?'استخراج تقرير':'Export Report'}
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STATS CARDS ══ -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="card p-4 text-center">
+      <div class="text-3xl font-black" style="color:#1e3a5f" id="statTotal">0</div>
+      <div class="text-xs text-gray-500 mt-1">${isRTL?'إجمالي المهام':'Total Missions'}</div>
+    </div>
+    <div class="card p-4 text-center">
+      <div class="text-3xl font-black text-yellow-600" id="statPending">0</div>
+      <div class="text-xs text-gray-500 mt-1">${isRTL?'قيد المراجعة':'Under Review'}</div>
+    </div>
+    <div class="card p-4 text-center">
+      <div class="text-3xl font-black text-green-600" id="statApproved">0</div>
+      <div class="text-xs text-gray-500 mt-1">${isRTL?'معتمدة':'Approved'}</div>
+    </div>
+    <div class="card p-4 text-center">
+      <div class="text-3xl font-black" style="color:var(--qu-gold)" id="statTotalCost">0</div>
+      <div class="text-xs text-gray-500 mt-1">${isRTL?'إجمالي التكلفة (ريال)':'Total Cost (QAR)'}</div>
+    </div>
+  </div>
+
+  <!-- ══ TRAINING DEPT INBOX ══ -->
+  <div class="card p-0 overflow-hidden mb-6">
+    <div class="px-5 py-4 flex items-center justify-between flex-wrap gap-3"
+         style="background:linear-gradient(90deg,#064E3B,#065F46);border-radius:12px 12px 0 0">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(255,255,255,.15)">
+          <i class="fas fa-chalkboard-teacher text-white"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-white text-sm">${isRTL?'طلبات واردة من قسم التدريب والتطوير':'Requests from Training & Development Dept.'}</h3>
+          <p class="text-green-200 text-xs">${isRTL?'المهام الواردة من إدارة التدريب بانتظار الاعتماد':'Training-originated missions awaiting payroll approval'}</p>
+        </div>
+      </div>
+      <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(255,255,255,.2);color:#fff" id="trainingBadge">0</span>
+    </div>
+    <div id="trainingInbox" class="divide-y divide-gray-100"></div>
+    <div id="trainingEmpty" class="py-10 text-center text-gray-400 text-sm hidden">
+      <i class="fas fa-inbox text-3xl mb-2 block opacity-30"></i>
+      ${isRTL?'لا توجد طلبات واردة من قسم التدريب':'No incoming requests from Training Dept.'}
+    </div>
+  </div>
+
+  <!-- ══ FILTERS + SEARCH ══ -->
+  <div class="card p-4 mb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <input id="srchInput" type="text" placeholder="${isRTL?'بحث بالاسم أو الرقم...':'Search by name or ID...'}"
+        oninput="filterMissions()"
+        class="col-span-1 sm:col-span-2 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2">
+      <select id="filterType" onchange="filterMissions()"
+        class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
+        <option value="">${isRTL?'كل الأنواع':'All Types'}</option>
+        <option value="official">${isRTL?'مهمة رسمية':'Official Mission'}</option>
+        <option value="academic">${isRTL?'مهمة علمية':'Academic Mission'}</option>
+        <option value="training">${isRTL?'تدريب خارجي':'External Training'}</option>
+        <option value="conference">${isRTL?'مؤتمر / ورشة':'Conference / Workshop'}</option>
+      </select>
+      <select id="filterStatus" onchange="filterMissions()"
+        class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
+        <option value="">${isRTL?'كل الحالات':'All Statuses'}</option>
+        <option value="pending">${isRTL?'قيد المراجعة':'Pending'}</option>
+        <option value="approved">${isRTL?'معتمدة':'Approved'}</option>
+        <option value="rejected">${isRTL?'مرفوضة':'Rejected'}</option>
+        <option value="completed">${isRTL?'منتهية':'Completed'}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ══ MISSIONS TABLE ══ -->
+  <div class="card overflow-hidden mb-6">
+    <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="font-bold text-gray-800">${isRTL?'سجل المهام':'Missions Log'}</h3>
+      <span class="text-xs text-gray-400" id="countLabel"></span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-gray-50 border-b border-gray-100">
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'رقم المهمة':'Mission ID'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الموظف':'Employee'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'نوع المهمة':'Type'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الوجهة':'Destination'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'التاريخ':'Date'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'التكلفة (ريال)':'Cost (QAR)'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الحالة':'Status'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'إجراءات':'Actions'}</th>
+          </tr>
+        </thead>
+        <tbody id="missionsBody"></tbody>
+      </table>
+    </div>
+    <div id="missionsEmpty" class="py-16 text-center text-gray-400 hidden">
+      <i class="fas fa-plane text-4xl mb-3 block opacity-20"></i>
+      <p>${isRTL?'لا توجد مهام مسجلة':'No missions recorded'}</p>
+      <button onclick="openNewMission()" class="mt-3 px-4 py-2 rounded-xl text-sm font-bold btn-primary text-white">${isRTL?'إضافة أول مهمة':'Add First Mission'}</button>
+    </div>
+  </div>
+
+  <!-- ══ NEW MISSION MODAL ══ -->
+  <div id="missionModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,.5)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between"
+           style="background:linear-gradient(135deg,#1e3a5f,#1a4a7a);border-radius:16px 16px 0 0">
+        <h3 class="font-bold text-white" id="modalTitle">${isRTL?'تسجيل مهمة جديدة':'Register New Mission'}</h3>
+        <button onclick="closeModal()" class="text-white/70 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="p-6 space-y-4">
+        <input type="hidden" id="editId">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'اسم الموظف *':'Employee Name *'}</label>
+            <input id="fEmpName" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'الاسم الكامل':'Full name'}">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'رقم الموظف *':'Employee ID *'}</label>
+            <input id="fEmpId" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="QU-XXXX-XXXX">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'البريد الإلكتروني':'Email'}</label>
+            <input id="fEmpEmail" type="email" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="employee@qu.edu.qa">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'القسم / الكلية':'Department / College'}</label>
+            <input id="fDept" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'مثال: كلية الهندسة':'e.g. College of Engineering'}">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'نوع المهمة *':'Mission Type *'}</label>
+            <select id="fType" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+              <option value="official">${isRTL?'مهمة رسمية':'Official Mission'}</option>
+              <option value="academic">${isRTL?'مهمة علمية':'Academic Mission'}</option>
+              <option value="training">${isRTL?'تدريب خارجي':'External Training'}</option>
+              <option value="conference">${isRTL?'مؤتمر / ورشة':'Conference / Workshop'}</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'الوجهة / المدينة *':'Destination / City *'}</label>
+            <input id="fDest" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'مثال: دبي، الإمارات':'e.g. Dubai, UAE'}">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'تاريخ البداية *':'Start Date *'}</label>
+            <input id="fDateFrom" type="date" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'تاريخ النهاية *':'End Date *'}</label>
+            <input id="fDateTo" type="date" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+          </div>
+        </div>
+        <div class="rounded-xl p-4 space-y-3" style="background:#F0F7FF;border:1px solid #BFDBFE">
+          <h4 class="font-bold text-blue-800 text-sm flex items-center gap-2">
+            <i class="fas fa-coins"></i>${isRTL?'التكاليف المالية (ريال قطري)':'Financial Costs (QAR)'}
+          </h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="text-xs text-gray-600 block mb-1">${isRTL?'بدل يومي':'Daily Allowance'}</label>
+              <input id="fDaily" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
+            </div>
+            <div>
+              <label class="text-xs text-gray-600 block mb-1">${isRTL?'تذاكر السفر':'Flight Tickets'}</label>
+              <input id="fTickets" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
+            </div>
+            <div>
+              <label class="text-xs text-gray-600 block mb-1">${isRTL?'الإقامة / الفندق':'Accommodation'}</label>
+              <input id="fHotel" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
+            </div>
+            <div>
+              <label class="text-xs text-gray-600 block mb-1">${isRTL?'رسوم التسجيل':'Registration Fees'}</label>
+              <input id="fFees" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
+            </div>
+            <div>
+              <label class="text-xs text-gray-600 block mb-1">${isRTL?'مصاريف أخرى':'Other Expenses'}</label>
+              <input id="fOther" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
+            </div>
+            <div class="flex flex-col justify-end">
+              <label class="text-xs font-bold text-blue-800 block mb-1">${isRTL?'الإجمالي':'Total'}</label>
+              <div class="rounded-xl px-3 py-2 text-sm font-black text-blue-900" style="background:#DBEAFE" id="fTotal">0 ${isRTL?'ريال':'QAR'}</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'الغرض من المهمة *':'Mission Purpose *'}</label>
+          <textarea id="fPurpose" rows="3" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'وصف موجز للمهمة والهدف منها...':'Brief description of the mission and its objective...'}"></textarea>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'المصدر':'Source'}</label>
+            <select id="fSource" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+              <option value="payroll">${isRTL?'إدارة الرواتب':'Payroll Dept.'}</option>
+              <option value="training">${isRTL?'قسم التدريب والتطوير':'Training & Development'}</option>
+              <option value="hr">${isRTL?'الموارد البشرية':'Human Resources'}</option>
+              <option value="college">${isRTL?'الكلية / القسم':'College / Department'}</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'الحالة':'Status'}</label>
+            <select id="fStatus" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+              <option value="pending">${isRTL?'قيد المراجعة':'Pending'}</option>
+              <option value="approved">${isRTL?'معتمدة':'Approved'}</option>
+              <option value="rejected">${isRTL?'مرفوضة':'Rejected'}</option>
+              <option value="completed">${isRTL?'منتهية':'Completed'}</option>
+            </select>
+          </div>
+        </div>
+        <div class="rounded-xl p-4 flex items-center gap-3" style="background:#FFFBEB;border:1px solid #FDE68A">
+          <input type="checkbox" id="fSendEmail" class="w-4 h-4 accent-yellow-500">
+          <div>
+            <label for="fSendEmail" class="font-bold text-yellow-800 text-sm cursor-pointer">
+              <i class="fas fa-envelope ${isRTL?'ml-1':'mr-1'}"></i>
+              ${isRTL?'إرسال إيميل إشعار للموظف بتفاصيل المهمة والقيمة المالية':'Send email notification to employee with mission details & financial value'}
+            </label>
+            <p class="text-yellow-700 text-xs mt-0.5">${isRTL?'سيُرسل الإيميل على البريد المسجّل للموظف':'Email will be sent to the registered employee email'}</p>
+          </div>
+        </div>
+      </div>
+      <div class="px-6 pb-6 flex gap-3 justify-end">
+        <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition">${isRTL?'إلغاء':'Cancel'}</button>
+        <button onclick="saveMission()" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white btn-primary flex items-center gap-2">
+          <i class="fas fa-save"></i>${isRTL?'حفظ المهمة':'Save Mission'}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EMAIL PREVIEW MODAL ══ -->
+  <div id="emailModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,.6)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-screen overflow-y-auto">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between"
+           style="background:linear-gradient(135deg,#C4922A,#DBA93C);border-radius:16px 16px 0 0">
+        <h3 class="font-bold text-white"><i class="fas fa-envelope ${isRTL?'ml-2':'mr-2'}"></i>${isRTL?'معاينة الإيميل':'Email Preview'}</h3>
+        <button onclick="closeEmailModal()" class="text-white/70 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="p-6">
+        <div id="emailPreviewBody" class="rounded-xl border border-gray-200 p-5 text-sm text-gray-700 space-y-3 bg-gray-50"></div>
+        <div class="mt-4 flex gap-3 justify-end">
+          <button onclick="closeEmailModal()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200">${isRTL?'إغلاق':'Close'}</button>
+          <button onclick="confirmSendEmail()" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2" style="background:var(--qu-gold)">
+            <i class="fas fa-paper-plane"></i>${isRTL?'تأكيد الإرسال':'Confirm Send'}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REPORT MODAL ══ -->
+  <div id="reportModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,.6)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-screen overflow-y-auto">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between"
+           style="background:linear-gradient(135deg,#1e3a5f,#1a4a7a);border-radius:16px 16px 0 0">
+        <h3 class="font-bold text-white"><i class="fas fa-chart-bar ${isRTL?'ml-2':'mr-2'}"></i>${isRTL?'تقرير المهام':'Missions Report'}</h3>
+        <button onclick="closeReportModal()" class="text-white/70 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="flex gap-3 flex-wrap">
+          <select id="rptYear" onchange="buildReport()" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
+            <option value="">${isRTL?'كل السنوات':'All Years'}</option>
+            <option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option>
+          </select>
+          <select id="rptType" onchange="buildReport()" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
+            <option value="">${isRTL?'كل الأنواع':'All Types'}</option>
+            <option value="official">${isRTL?'رسمية':'Official'}</option>
+            <option value="academic">${isRTL?'علمية':'Academic'}</option>
+            <option value="training">${isRTL?'تدريب':'Training'}</option>
+            <option value="conference">${isRTL?'مؤتمرات':'Conferences'}</option>
+          </select>
+          <select id="rptSource" onchange="buildReport()" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
+            <option value="">${isRTL?'كل المصادر':'All Sources'}</option>
+            <option value="training">${isRTL?'التدريب والتطوير':'Training & Dev.'}</option>
+            <option value="payroll">${isRTL?'الرواتب':'Payroll'}</option>
+            <option value="hr">${isRTL?'الموارد البشرية':'HR'}</option>
+          </select>
+          <button onclick="printReport()" class="px-4 py-2 rounded-xl text-sm font-bold text-white btn-primary flex items-center gap-2">
+            <i class="fas fa-print"></i>${isRTL?'طباعة':'Print'}
+          </button>
+        </div>
+        <div id="reportBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOAST ══ -->
+  <div id="msToast" class="fixed bottom-6 ${isRTL?'left-6':'right-6'} z-50 hidden px-5 py-3 rounded-xl text-white text-sm font-bold shadow-xl flex items-center gap-3" style="background:#1e3a5f">
+    <i id="msToastIcon" class="fas fa-check-circle"></i>
+    <span id="msToastMsg"></span>
+  </div>
+
+  <script>
+  var IS_RTL_MS = ${isRTL};
+  var MISSIONS_KEY = 'qu_missions_v1';
+
+  function getMissions(){ try{return JSON.parse(localStorage.getItem(MISSIONS_KEY)||'[]')}catch(e){return[]} }
+  function saveMissions(d){ localStorage.setItem(MISSIONS_KEY, JSON.stringify(d)) }
+  function genId(){ return 'MS-'+Date.now().toString(36).toUpperCase(); }
+  function fmtDate(iso){ if(!iso) return '\u2013'; var d=new Date(iso); return d.toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'2-digit'}); }
+  function numDays(from,to){ if(!from||!to) return 0; return Math.max(0,Math.round((new Date(to)-new Date(from))/(1000*60*60*24))+1); }
+
+  var typeLabel = {
+    official: IS_RTL_MS?'\u0645\u0647\u0645\u0629 \u0631\u0633\u0645\u064a\u0629':'Official Mission',
+    academic:  IS_RTL_MS?'\u0645\u0647\u0645\u0629 \u0639\u0644\u0645\u064a\u0629':'Academic Mission',
+    training:  IS_RTL_MS?'\u062a\u062f\u0631\u064a\u0628 \u062e\u0627\u0631\u062c\u064a':'External Training',
+    conference:IS_RTL_MS?'\u0645\u0624\u062a\u0645\u0631 / \u0648\u0631\u0634\u0629':'Conference / Workshop'
+  };
+  var typeBg = { official:'#EFF6FF', academic:'#F0FDF4', training:'#FFFBEB', conference:'#FDF4FF' };
+  var typeColor = { official:'#1D4ED8', academic:'#15803D', training:'#D97706', conference:'#7C3AED' };
+  var statusLabel = {
+    pending:   IS_RTL_MS?'\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629':'Pending',
+    approved:  IS_RTL_MS?'\u0645\u0639\u062a\u0645\u062f\u0629':'Approved',
+    rejected:  IS_RTL_MS?'\u0645\u0631\u0641\u0648\u0636\u0629':'Rejected',
+    completed: IS_RTL_MS?'\u0645\u0646\u062a\u0647\u064a\u0629':'Completed'
+  };
+  var statusColor = { pending:'#D97706', approved:'#15803D', rejected:'#DC2626', completed:'#6B7280' };
+  var statusBg    = { pending:'#FFFBEB', approved:'#F0FDF4', rejected:'#FEF2F2', completed:'#F9FAFB' };
+  var sourceLabel = {
+    payroll:  IS_RTL_MS?'\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0631\u0648\u0627\u062a\u0628':'Payroll Dept.',
+    training: IS_RTL_MS?'\u0642\u0633\u0645 \u0627\u0644\u062a\u062f\u0631\u064a\u0628 \u0648\u0627\u0644\u062a\u0637\u0648\u064a\u0631':'Training & Dev.',
+    hr:       IS_RTL_MS?'\u0627\u0644\u0645\u0648\u0627\u0631\u062f \u0627\u0644\u0628\u0634\u0631\u064a\u0629':'Human Resources',
+    college:  IS_RTL_MS?'\u0627\u0644\u0643\u0644\u064a\u0629 / \u0627\u0644\u0642\u0633\u0645':'College / Dept.'
+  };
+
+  function updateStats(){
+    var ms = getMissions();
+    document.getElementById('statTotal').textContent    = ms.length;
+    document.getElementById('statPending').textContent  = ms.filter(function(m){return m.status==='pending';}).length;
+    document.getElementById('statApproved').textContent = ms.filter(function(m){return m.status==='approved';}).length;
+    var totalCost = ms.reduce(function(s,m){ return s+(m.totalCost||0); },0);
+    document.getElementById('statTotalCost').textContent = totalCost.toLocaleString();
+  }
+
+  function renderTrainingInbox(){
+    var ms = getMissions().filter(function(m){ return m.source==='training'; });
+    var badge = document.getElementById('trainingBadge');
+    var inbox = document.getElementById('trainingInbox');
+    var empty = document.getElementById('trainingEmpty');
+    badge.textContent = ms.length;
+    if(!ms.length){ inbox.innerHTML=''; empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+    inbox.innerHTML = ms.map(function(m){
+      return '<div class="px-5 py-4 flex items-center justify-between gap-3 flex-wrap hover:bg-green-50 transition">'
+        +'<div class="flex items-center gap-3">'
+        +'<div class="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold" style="background:#064E3B">'
+        +m.empName.charAt(0)+'</div>'
+        +'<div>'
+        +'<p class="font-bold text-gray-800 text-sm">'+m.empName+'</p>'
+        +'<p class="text-xs text-gray-500">'+m.empId+' \u2022 '+(typeLabel[m.type]||m.type)+' \u2022 '+m.dest+'</p>'
+        +'<p class="text-xs text-green-700 font-bold mt-0.5"><i class="fas fa-coins mr-1"></i>'+(m.totalCost||0).toLocaleString()+' '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR')+'</p>'
+        +'</div></div>'
+        +'<div class="flex items-center gap-2">'
+        +'<span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span>'
+        +'<button onclick="editMission(\''+m.id+'\')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#064E3B"><i class="fas fa-edit"></i></button>'
+        +'<button onclick="sendEmailTo(\''+m.id+'\')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  function renderMissions(list){
+    var tbody = document.getElementById('missionsBody');
+    var empty = document.getElementById('missionsEmpty');
+    if(!list){ list = getMissions(); }
+    document.getElementById('countLabel').textContent = list.length + (IS_RTL_MS?' \u0645\u0647\u0645\u0629':' missions');
+    if(!list.length){ tbody.innerHTML=''; empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+    tbody.innerHTML = list.map(function(m){
+      return '<tr class="border-b border-gray-50 hover:bg-gray-50 transition">'
+        +'<td class="px-4 py-3 font-mono text-xs text-gray-500">'+m.id+'</td>'
+        +'<td class="px-4 py-3">'
+          +'<p class="font-bold text-gray-800 text-sm">'+m.empName+'</p>'
+          +'<p class="text-xs text-gray-400">'+m.empId+'</p>'
+          +(m.dept?'<p class="text-xs text-gray-400">'+m.dept+'</p>':'')
+        +'</td>'
+        +'<td class="px-4 py-3"><span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+typeBg[m.type]+';color:'+typeColor[m.type]+'">'+(typeLabel[m.type]||m.type)+'</span><br><span class="text-xs text-gray-400 mt-0.5 block">'+(sourceLabel[m.source]||m.source)+'</span></td>'
+        +'<td class="px-4 py-3 text-sm text-gray-700">'+m.dest+'</td>'
+        +'<td class="px-4 py-3 text-xs text-gray-600">'+fmtDate(m.dateFrom)+'<br>'+fmtDate(m.dateTo)+'<br><span class="text-gray-400">'+numDays(m.dateFrom,m.dateTo)+' '+(IS_RTL_MS?'\u0623\u064a\u0627\u0645':'days')+'</span></td>'
+        +'<td class="px-4 py-3 font-bold text-sm" style="color:#1e3a5f">'+(m.totalCost||0).toLocaleString()+'<br><span class="text-xs text-gray-400 font-normal">'+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR')+'</span></td>'
+        +'<td class="px-4 py-3"><span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span></td>'
+        +'<td class="px-4 py-3">'
+          +'<div class="flex gap-1 flex-wrap">'
+          +'<button onclick="editMission(\''+m.id+'\')" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#1e3a5f"><i class="fas fa-edit"></i></button>'
+          +'<button onclick="sendEmailTo(\''+m.id+'\')" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
+          +'<button onclick="deleteMission(\''+m.id+'\')" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white bg-red-500 hover:bg-red-600"><i class="fas fa-trash"></i></button>'
+          +'</div>'
+        +'</td>'
+        +'</tr>';
+    }).join('');
+  }
+
+  function filterMissions(){
+    var q      = document.getElementById('srchInput').value.toLowerCase();
+    var type   = document.getElementById('filterType').value;
+    var status = document.getElementById('filterStatus').value;
+    var list   = getMissions().filter(function(m){
+      var matchQ      = !q      || m.empName.toLowerCase().includes(q) || m.empId.toLowerCase().includes(q) || m.dest.toLowerCase().includes(q);
+      var matchType   = !type   || m.type===type;
+      var matchStatus = !status || m.status===status;
+      return matchQ && matchType && matchStatus;
+    });
+    renderMissions(list);
+  }
+
+  function calcTotal(){
+    var d = parseFloat(document.getElementById('fDaily').value)||0;
+    var t = parseFloat(document.getElementById('fTickets').value)||0;
+    var h = parseFloat(document.getElementById('fHotel').value)||0;
+    var f = parseFloat(document.getElementById('fFees').value)||0;
+    var o = parseFloat(document.getElementById('fOther').value)||0;
+    var total = d+t+h+f+o;
+    document.getElementById('fTotal').textContent = total.toLocaleString()+' '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR');
+    return total;
+  }
+
+  function openNewMission(){
+    document.getElementById('editId').value = '';
+    document.getElementById('modalTitle').textContent = IS_RTL_MS?'\u062a\u0633\u062c\u064a\u0644 \u0645\u0647\u0645\u0629 \u062c\u062f\u064a\u062f\u0629':'Register New Mission';
+    ['fEmpName','fEmpId','fEmpEmail','fDept','fDest','fPurpose'].forEach(function(id){ document.getElementById(id).value=''; });
+    ['fDaily','fTickets','fHotel','fFees','fOther'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('fType').value   = 'official';
+    document.getElementById('fSource').value = 'payroll';
+    document.getElementById('fStatus').value = 'pending';
+    document.getElementById('fDateFrom').value = '';
+    document.getElementById('fDateTo').value   = '';
+    document.getElementById('fTotal').textContent = '0 '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR');
+    document.getElementById('fSendEmail').checked = false;
+    var m = document.getElementById('missionModal');
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+  }
+  function closeModal(){
+    var m = document.getElementById('missionModal');
+    m.classList.add('hidden');
+    m.style.display = 'none';
+  }
+
+  function editMission(id){
+    var ms = getMissions();
+    var m  = ms.find(function(x){ return x.id===id; });
+    if(!m) return;
+    document.getElementById('editId').value     = m.id;
+    document.getElementById('modalTitle').textContent = IS_RTL_MS?'\u062a\u0639\u062f\u064a\u0644 \u0627\u0644\u0645\u0647\u0645\u0629':'Edit Mission';
+    document.getElementById('fEmpName').value   = m.empName||'';
+    document.getElementById('fEmpId').value     = m.empId||'';
+    document.getElementById('fEmpEmail').value  = m.empEmail||'';
+    document.getElementById('fDept').value      = m.dept||'';
+    document.getElementById('fType').value      = m.type||'official';
+    document.getElementById('fDest').value      = m.dest||'';
+    document.getElementById('fDateFrom').value  = m.dateFrom||'';
+    document.getElementById('fDateTo').value    = m.dateTo||'';
+    document.getElementById('fDaily').value     = m.daily||'';
+    document.getElementById('fTickets').value   = m.tickets||'';
+    document.getElementById('fHotel').value     = m.hotel||'';
+    document.getElementById('fFees').value      = m.fees||'';
+    document.getElementById('fOther').value     = m.otherCost||'';
+    document.getElementById('fPurpose').value   = m.purpose||'';
+    document.getElementById('fSource').value    = m.source||'payroll';
+    document.getElementById('fStatus').value    = m.status||'pending';
+    document.getElementById('fSendEmail').checked = false;
+    calcTotal();
+    var modal = document.getElementById('missionModal');
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
+
+  function saveMission(){
+    var empName = document.getElementById('fEmpName').value.trim();
+    var empId   = document.getElementById('fEmpId').value.trim();
+    var dest    = document.getElementById('fDest').value.trim();
+    var dateFrom= document.getElementById('fDateFrom').value;
+    var dateTo  = document.getElementById('fDateTo').value;
+    if(!empName||!empId||!dest||!dateFrom||!dateTo){
+      showToast(IS_RTL_MS?'\u064a\u0631\u062c\u0649 \u062a\u0639\u0628\u0626\u0629 \u0627\u0644\u062d\u0642\u0648\u0644 \u0627\u0644\u0625\u0644\u0632\u0627\u0645\u064a\u0629':'Please fill required fields','error');
+      return;
+    }
+    var total = calcTotal();
+    var ms    = getMissions();
+    var editId= document.getElementById('editId').value;
+    var rec   = {
+      id:        editId || genId(),
+      empName:   empName,
+      empId:     empId,
+      empEmail:  document.getElementById('fEmpEmail').value.trim(),
+      dept:      document.getElementById('fDept').value.trim(),
+      type:      document.getElementById('fType').value,
+      dest:      dest,
+      dateFrom:  dateFrom,
+      dateTo:    dateTo,
+      daily:     parseFloat(document.getElementById('fDaily').value)||0,
+      tickets:   parseFloat(document.getElementById('fTickets').value)||0,
+      hotel:     parseFloat(document.getElementById('fHotel').value)||0,
+      fees:      parseFloat(document.getElementById('fFees').value)||0,
+      otherCost: parseFloat(document.getElementById('fOther').value)||0,
+      totalCost: total,
+      purpose:   document.getElementById('fPurpose').value.trim(),
+      source:    document.getElementById('fSource').value,
+      status:    document.getElementById('fStatus').value,
+      createdAt: editId ? (ms.find(function(x){return x.id===editId;})||{}).createdAt||new Date().toISOString() : new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    if(editId){
+      var idx = ms.findIndex(function(x){return x.id===editId;});
+      if(idx>-1) ms[idx]=rec; else ms.push(rec);
+    } else {
+      ms.unshift(rec);
+    }
+    saveMissions(ms);
+    closeModal();
+    renderAll();
+    showToast(IS_RTL_MS?'\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u0645\u0647\u0645\u0629 \u0628\u0646\u062c\u0627\u062d \u2713':'Mission saved successfully \u2713','success');
+    if(document.getElementById('fSendEmail').checked){ sendEmailTo(rec.id); }
+  }
+
+  function deleteMission(id){
+    if(!confirm(IS_RTL_MS?'\u0647\u0644 \u062a\u0631\u064a\u062f \u062d\u0630\u0641 \u0647\u0630\u0647 \u0627\u0644\u0645\u0647\u0645\u0629\u061f':'Delete this mission?')) return;
+    var ms = getMissions().filter(function(m){return m.id!==id;});
+    saveMissions(ms);
+    renderAll();
+    showToast(IS_RTL_MS?'\u062a\u0645 \u062d\u0630\u0641 \u0627\u0644\u0645\u0647\u0645\u0629':'Mission deleted','error');
+  }
+
+  function sendEmailTo(id){
+    var ms = getMissions();
+    var m  = ms.find(function(x){return x.id===id;});
+    if(!m) return;
+    var days = numDays(m.dateFrom,m.dateTo);
+    var body = document.getElementById('emailPreviewBody');
+    body.innerHTML =
+      '<div style="border-bottom:2px solid #1e3a5f;padding-bottom:12px;margin-bottom:12px">'
+      +'<p style="font-weight:800;color:#1e3a5f;font-size:1rem">'+(IS_RTL_MS?'\u0625\u0634\u0639\u0627\u0631 \u0645\u0647\u0645\u0629 \u0631\u0633\u0645\u064a\u0629 / \u0639\u0644\u0645\u064a\u0629':'Official Mission Notification')+'</p>'
+      +'<p style="color:#666;font-size:.85rem">'+new Date().toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB')+'</p>'
+      +'</div>'
+      +'<p>'+(IS_RTL_MS?'\u0627\u0644\u0633\u064a\u062f / \u0627\u0644\u0633\u064a\u062f\u0629 \u0627\u0644\u0641\u0627\u0636\u0644/\u0629:':'Dear')+'<strong> '+m.empName+'</strong></p>'
+      +'<p>'+(IS_RTL_MS?'\u064a\u0633\u0631\u0651\u0646\u0627 \u0625\u0628\u0644\u0627\u063a\u0643\u0645 \u0628\u062a\u0641\u0627\u0635\u064a\u0644 \u0627\u0644\u0645\u0647\u0645\u0629 \u0627\u0644\u0645\u0639\u062a\u0645\u062f\u0629 \u0639\u0644\u0649 \u0627\u0644\u0646\u062d\u0648 \u0627\u0644\u062a\u0627\u0644\u064a:':'Please find below the details of your approved mission:')+'</p>'
+      +'<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85rem">'
+      +'<tr style="background:#EFF6FF"><td style="padding:8px;font-weight:700;border:1px solid #ddd;width:40%">'+(IS_RTL_MS?'\u0631\u0642\u0645 \u0627\u0644\u0645\u0647\u0645\u0629':'Mission ID')+'</td><td style="padding:8px;border:1px solid #ddd">'+m.id+'</td></tr>'
+      +'<tr><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u0646\u0648\u0639 \u0627\u0644\u0645\u0647\u0645\u0629':'Type')+'</td><td style="padding:8px;border:1px solid #ddd">'+(typeLabel[m.type]||m.type)+'</td></tr>'
+      +'<tr style="background:#EFF6FF"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u0627\u0644\u0648\u062c\u0647\u0629':'Destination')+'</td><td style="padding:8px;border:1px solid #ddd">'+m.dest+'</td></tr>'
+      +'<tr><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0628\u062f\u0627\u064a\u0629':'Start Date')+'</td><td style="padding:8px;border:1px solid #ddd">'+fmtDate(m.dateFrom)+'</td></tr>'
+      +'<tr style="background:#EFF6FF"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0646\u0647\u0627\u064a\u0629':'End Date')+'</td><td style="padding:8px;border:1px solid #ddd">'+fmtDate(m.dateTo)+'</td></tr>'
+      +'<tr><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u0639\u062f\u062f \u0627\u0644\u0623\u064a\u0627\u0645':'Duration')+'</td><td style="padding:8px;border:1px solid #ddd">'+days+' '+(IS_RTL_MS?'\u0623\u064a\u0627\u0645':'days')+'</td></tr>'
+      +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u0627\u0644\u0628\u062f\u0644 \u0627\u0644\u064a\u0648\u0645\u064a':'Daily Allowance')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.daily||0).toLocaleString()+' '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR')+'</td></tr>'
+      +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u062a\u0630\u0627\u0643\u0631 \u0627\u0644\u0633\u0641\u0631':'Flight Tickets')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.tickets||0).toLocaleString()+' '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR')+'</td></tr>'
+      +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u0627\u0644\u0625\u0642\u0627\u0645\u0629':'Accommodation')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.hotel||0).toLocaleString()+' '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR')+'</td></tr>'
+      +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'\u0631\u0633\u0648\u0645 \u0627\u0644\u062a\u0633\u062c\u064a\u0644':'Registration Fees')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.fees||0).toLocaleString()+' '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644':'QAR')+'</td></tr>'
+      +'<tr style="background:#FEF9C3;font-weight:800"><td style="padding:8px;font-weight:800;border:2px solid #C4922A;color:#92400E">'+(IS_RTL_MS?'\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0643\u0644\u064a':'TOTAL COST')+'</td><td style="padding:8px;border:2px solid #C4922A;color:#92400E;font-size:1.05rem">'+(m.totalCost||0).toLocaleString()+' '+(IS_RTL_MS?'\u0631\u064a\u0627\u0644 \u0642\u0637\u0631\u064a':'QAR')+'</td></tr>'
+      +'</table>'
+      +(m.purpose?'<p style="background:#F1F5F9;padding:10px;border-radius:8px;font-size:.85rem"><strong>'+(IS_RTL_MS?'\u0627\u0644\u063a\u0631\u0636:':'Purpose:')+'</strong> '+m.purpose+'</p>':'')
+      +'<p style="margin-top:16px;color:#666;font-size:.82rem">'+(IS_RTL_MS?'\u0644\u0644\u0627\u0633\u062a\u0641\u0633\u0627\u0631: \u0645\u0643\u062a\u0628 \u0627\u0644\u0631\u0648\u0627\u062a\u0628 \u2014 \u0627\u0644\u062f\u0627\u062e\u0644\u064a 4200 | payroll@qu.edu.qa':'For inquiries: Payroll Office \u2014 Ext. 4200 | payroll@qu.edu.qa')+'</p>';
+
+    document.getElementById('_pendingEmailId').value = id;
+    var em = document.getElementById('emailModal');
+    em.classList.remove('hidden');
+    em.style.display = 'flex';
+  }
+  function closeEmailModal(){
+    var em = document.getElementById('emailModal');
+    em.classList.add('hidden');
+    em.style.display = 'none';
+  }
+  function confirmSendEmail(){
+    closeEmailModal();
+    showToast(IS_RTL_MS?'\u2709\ufe0f \u062a\u0645 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0625\u064a\u0645\u064a\u0644 \u0644\u0644\u0645\u0648\u0638\u0641 \u0628\u0646\u062c\u0627\u062d':'\u2709\ufe0f Email sent to employee successfully','success');
+  }
+
+  function exportReport(){
+    var r = document.getElementById('reportModal');
+    r.classList.remove('hidden');
+    r.style.display = 'flex';
+    buildReport();
+  }
+  function closeReportModal(){
+    var r = document.getElementById('reportModal');
+    r.classList.add('hidden');
+    r.style.display = 'none';
+  }
+  function buildReport(){
+    var year   = document.getElementById('rptYear').value;
+    var type   = document.getElementById('rptType').value;
+    var source = document.getElementById('rptSource').value;
+    var ms = getMissions().filter(function(m){
+      var y = m.dateFrom ? m.dateFrom.slice(0,4) : '';
+      return (!year||y===year) && (!type||m.type===type) && (!source||m.source===source);
+    });
+    var totalCost = ms.reduce(function(s,m){return s+(m.totalCost||0);},0);
+    var byStatus={};
+    ms.forEach(function(m){ byStatus[m.status]=(byStatus[m.status]||0)+1; });
+    var body = document.getElementById('reportBody');
+    body.innerHTML =
+      '<div class="grid grid-cols-3 gap-4 mb-4">'
+      +'<div class="card p-4 text-center"><div class="text-2xl font-black" style="color:#1e3a5f">'+ms.length+'</div><div class="text-xs text-gray-500">'+(IS_RTL_MS?'\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0647\u0627\u0645':'Total Missions')+'</div></div>'
+      +'<div class="card p-4 text-center"><div class="text-2xl font-black text-green-600">'+(byStatus.approved||0)+'</div><div class="text-xs text-gray-500">'+(IS_RTL_MS?'\u0645\u0639\u062a\u0645\u062f\u0629':'Approved')+'</div></div>'
+      +'<div class="card p-4 text-center"><div class="text-2xl font-black" style="color:var(--qu-gold)">'+totalCost.toLocaleString()+'</div><div class="text-xs text-gray-500">'+(IS_RTL_MS?'\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u062a\u0643\u0644\u0641\u0629 (\u0631\u064a\u0627\u0644)':'Total Cost (QAR)')+'</div></div>'
+      +'</div>'
+      +'<div class="overflow-x-auto rounded-xl border border-gray-100"><table class="w-full text-xs">'
+      +'<thead><tr class="bg-gray-50 border-b">'
+      +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'\u0627\u0644\u0645\u0648\u0638\u0641':'Employee')+'</th>'
+      +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'\u0627\u0644\u0646\u0648\u0639':'Type')+'</th>'
+      +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'\u0627\u0644\u0648\u062c\u0647\u0629':'Dest.')+'</th>'
+      +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'\u0627\u0644\u0645\u062f\u0629':'Days')+'</th>'
+      +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'\u0627\u0644\u062a\u0643\u0644\u0641\u0629':'Cost')+'</th>'
+      +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'\u0627\u0644\u062d\u0627\u0644\u0629':'Status')+'</th>'
+      +'</tr></thead><tbody>'
+      +ms.map(function(m){
+        return '<tr class="border-b hover:bg-gray-50">'
+          +'<td class="px-3 py-2"><p class="font-bold">'+m.empName+'</p><p class="text-gray-400">'+m.empId+'</p></td>'
+          +'<td class="px-3 py-2"><span class="px-2 py-0.5 rounded-lg font-bold" style="background:'+typeBg[m.type]+';color:'+typeColor[m.type]+'">'+(typeLabel[m.type]||m.type)+'</span></td>'
+          +'<td class="px-3 py-2">'+m.dest+'</td>'
+          +'<td class="px-3 py-2">'+numDays(m.dateFrom,m.dateTo)+' '+(IS_RTL_MS?'\u0623\u064a\u0627\u0645':'d')+'</td>'
+          +'<td class="px-3 py-2 font-bold">'+(m.totalCost||0).toLocaleString()+'</td>'
+          +'<td class="px-3 py-2"><span class="px-2 py-0.5 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span></td>'
+          +'</tr>';
+      }).join('')
+      +'</tbody></table></div>';
+  }
+  function printReport(){
+    var content = document.getElementById('reportBody').innerHTML;
+    var w = window.open('','_blank');
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+(IS_RTL_MS?'\u062a\u0642\u0631\u064a\u0631 \u0627\u0644\u0645\u0647\u0627\u0645':'Missions Report')+'</title>'
+      +'<style>body{font-family:Arial,sans-serif;padding:20px;direction:'+(IS_RTL_MS?'rtl':'ltr')+'}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:'+(IS_RTL_MS?'right':'left')+'}th{background:#f0f0f0}@media print{button{display:none}}</style>'
+      +'</head><body><h2>'+(IS_RTL_MS?'\u062a\u0642\u0631\u064a\u0631 \u0627\u0644\u0645\u0647\u0627\u0645 \u0627\u0644\u0631\u0633\u0645\u064a\u0629 \u0648\u0627\u0644\u0639\u0644\u0645\u064a\u0629':'Official & Academic Missions Report')+'</h2>'
+      +'<p style="color:#666;font-size:.9rem">'+new Date().toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB')+'</p>'
+      +content
+      +'<script>window.print();<\/script></body></html>');
+    w.document.close();
+  }
+
+  function showToast(msg, type){
+    var t = document.getElementById('msToast');
+    var i = document.getElementById('msToastIcon');
+    var m = document.getElementById('msToastMsg');
+    t.style.background = type==='error'?'#DC2626':type==='warning'?'#D97706':'#15803D';
+    i.className = 'fas '+(type==='error'?'fa-times-circle':type==='warning'?'fa-exclamation-triangle':'fa-check-circle');
+    m.textContent = msg;
+    t.classList.remove('hidden');
+    t.style.display = 'flex';
+    setTimeout(function(){ t.classList.add('hidden'); t.style.display='none'; }, 3500);
+  }
+
+  function renderAll(){
+    updateStats();
+    renderTrainingInbox();
+    filterMissions();
+  }
+
+  function seedDemo(){
+    if(getMissions().length) return;
+    var demos = [
+      {id:'MS-A1B2C3',empName:IS_RTL_MS?'\u0623\u062d\u0645\u062f \u0645\u062d\u0645\u062f \u0627\u0644\u0646\u0639\u064a\u0645\u064a':'Ahmed Al-Naimi',empId:'QU-2019-0245',empEmail:'a.alnaimi@qu.edu.qa',dept:IS_RTL_MS?'\u0643\u0644\u064a\u0629 \u0627\u0644\u0647\u0646\u062f\u0633\u0629':'College of Engineering',type:'conference',dest:IS_RTL_MS?'\u062f\u0628\u064a\u060c \u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062a':'Dubai, UAE',dateFrom:'2025-03-10',dateTo:'2025-03-13',daily:800,tickets:1200,hotel:1800,fees:500,otherCost:200,totalCost:4500,purpose:IS_RTL_MS?'\u062d\u0636\u0648\u0631 \u0645\u0624\u062a\u0645\u0631 \u0627\u0644\u0647\u0646\u062f\u0633\u0629 \u0627\u0644\u062f\u0648\u0644\u064a':'Attending International Engineering Conference',source:'training',status:'approved',createdAt:'2025-02-15T10:00:00Z',updatedAt:'2025-02-20T10:00:00Z'},
+      {id:'MS-D4E5F6',empName:IS_RTL_MS?'\u0641\u0627\u0637\u0645\u0629 \u0633\u0627\u0644\u0645 \u0627\u0644\u0642\u062d\u0637\u0627\u0646\u064a':'Fatima Al-Qahtani',empId:'QU-2020-0189',empEmail:'f.alqahtani@qu.edu.qa',dept:IS_RTL_MS?'\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0631\u062f \u0627\u0644\u0628\u0634\u0631\u064a\u0629':'HR Department',type:'training',dest:IS_RTL_MS?'\u0644\u0646\u062f\u0646\u060c \u0627\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0645\u062a\u062d\u062f\u0629':'London, UK',dateFrom:'2025-04-05',dateTo:'2025-04-10',daily:1200,tickets:3500,hotel:4200,fees:800,otherCost:300,totalCost:10000,purpose:IS_RTL_MS?'\u062f\u0648\u0631\u0629 \u062a\u062f\u0631\u064a\u0628\u064a\u0629 \u0641\u064a \u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u0631\u062f \u0627\u0644\u0628\u0634\u0631\u064a\u0629':'HR Management Training Course',source:'training',status:'pending',createdAt:'2025-03-01T09:00:00Z',updatedAt:'2025-03-01T09:00:00Z'},
+      {id:'MS-G7H8I9',empName:IS_RTL_MS?'\u062e\u0627\u0644\u062f \u0639\u0628\u062f\u0627\u0644\u0644\u0647 \u0627\u0644\u062f\u0648\u0633\u0631\u064a':'Khaled Al-Dosari',empId:'QU-2018-0312',empEmail:'k.aldosari@qu.edu.qa',dept:IS_RTL_MS?'\u0643\u0644\u064a\u0629 \u0627\u0644\u0639\u0644\u0648\u0645':'College of Science',type:'academic',dest:IS_RTL_MS?'\u0628\u0627\u0631\u064a\u0633\u060c \u0641\u0631\u0646\u0633\u0627':'Paris, France',dateFrom:'2025-05-20',dateTo:'2025-05-25',daily:1500,tickets:4000,hotel:5000,fees:1200,otherCost:500,totalCost:12200,purpose:IS_RTL_MS?'\u062a\u0642\u062f\u064a\u0645 \u0628\u062d\u062b \u0639\u0644\u0645\u064a \u0641\u064a \u0645\u0624\u062a\u0645\u0631 \u0627\u0644\u0643\u064a\u0645\u064a\u0627\u0621 \u0627\u0644\u062f\u0648\u0644\u064a':'Presenting research paper at International Chemistry Conference',source:'college',status:'approved',createdAt:'2025-04-01T08:00:00Z',updatedAt:'2025-04-05T08:00:00Z'},
+      {id:'MS-J1K2L3',empName:IS_RTL_MS?'\u0646\u0648\u0631\u0629 \u0631\u0627\u0634\u062f \u0627\u0644\u0645\u0631\u064a':'Noura Al-Marri',empId:'QU-2021-0098',empEmail:'n.almarri@qu.edu.qa',dept:IS_RTL_MS?'\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0627\u0644\u064a\u0629':'Finance Department',type:'official',dest:IS_RTL_MS?'\u0627\u0644\u0631\u064a\u0627\u0636\u060c \u0627\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 \u0627\u0644\u0633\u0639\u0648\u062f\u064a\u0629':'Riyadh, Saudi Arabia',dateFrom:'2025-06-08',dateTo:'2025-06-09',daily:600,tickets:900,hotel:700,fees:0,otherCost:100,totalCost:2300,purpose:IS_RTL_MS?'\u0627\u062c\u062a\u0645\u0627\u0639 \u0645\u0639 \u0648\u0632\u0627\u0631\u0629 \u0627\u0644\u0645\u0627\u0644\u064a\u0629 \u0627\u0644\u0642\u0637\u0631\u064a\u0629':'Meeting with Ministry of Finance',source:'payroll',status:'pending',createdAt:'2025-05-10T11:00:00Z',updatedAt:'2025-05-10T11:00:00Z'},
+    ];
+    saveMissions(demos);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    seedDemo();
+    renderAll();
+    var h=document.createElement('input');
+    h.type='hidden'; h.id='_pendingEmailId';
+    document.body.appendChild(h);
+  });
+  </script>
+
   `
 
   return c.html(layout(pageTitle, content, 'missions', lang))
@@ -6802,7 +7500,6 @@ function staffLayout(title: string, content: string, activePage: string, lang: L
   const navItems = [
     { href: '/staff',            icon: 'fa-home',            label: isRTL ? 'الرئيسية' : 'Home',               page: 'home' },
     { href: '/staff-dashboard',  icon: 'fa-chart-line',      label: isRTL ? 'لوحة متابعتي' : 'My Dashboard',   page: 'dashboard' },
-    { href: '/staff-missions',   icon: 'fa-plane-departure', label: isRTL ? 'المهام الرسمية' : 'Official Missions', page: 'missions' },
     { href: '/staff-forms',      icon: 'fa-file-alt',        label: isRTL ? 'النماذج والوثائق' : 'Forms & Documents', page: 'forms' },
     { href: '/staff-request',    icon: 'fa-concierge-bell',  label: isRTL ? 'طلب خدمة' : 'Request a Service',  page: 'request' },
     { href: '/staff-contact',    icon: 'fa-envelope',        label: isRTL ? 'تواصل معنا' : 'Contact Us',       page: 'contact' },
@@ -13778,739 +14475,5 @@ function setTheme(id){
 </html>`)
 })
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  STAFF MISSIONS  /staff-missions
-// ─────────────────────────────────────────────────────────────────────────────
-app.get('/staff-missions', (c) => {
-  const lang  = getLang(c)
-  const isRTL = lang === 'ar'
-  const pageTitle = isRTL ? 'المهام الرسمية والعلمية' : 'Official & Academic Missions'
-
-  const content = `
-<div dir="${isRTL?'rtl':'ltr'}" class="space-y-6">
-
-<!-- ══ PAGE HEADER ══ -->
-<div class="rounded-2xl p-6 flex items-center justify-between gap-4 flex-wrap"
-     style="background:linear-gradient(135deg,#1e3a5f 0%,#1a4a7a 60%,#0f2d50 100%)">
-  <div class="${isRTL?'text-right':''}">
-    <p class="text-white/70 text-sm mb-1">
-      <i class="fas fa-building ${isRTL?'ml-1':'mr-1'}"></i>
-      ${isRTL?'إدارة الرواتب والموارد البشرية':'Payroll & HR Department'}
-    </p>
-    <h1 class="text-2xl font-bold text-white">
-      <i class="fas fa-plane-departure ${isRTL?'ml-2':'mr-2'}"></i>
-      ${isRTL?'المهام الرسمية والعلمية':'Official & Academic Missions'}
-    </h1>
-    <p class="text-white/60 text-sm mt-1">
-      ${isRTL?'تتبع طلبات المهام • استخراج التقارير • إشعارات الموظفين':'Track Mission Requests • Generate Reports • Employee Notifications'}
-    </p>
-  </div>
-  <div class="flex gap-3 flex-wrap">
-    <button onclick="openNewMission()"
-      class="px-4 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition"
-      style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3)">
-      <i class="fas fa-plus-circle"></i>${isRTL?'مهمة جديدة':'New Mission'}
-    </button>
-    <button onclick="exportReport()"
-      class="px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:opacity-90 transition"
-      style="background:var(--qu-gold);color:white">
-      <i class="fas fa-file-export"></i>${isRTL?'استخراج تقرير':'Export Report'}
-    </button>
-  </div>
-</div>
-
-<!-- ══ STATS CARDS ══ -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-  <div class="card p-4 text-center">
-    <div class="text-3xl font-black" style="color:#1e3a5f" id="statTotal">0</div>
-    <div class="text-xs text-gray-500 mt-1">${isRTL?'إجمالي المهام':'Total Missions'}</div>
-  </div>
-  <div class="card p-4 text-center">
-    <div class="text-3xl font-black text-yellow-600" id="statPending">0</div>
-    <div class="text-xs text-gray-500 mt-1">${isRTL?'قيد المراجعة':'Under Review'}</div>
-  </div>
-  <div class="card p-4 text-center">
-    <div class="text-3xl font-black text-green-600" id="statApproved">0</div>
-    <div class="text-xs text-gray-500 mt-1">${isRTL?'معتمدة':'Approved'}</div>
-  </div>
-  <div class="card p-4 text-center">
-    <div class="text-3xl font-black" style="color:var(--qu-gold)" id="statTotalCost">0</div>
-    <div class="text-xs text-gray-500 mt-1">${isRTL?'إجمالي التكلفة (ريال)':'Total Cost (QAR)'}</div>
-  </div>
-</div>
-
-<!-- ══ TRAINING DEPT INBOX ══ -->
-<div class="card p-0 overflow-hidden">
-  <div class="px-5 py-4 flex items-center justify-between flex-wrap gap-3"
-       style="background:linear-gradient(90deg,#064E3B,#065F46);border-radius:12px 12px 0 0">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(255,255,255,.15)">
-        <i class="fas fa-chalkboard-teacher text-white"></i>
-      </div>
-      <div>
-        <h2 class="font-bold text-white text-sm">${isRTL?'طلبات واردة من قسم التدريب والتطوير':'Requests from Training & Development Dept.'}</h2>
-        <p class="text-green-200 text-xs">${isRTL?'المهام الواردة من إدارة التدريب بانتظار الاعتماد':'Training-originated missions awaiting payroll approval'}</p>
-      </div>
-    </div>
-    <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(255,255,255,.2);color:#fff" id="trainingBadge">0</span>
-  </div>
-  <div id="trainingInbox" class="divide-y divide-gray-100"></div>
-  <div id="trainingEmpty" class="py-10 text-center text-gray-400 text-sm hidden">
-    <i class="fas fa-inbox text-3xl mb-2 block opacity-30"></i>
-    ${isRTL?'لا توجد طلبات واردة من قسم التدريب':'No incoming requests from Training Dept.'}
-  </div>
-</div>
-
-<!-- ══ FILTERS + SEARCH ══ -->
-<div class="card p-4">
-  <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-    <input id="srchInput" type="text" placeholder="${isRTL?'بحث بالاسم أو الرقم...':'Search by name or ID...'}"
-      oninput="filterMissions()"
-      class="col-span-1 sm:col-span-2 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2"
-      style="focus:ring-color:var(--qu-maroon)">
-    <select id="filterType" onchange="filterMissions()"
-      class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
-      <option value="">${isRTL?'كل الأنواع':'All Types'}</option>
-      <option value="official">${isRTL?'مهمة رسمية':'Official Mission'}</option>
-      <option value="academic">${isRTL?'مهمة علمية':'Academic Mission'}</option>
-      <option value="training">${isRTL?'تدريب خارجي':'External Training'}</option>
-      <option value="conference">${isRTL?'مؤتمر / ورشة':'Conference / Workshop'}</option>
-    </select>
-    <select id="filterStatus" onchange="filterMissions()"
-      class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
-      <option value="">${isRTL?'كل الحالات':'All Statuses'}</option>
-      <option value="pending">${isRTL?'قيد المراجعة':'Pending'}</option>
-      <option value="approved">${isRTL?'معتمدة':'Approved'}</option>
-      <option value="rejected">${isRTL?'مرفوضة':'Rejected'}</option>
-      <option value="completed">${isRTL?'منتهية':'Completed'}</option>
-    </select>
-  </div>
-</div>
-
-<!-- ══ MISSIONS TABLE ══ -->
-<div class="card overflow-hidden">
-  <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-    <h2 class="font-bold text-gray-800">${isRTL?'سجل المهام':'Missions Log'}</h2>
-    <span class="text-xs text-gray-400" id="countLabel"></span>
-  </div>
-  <div class="overflow-x-auto">
-    <table class="w-full text-sm">
-      <thead>
-        <tr class="bg-gray-50 border-b border-gray-100">
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'رقم المهمة':'Mission ID'}</th>
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الموظف':'Employee'}</th>
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'نوع المهمة':'Type'}</th>
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الوجهة':'Destination'}</th>
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'التاريخ':'Date'}</th>
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'التكلفة (ريال)':'Cost (QAR)'}</th>
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'الحالة':'Status'}</th>
-          <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase ${isRTL?'text-right':'text-left'}">${isRTL?'إجراءات':'Actions'}</th>
-        </tr>
-      </thead>
-      <tbody id="missionsBody"></tbody>
-    </table>
-  </div>
-  <div id="missionsEmpty" class="py-16 text-center text-gray-400 hidden">
-    <i class="fas fa-plane text-4xl mb-3 block opacity-20"></i>
-    <p>${isRTL?'لا توجد مهام مسجلة':'No missions recorded'}</p>
-    <button onclick="openNewMission()" class="mt-3 px-4 py-2 rounded-xl text-sm font-bold btn-primary text-white">${isRTL?'إضافة أول مهمة':'Add First Mission'}</button>
-  </div>
-</div>
-
-<!-- ══ NEW MISSION MODAL ══ -->
-<div id="missionModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,.5)">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto">
-    <div class="p-5 border-b border-gray-100 flex items-center justify-between"
-         style="background:linear-gradient(135deg,#1e3a5f,#1a4a7a);border-radius:16px 16px 0 0">
-      <h3 class="font-bold text-white" id="modalTitle">${isRTL?'تسجيل مهمة جديدة':'Register New Mission'}</h3>
-      <button onclick="closeModal()" class="text-white/70 hover:text-white text-xl"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="p-6 space-y-4">
-      <input type="hidden" id="editId">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'اسم الموظف *':'Employee Name *'}</label>
-          <input id="fEmpName" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'الاسم الكامل':'Full name'}">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'رقم الموظف *':'Employee ID *'}</label>
-          <input id="fEmpId" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="QU-XXXX-XXXX">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'البريد الإلكتروني':'Email'}</label>
-          <input id="fEmpEmail" type="email" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="employee@qu.edu.qa">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'القسم / الكلية':'Department / College'}</label>
-          <input id="fDept" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'مثال: كلية الهندسة':'e.g. College of Engineering'}">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'نوع المهمة *':'Mission Type *'}</label>
-          <select id="fType" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-            <option value="official">${isRTL?'مهمة رسمية':'Official Mission'}</option>
-            <option value="academic">${isRTL?'مهمة علمية':'Academic Mission'}</option>
-            <option value="training">${isRTL?'تدريب خارجي':'External Training'}</option>
-            <option value="conference">${isRTL?'مؤتمر / ورشة':'Conference / Workshop'}</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'الوجهة / المدينة *':'Destination / City *'}</label>
-          <input id="fDest" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'مثال: دبي، الإمارات':'e.g. Dubai, UAE'}">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'تاريخ البداية *':'Start Date *'}</label>
-          <input id="fDateFrom" type="date" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'تاريخ النهاية *':'End Date *'}</label>
-          <input id="fDateTo" type="date" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-        </div>
-      </div>
-
-      <!-- التكاليف المالية -->
-      <div class="rounded-xl p-4 space-y-3" style="background:#F0F7FF;border:1px solid #BFDBFE">
-        <h4 class="font-bold text-blue-800 text-sm flex items-center gap-2">
-          <i class="fas fa-coins"></i>${isRTL?'التكاليف المالية (ريال قطري)':'Financial Costs (QAR)'}
-        </h4>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="text-xs text-gray-600 block mb-1">${isRTL?'بدل يومي':'Daily Allowance'}</label>
-            <input id="fDaily" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
-          </div>
-          <div>
-            <label class="text-xs text-gray-600 block mb-1">${isRTL?'تذاكر السفر':'Flight Tickets'}</label>
-            <input id="fTickets" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
-          </div>
-          <div>
-            <label class="text-xs text-gray-600 block mb-1">${isRTL?'الإقامة / الفندق':'Accommodation'}</label>
-            <input id="fHotel" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
-          </div>
-          <div>
-            <label class="text-xs text-gray-600 block mb-1">${isRTL?'رسوم التسجيل':'Registration Fees'}</label>
-            <input id="fFees" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
-          </div>
-          <div>
-            <label class="text-xs text-gray-600 block mb-1">${isRTL?'مصاريف أخرى':'Other Expenses'}</label>
-            <input id="fOther" type="number" min="0" oninput="calcTotal()" class="w-full border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
-          </div>
-          <div class="flex flex-col justify-end">
-            <label class="text-xs font-bold text-blue-800 block mb-1">${isRTL?'الإجمالي':'Total'}</label>
-            <div class="rounded-xl px-3 py-2 text-sm font-black text-blue-900" style="background:#DBEAFE" id="fTotal">0 ${isRTL?'ريال':'QAR'}</div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'الغرض من المهمة *':'Mission Purpose *'}</label>
-        <textarea id="fPurpose" rows="3" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'وصف موجز للمهمة والهدف منها...':'Brief description of the mission and its objective...'}"></textarea>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'المصدر':'Source'}</label>
-          <select id="fSource" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-            <option value="payroll">${isRTL?'إدارة الرواتب':'Payroll Dept.'}</option>
-            <option value="training">${isRTL?'قسم التدريب والتطوير':'Training & Development'}</option>
-            <option value="hr">${isRTL?'الموارد البشرية':'Human Resources'}</option>
-            <option value="college">${isRTL?'الكلية / القسم':'College / Department'}</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-600 block mb-1">${isRTL?'الحالة':'Status'}</label>
-          <select id="fStatus" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-            <option value="pending">${isRTL?'قيد المراجعة':'Pending'}</option>
-            <option value="approved">${isRTL?'معتمدة':'Approved'}</option>
-            <option value="rejected">${isRTL?'مرفوضة':'Rejected'}</option>
-            <option value="completed">${isRTL?'منتهية':'Completed'}</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- خيار إرسال إيميل -->
-      <div class="rounded-xl p-4 flex items-center gap-3" style="background:#FFFBEB;border:1px solid #FDE68A">
-        <input type="checkbox" id="fSendEmail" class="w-4 h-4 accent-yellow-500">
-        <div>
-          <label for="fSendEmail" class="font-bold text-yellow-800 text-sm cursor-pointer">
-            <i class="fas fa-envelope ${isRTL?'ml-1':'mr-1'}"></i>
-            ${isRTL?'إرسال إيميل إشعار للموظف بتفاصيل المهمة والقيمة المالية':'Send email notification to employee with mission details & financial value'}
-          </label>
-          <p class="text-yellow-700 text-xs mt-0.5">${isRTL?'سيُرسل الإيميل على البريد المسجّل للموظف':'Email will be sent to the registered employee email'}</p>
-        </div>
-      </div>
-
-    </div>
-    <div class="px-6 pb-6 flex gap-3 justify-end">
-      <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition">${isRTL?'إلغاء':'Cancel'}</button>
-      <button onclick="saveMission()" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white btn-primary flex items-center gap-2">
-        <i class="fas fa-save"></i>${isRTL?'حفظ المهمة':'Save Mission'}
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ EMAIL PREVIEW MODAL ══ -->
-<div id="emailModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,.6)">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-screen overflow-y-auto">
-    <div class="p-5 border-b border-gray-100 flex items-center justify-between"
-         style="background:linear-gradient(135deg,#C4922A,#DBA93C);border-radius:16px 16px 0 0">
-      <h3 class="font-bold text-white"><i class="fas fa-envelope ${isRTL?'ml-2':'mr-2'}"></i>${isRTL?'معاينة الإيميل':'Email Preview'}</h3>
-      <button onclick="closeEmailModal()" class="text-white/70 hover:text-white text-xl"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="p-6">
-      <div id="emailPreviewBody" class="rounded-xl border border-gray-200 p-5 text-sm text-gray-700 space-y-3 bg-gray-50"></div>
-      <div class="mt-4 flex gap-3 justify-end">
-        <button onclick="closeEmailModal()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200">${isRTL?'إغلاق':'Close'}</button>
-        <button onclick="confirmSendEmail()" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2" style="background:var(--qu-gold)">
-          <i class="fas fa-paper-plane"></i>${isRTL?'تأكيد الإرسال':'Confirm Send'}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ REPORT MODAL ══ -->
-<div id="reportModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,.6)">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-screen overflow-y-auto">
-    <div class="p-5 border-b border-gray-100 flex items-center justify-between"
-         style="background:linear-gradient(135deg,#1e3a5f,#1a4a7a);border-radius:16px 16px 0 0">
-      <h3 class="font-bold text-white"><i class="fas fa-chart-bar ${isRTL?'ml-2':'mr-2'}"></i>${isRTL?'تقرير المهام':'Missions Report'}</h3>
-      <button onclick="closeReportModal()" class="text-white/70 hover:text-white text-xl"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="p-6 space-y-4">
-      <div class="flex gap-3 flex-wrap">
-        <select id="rptYear" onchange="buildReport()" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
-          <option value="">${isRTL?'كل السنوات':'All Years'}</option>
-          <option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option>
-        </select>
-        <select id="rptType" onchange="buildReport()" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
-          <option value="">${isRTL?'كل الأنواع':'All Types'}</option>
-          <option value="official">${isRTL?'رسمية':'Official'}</option>
-          <option value="academic">${isRTL?'علمية':'Academic'}</option>
-          <option value="training">${isRTL?'تدريب':'Training'}</option>
-          <option value="conference">${isRTL?'مؤتمرات':'Conferences'}</option>
-        </select>
-        <select id="rptSource" onchange="buildReport()" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none">
-          <option value="">${isRTL?'كل المصادر':'All Sources'}</option>
-          <option value="training">${isRTL?'التدريب والتطوير':'Training & Dev.'}</option>
-          <option value="payroll">${isRTL?'الرواتب':'Payroll'}</option>
-          <option value="hr">${isRTL?'الموارد البشرية':'HR'}</option>
-        </select>
-        <button onclick="printReport()" class="px-4 py-2 rounded-xl text-sm font-bold text-white btn-primary flex items-center gap-2">
-          <i class="fas fa-print"></i>${isRTL?'طباعة':'Print'}
-        </button>
-      </div>
-      <div id="reportBody"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ TOAST ══ -->
-<div id="msToast" class="fixed bottom-6 ${isRTL?'left-6':'right-6'} z-50 hidden px-5 py-3 rounded-xl text-white text-sm font-bold shadow-xl flex items-center gap-3" style="background:#1e3a5f">
-  <i id="msToastIcon" class="fas fa-check-circle"></i>
-  <span id="msToastMsg"></span>
-</div>
-
-</div><!-- /main div -->
-
-<script>
-var IS_RTL_MS = ${isRTL};
-var MISSIONS_KEY = 'qu_missions_v1';
-
-/* ── helpers ── */
-function getMissions(){ try{return JSON.parse(localStorage.getItem(MISSIONS_KEY)||'[]')}catch(e){return[]} }
-function saveMissions(d){ localStorage.setItem(MISSIONS_KEY, JSON.stringify(d)) }
-function genId(){ return 'MS-'+Date.now().toString(36).toUpperCase(); }
-function fmtDate(iso){ if(!iso) return '–'; var d=new Date(iso); return d.toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'2-digit'}); }
-function numDays(from,to){ if(!from||!to) return 0; return Math.max(0,Math.round((new Date(to)-new Date(from))/(1000*60*60*24))+1); }
-
-var typeLabel = {
-  official: IS_RTL_MS?'مهمة رسمية':'Official Mission',
-  academic:  IS_RTL_MS?'مهمة علمية':'Academic Mission',
-  training:  IS_RTL_MS?'تدريب خارجي':'External Training',
-  conference:IS_RTL_MS?'مؤتمر / ورشة':'Conference / Workshop'
-};
-var typeBg = { official:'#EFF6FF', academic:'#F0FDF4', training:'#FFFBEB', conference:'#FDF4FF' };
-var typeColor = { official:'#1D4ED8', academic:'#15803D', training:'#D97706', conference:'#7C3AED' };
-var statusLabel = {
-  pending:   IS_RTL_MS?'قيد المراجعة':'Pending',
-  approved:  IS_RTL_MS?'معتمدة':'Approved',
-  rejected:  IS_RTL_MS?'مرفوضة':'Rejected',
-  completed: IS_RTL_MS?'منتهية':'Completed'
-};
-var statusColor = { pending:'#D97706', approved:'#15803D', rejected:'#DC2626', completed:'#6B7280' };
-var statusBg    = { pending:'#FFFBEB', approved:'#F0FDF4', rejected:'#FEF2F2', completed:'#F9FAFB' };
-var sourceLabel = {
-  payroll:  IS_RTL_MS?'إدارة الرواتب':'Payroll Dept.',
-  training: IS_RTL_MS?'قسم التدريب والتطوير':'Training & Dev.',
-  hr:       IS_RTL_MS?'الموارد البشرية':'Human Resources',
-  college:  IS_RTL_MS?'الكلية / القسم':'College / Dept.'
-};
-
-/* ── stats ── */
-function updateStats(){
-  var ms = getMissions();
-  document.getElementById('statTotal').textContent    = ms.length;
-  document.getElementById('statPending').textContent  = ms.filter(m=>m.status==='pending').length;
-  document.getElementById('statApproved').textContent = ms.filter(m=>m.status==='approved').length;
-  var totalCost = ms.reduce(function(s,m){ return s+(m.totalCost||0); },0);
-  document.getElementById('statTotalCost').textContent = totalCost.toLocaleString();
-}
-
-/* ── training inbox ── */
-function renderTrainingInbox(){
-  var ms = getMissions().filter(function(m){ return m.source==='training'; });
-  var badge = document.getElementById('trainingBadge');
-  var inbox = document.getElementById('trainingInbox');
-  var empty = document.getElementById('trainingEmpty');
-  badge.textContent = ms.length;
-  if(!ms.length){ inbox.innerHTML=''; empty.classList.remove('hidden'); return; }
-  empty.classList.add('hidden');
-  inbox.innerHTML = ms.map(function(m){
-    return '<div class="px-5 py-4 flex items-center justify-between gap-3 flex-wrap hover:bg-green-50 transition">'
-      +'<div class="flex items-center gap-3">'
-      +'<div class="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold" style="background:#064E3B">'
-      +m.empName.charAt(0)+'</div>'
-      +'<div>'
-      +'<p class="font-bold text-gray-800 text-sm">'+m.empName+'</p>'
-      +'<p class="text-xs text-gray-500">'+m.empId+' • '+(typeLabel[m.type]||m.type)+' • '+m.dest+'</p>'
-      +'<p class="text-xs text-green-700 font-bold mt-0.5"><i class="fas fa-coins mr-1"></i>'+(m.totalCost||0).toLocaleString()+' '+(IS_RTL_MS?'ريال':'QAR')+'</p>'
-      +'</div></div>'
-      +'<div class="flex items-center gap-2">'
-      +'<span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span>'
-      +'<button onclick="editMission(\''+m.id+'\')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#064E3B"><i class="fas fa-edit"></i></button>'
-      +'<button onclick="sendEmailTo(\''+m.id+'\')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
-      +'</div>'
-      +'</div>';
-  }).join('');
-}
-
-/* ── render table ── */
-function renderMissions(list){
-  var tbody = document.getElementById('missionsBody');
-  var empty = document.getElementById('missionsEmpty');
-  if(!list){ list = getMissions(); }
-  document.getElementById('countLabel').textContent = list.length + (IS_RTL_MS?' مهمة':' missions');
-  if(!list.length){ tbody.innerHTML=''; empty.classList.remove('hidden'); return; }
-  empty.classList.add('hidden');
-  tbody.innerHTML = list.map(function(m){
-    return '<tr class="border-b border-gray-50 hover:bg-gray-50 transition">'
-      +'<td class="px-4 py-3 font-mono text-xs text-gray-500">'+m.id+'</td>'
-      +'<td class="px-4 py-3">'
-        +'<p class="font-bold text-gray-800 text-sm">'+m.empName+'</p>'
-        +'<p class="text-xs text-gray-400">'+m.empId+'</p>'
-        +(m.dept?'<p class="text-xs text-gray-400">'+m.dept+'</p>':'')
-      +'</td>'
-      +'<td class="px-4 py-3"><span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+typeBg[m.type]+';color:'+typeColor[m.type]+'">'+(typeLabel[m.type]||m.type)+'</span><br><span class="text-xs text-gray-400 mt-0.5 block">'+(sourceLabel[m.source]||m.source)+'</span></td>'
-      +'<td class="px-4 py-3 text-sm text-gray-700">'+m.dest+'</td>'
-      +'<td class="px-4 py-3 text-xs text-gray-600">'+fmtDate(m.dateFrom)+'<br>'+fmtDate(m.dateTo)+'<br><span class="text-gray-400">'+numDays(m.dateFrom,m.dateTo)+' '+(IS_RTL_MS?'أيام':'days')+'</span></td>'
-      +'<td class="px-4 py-3 font-bold text-sm" style="color:#1e3a5f">'+(m.totalCost||0).toLocaleString()+'<br><span class="text-xs text-gray-400 font-normal">'+(IS_RTL_MS?'ريال':'QAR')+'</span></td>'
-      +'<td class="px-4 py-3"><span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span></td>'
-      +'<td class="px-4 py-3">'
-        +'<div class="flex gap-1 flex-wrap">'
-        +'<button onclick="editMission(\''+m.id+'\')" title="${isRTL?'تعديل':'Edit'}" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#1e3a5f"><i class="fas fa-edit"></i></button>'
-        +'<button onclick="sendEmailTo(\''+m.id+'\')" title="${isRTL?'إرسال إيميل':'Send Email'}" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white" style="background:var(--qu-gold)"><i class="fas fa-envelope"></i></button>'
-        +'<button onclick="deleteMission(\''+m.id+'\')" title="${isRTL?'حذف':'Delete'}" class="px-2 py-1.5 rounded-lg text-xs font-bold text-white bg-red-500 hover:bg-red-600"><i class="fas fa-trash"></i></button>'
-        +'</div>'
-      +'</td>'
-      +'</tr>';
-  }).join('');
-}
-
-/* ── filter ── */
-function filterMissions(){
-  var q      = document.getElementById('srchInput').value.toLowerCase();
-  var type   = document.getElementById('filterType').value;
-  var status = document.getElementById('filterStatus').value;
-  var list   = getMissions().filter(function(m){
-    var matchQ      = !q      || m.empName.toLowerCase().includes(q) || m.empId.toLowerCase().includes(q) || m.dest.toLowerCase().includes(q);
-    var matchType   = !type   || m.type===type;
-    var matchStatus = !status || m.status===status;
-    return matchQ && matchType && matchStatus;
-  });
-  renderMissions(list);
-}
-
-/* ── calc total ── */
-function calcTotal(){
-  var d = parseFloat(document.getElementById('fDaily').value)||0;
-  var t = parseFloat(document.getElementById('fTickets').value)||0;
-  var h = parseFloat(document.getElementById('fHotel').value)||0;
-  var f = parseFloat(document.getElementById('fFees').value)||0;
-  var o = parseFloat(document.getElementById('fOther').value)||0;
-  var total = d+t+h+f+o;
-  document.getElementById('fTotal').textContent = total.toLocaleString()+' '+(IS_RTL_MS?'ريال':'QAR');
-  return total;
-}
-
-/* ── open/close modal ── */
-function openNewMission(){
-  document.getElementById('editId').value = '';
-  document.getElementById('modalTitle').textContent = IS_RTL_MS?'تسجيل مهمة جديدة':'Register New Mission';
-  ['fEmpName','fEmpId','fEmpEmail','fDept','fDest','fPurpose'].forEach(function(id){ document.getElementById(id).value=''; });
-  ['fDaily','fTickets','fHotel','fFees','fOther'].forEach(function(id){ document.getElementById(id).value=''; });
-  document.getElementById('fType').value   = 'official';
-  document.getElementById('fSource').value = 'payroll';
-  document.getElementById('fStatus').value = 'pending';
-  document.getElementById('fDateFrom').value = '';
-  document.getElementById('fDateTo').value   = '';
-  document.getElementById('fTotal').textContent = '0 '+(IS_RTL_MS?'ريال':'QAR');
-  document.getElementById('fSendEmail').checked = false;
-  var m = document.getElementById('missionModal');
-  m.classList.remove('hidden');
-  m.style.display = 'flex';
-}
-function closeModal(){
-  var m = document.getElementById('missionModal');
-  m.classList.add('hidden');
-  m.style.display = 'none';
-}
-
-/* ── edit ── */
-function editMission(id){
-  var ms = getMissions();
-  var m  = ms.find(function(x){ return x.id===id; });
-  if(!m) return;
-  document.getElementById('editId').value     = m.id;
-  document.getElementById('modalTitle').textContent = IS_RTL_MS?'تعديل المهمة':'Edit Mission';
-  document.getElementById('fEmpName').value   = m.empName||'';
-  document.getElementById('fEmpId').value     = m.empId||'';
-  document.getElementById('fEmpEmail').value  = m.empEmail||'';
-  document.getElementById('fDept').value      = m.dept||'';
-  document.getElementById('fType').value      = m.type||'official';
-  document.getElementById('fDest').value      = m.dest||'';
-  document.getElementById('fDateFrom').value  = m.dateFrom||'';
-  document.getElementById('fDateTo').value    = m.dateTo||'';
-  document.getElementById('fDaily').value     = m.daily||'';
-  document.getElementById('fTickets').value   = m.tickets||'';
-  document.getElementById('fHotel').value     = m.hotel||'';
-  document.getElementById('fFees').value      = m.fees||'';
-  document.getElementById('fOther').value     = m.otherCost||'';
-  document.getElementById('fPurpose').value   = m.purpose||'';
-  document.getElementById('fSource').value    = m.source||'payroll';
-  document.getElementById('fStatus').value    = m.status||'pending';
-  document.getElementById('fSendEmail').checked = false;
-  calcTotal();
-  var modal = document.getElementById('missionModal');
-  modal.classList.remove('hidden');
-  modal.style.display = 'flex';
-}
-
-/* ── save ── */
-function saveMission(){
-  var empName = document.getElementById('fEmpName').value.trim();
-  var empId   = document.getElementById('fEmpId').value.trim();
-  var dest    = document.getElementById('fDest').value.trim();
-  var dateFrom= document.getElementById('fDateFrom').value;
-  var dateTo  = document.getElementById('fDateTo').value;
-  if(!empName||!empId||!dest||!dateFrom||!dateTo){
-    showToast(IS_RTL_MS?'يرجى تعبئة الحقول الإلزامية':'Please fill required fields','error');
-    return;
-  }
-  var total = calcTotal();
-  var ms    = getMissions();
-  var editId= document.getElementById('editId').value;
-  var rec   = {
-    id:        editId || genId(),
-    empName:   empName,
-    empId:     empId,
-    empEmail:  document.getElementById('fEmpEmail').value.trim(),
-    dept:      document.getElementById('fDept').value.trim(),
-    type:      document.getElementById('fType').value,
-    dest:      dest,
-    dateFrom:  dateFrom,
-    dateTo:    dateTo,
-    daily:     parseFloat(document.getElementById('fDaily').value)||0,
-    tickets:   parseFloat(document.getElementById('fTickets').value)||0,
-    hotel:     parseFloat(document.getElementById('fHotel').value)||0,
-    fees:      parseFloat(document.getElementById('fFees').value)||0,
-    otherCost: parseFloat(document.getElementById('fOther').value)||0,
-    totalCost: total,
-    purpose:   document.getElementById('fPurpose').value.trim(),
-    source:    document.getElementById('fSource').value,
-    status:    document.getElementById('fStatus').value,
-    createdAt: editId ? (ms.find(function(x){return x.id===editId;})||{}).createdAt||new Date().toISOString() : new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-  if(editId){
-    var idx = ms.findIndex(function(x){return x.id===editId;});
-    if(idx>-1) ms[idx]=rec; else ms.push(rec);
-  } else {
-    ms.unshift(rec);
-  }
-  saveMissions(ms);
-  closeModal();
-  renderAll();
-  showToast(IS_RTL_MS?'تم حفظ المهمة بنجاح ✓':'Mission saved successfully ✓','success');
-  if(document.getElementById('fSendEmail').checked){ sendEmailTo(rec.id); }
-}
-
-/* ── delete ── */
-function deleteMission(id){
-  if(!confirm(IS_RTL_MS?'هل تريد حذف هذه المهمة؟':'Delete this mission?')) return;
-  var ms = getMissions().filter(function(m){return m.id!==id;});
-  saveMissions(ms);
-  renderAll();
-  showToast(IS_RTL_MS?'تم حذف المهمة':'Mission deleted','error');
-}
-
-/* ── email ── */
-function sendEmailTo(id){
-  var ms = getMissions();
-  var m  = ms.find(function(x){return x.id===id;});
-  if(!m) return;
-  var days = numDays(m.dateFrom,m.dateTo);
-  var body = document.getElementById('emailPreviewBody');
-  body.innerHTML =
-    '<div style="border-bottom:2px solid #1e3a5f;padding-bottom:12px;margin-bottom:12px">'
-    +'<p style="font-weight:800;color:#1e3a5f;font-size:1rem">'+(IS_RTL_MS?'إشعار مهمة رسمية / علمية':'Official Mission Notification')+'</p>'
-    +'<p style="color:#666;font-size:.85rem">'+new Date().toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB')+'</p>'
-    +'</div>'
-    +'<p>'+(IS_RTL_MS?'السيد / السيدة الفاضل/ة:':'Dear')+'<strong> '+m.empName+'</strong></p>'
-    +'<p>'+(IS_RTL_MS?'يسرّنا إبلاغكم بتفاصيل المهمة المعتمدة على النحو التالي:':'Please find below the details of your approved mission:')+'</p>'
-    +'<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85rem">'
-    +'<tr style="background:#EFF6FF"><td style="padding:8px;font-weight:700;border:1px solid #ddd;width:40%">'+(IS_RTL_MS?'رقم المهمة':'Mission ID')+'</td><td style="padding:8px;border:1px solid #ddd">'+m.id+'</td></tr>'
-    +'<tr><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'نوع المهمة':'Type')+'</td><td style="padding:8px;border:1px solid #ddd">'+(typeLabel[m.type]||m.type)+'</td></tr>'
-    +'<tr style="background:#EFF6FF"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'الوجهة':'Destination')+'</td><td style="padding:8px;border:1px solid #ddd">'+m.dest+'</td></tr>'
-    +'<tr><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'تاريخ البداية':'Start Date')+'</td><td style="padding:8px;border:1px solid #ddd">'+fmtDate(m.dateFrom)+'</td></tr>'
-    +'<tr style="background:#EFF6FF"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'تاريخ النهاية':'End Date')+'</td><td style="padding:8px;border:1px solid #ddd">'+fmtDate(m.dateTo)+'</td></tr>'
-    +'<tr><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'عدد الأيام':'Duration')+'</td><td style="padding:8px;border:1px solid #ddd">'+days+' '+(IS_RTL_MS?'أيام':'days')+'</td></tr>'
-    +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'البدل اليومي':'Daily Allowance')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.daily||0).toLocaleString()+' '+(IS_RTL_MS?'ريال':'QAR')+'</td></tr>'
-    +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'تذاكر السفر':'Flight Tickets')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.tickets||0).toLocaleString()+' '+(IS_RTL_MS?'ريال':'QAR')+'</td></tr>'
-    +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'الإقامة':'Accommodation')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.hotel||0).toLocaleString()+' '+(IS_RTL_MS?'ريال':'QAR')+'</td></tr>'
-    +'<tr style="background:#FFFBEB"><td style="padding:8px;font-weight:700;border:1px solid #ddd">'+(IS_RTL_MS?'رسوم التسجيل':'Registration Fees')+'</td><td style="padding:8px;border:1px solid #ddd">'+(m.fees||0).toLocaleString()+' '+(IS_RTL_MS?'ريال':'QAR')+'</td></tr>'
-    +'<tr style="background:#FEF9C3;font-weight:800"><td style="padding:8px;font-weight:800;border:2px solid #C4922A;color:#92400E">'+(IS_RTL_MS?'الإجمالي الكلي':'TOTAL COST')+'</td><td style="padding:8px;border:2px solid #C4922A;color:#92400E;font-size:1.05rem">'+(m.totalCost||0).toLocaleString()+' '+(IS_RTL_MS?'ريال قطري':'QAR')+'</td></tr>'
-    +'</table>'
-    +(m.purpose?'<p style="background:#F1F5F9;padding:10px;border-radius:8px;font-size:.85rem"><strong>'+(IS_RTL_MS?'الغرض:':'Purpose:')+'</strong> '+m.purpose+'</p>':'')
-    +'<p style="margin-top:16px;color:#666;font-size:.82rem">'+(IS_RTL_MS?'للاستفسار: مكتب الرواتب — الداخلي 4200 | payroll@qu.edu.qa':'For inquiries: Payroll Office — Ext. 4200 | payroll@qu.edu.qa')+'</p>';
-
-  document.getElementById('_pendingEmailId').value = id;
-  var em = document.getElementById('emailModal');
-  em.classList.remove('hidden');
-  em.style.display = 'flex';
-}
-function closeEmailModal(){
-  var em = document.getElementById('emailModal');
-  em.classList.add('hidden');
-  em.style.display = 'none';
-}
-function confirmSendEmail(){
-  closeEmailModal();
-  showToast(IS_RTL_MS?'✉️ تم إرسال الإيميل للموظف بنجاح':'✉️ Email sent to employee successfully','success');
-}
-
-/* ── report ── */
-function exportReport(){
-  var r = document.getElementById('reportModal');
-  r.classList.remove('hidden');
-  r.style.display = 'flex';
-  buildReport();
-}
-function closeReportModal(){
-  var r = document.getElementById('reportModal');
-  r.classList.add('hidden');
-  r.style.display = 'none';
-}
-function buildReport(){
-  var year   = document.getElementById('rptYear').value;
-  var type   = document.getElementById('rptType').value;
-  var source = document.getElementById('rptSource').value;
-  var ms = getMissions().filter(function(m){
-    var y = m.dateFrom ? m.dateFrom.slice(0,4) : '';
-    return (!year||y===year) && (!type||m.type===type) && (!source||m.source===source);
-  });
-  var totalCost = ms.reduce(function(s,m){return s+(m.totalCost||0);},0);
-  var byType={}, byStatus={};
-  ms.forEach(function(m){
-    byType[m.type]=(byType[m.type]||0)+1;
-    byStatus[m.status]=(byStatus[m.status]||0)+1;
-  });
-  var body = document.getElementById('reportBody');
-  body.innerHTML =
-    '<div class="grid grid-cols-3 gap-4 mb-4">'
-    +'<div class="card p-4 text-center"><div class="text-2xl font-black" style="color:#1e3a5f">'+ms.length+'</div><div class="text-xs text-gray-500">'+(IS_RTL_MS?'إجمالي المهام':'Total Missions')+'</div></div>'
-    +'<div class="card p-4 text-center"><div class="text-2xl font-black text-green-600">'+(byStatus.approved||0)+'</div><div class="text-xs text-gray-500">'+(IS_RTL_MS?'معتمدة':'Approved')+'</div></div>'
-    +'<div class="card p-4 text-center"><div class="text-2xl font-black" style="color:var(--qu-gold)">'+totalCost.toLocaleString()+'</div><div class="text-xs text-gray-500">'+(IS_RTL_MS?'إجمالي التكلفة (ريال)':'Total Cost (QAR)')+'</div></div>'
-    +'</div>'
-    +'<div class="overflow-x-auto rounded-xl border border-gray-100"><table class="w-full text-xs">'
-    +'<thead><tr class="bg-gray-50 border-b">'
-    +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'الموظف':'Employee')+'</th>'
-    +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'النوع':'Type')+'</th>'
-    +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'الوجهة':'Dest.')+'</th>'
-    +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'المدة':'Days')+'</th>'
-    +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'التكلفة':'Cost')+'</th>'
-    +'<th class="px-3 py-2 text-'+(IS_RTL_MS?'right':'left')+' font-bold text-gray-500">'+(IS_RTL_MS?'الحالة':'Status')+'</th>'
-    +'</tr></thead><tbody>'
-    +ms.map(function(m){
-      return '<tr class="border-b hover:bg-gray-50">'
-        +'<td class="px-3 py-2"><p class="font-bold">'+m.empName+'</p><p class="text-gray-400">'+m.empId+'</p></td>'
-        +'<td class="px-3 py-2"><span class="px-2 py-0.5 rounded-lg font-bold" style="background:'+typeBg[m.type]+';color:'+typeColor[m.type]+'">'+(typeLabel[m.type]||m.type)+'</span></td>'
-        +'<td class="px-3 py-2">'+m.dest+'</td>'
-        +'<td class="px-3 py-2">'+numDays(m.dateFrom,m.dateTo)+' '+(IS_RTL_MS?'أيام':'d')+'</td>'
-        +'<td class="px-3 py-2 font-bold">'+(m.totalCost||0).toLocaleString()+'</td>'
-        +'<td class="px-3 py-2"><span class="px-2 py-0.5 rounded-lg font-bold" style="background:'+statusBg[m.status]+';color:'+statusColor[m.status]+'">'+(statusLabel[m.status]||m.status)+'</span></td>'
-        +'</tr>';
-    }).join('')
-    +'</tbody></table></div>';
-}
-function printReport(){
-  var content = document.getElementById('reportBody').innerHTML;
-  var w = window.open('','_blank');
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+(IS_RTL_MS?'تقرير المهام':'Missions Report')+'</title>'
-    +'<style>body{font-family:Arial,sans-serif;padding:20px;direction:'+(IS_RTL_MS?'rtl':'ltr')+'}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:'+(IS_RTL_MS?'right':'left')+'}th{background:#f0f0f0}@media print{button{display:none}}</style>'
-    +'</head><body><h2>'+(IS_RTL_MS?'تقرير المهام الرسمية والعلمية':'Official & Academic Missions Report')+'</h2>'
-    +'<p style="color:#666;font-size:.9rem">'+new Date().toLocaleDateString(IS_RTL_MS?'ar-QA':'en-GB')+'</p>'
-    +content
-    +'<script>window.print();<\/script></body></html>');
-  w.document.close();
-}
-
-/* ── toast ── */
-function showToast(msg, type){
-  var t = document.getElementById('msToast');
-  var i = document.getElementById('msToastIcon');
-  var m = document.getElementById('msToastMsg');
-  t.style.background = type==='error'?'#DC2626':type==='warning'?'#D97706':'#15803D';
-  i.className = 'fas '+(type==='error'?'fa-times-circle':type==='warning'?'fa-exclamation-triangle':'fa-check-circle');
-  m.textContent = msg;
-  t.classList.remove('hidden');
-  t.style.display = 'flex';
-  setTimeout(function(){ t.classList.add('hidden'); t.style.display='none'; }, 3500);
-}
-
-/* ── renderAll ── */
-function renderAll(){
-  updateStats();
-  renderTrainingInbox();
-  filterMissions();
-}
-
-/* ── seed demo data ── */
-function seedDemo(){
-  if(getMissions().length) return;
-  var demos = [
-    {id:'MS-A1B2C3',empName:IS_RTL_MS?'أحمد محمد النعيمي':'Ahmed Al-Naimi',empId:'QU-2019-0245',empEmail:'a.alnaimi@qu.edu.qa',dept:IS_RTL_MS?'كلية الهندسة':'College of Engineering',type:'conference',dest:IS_RTL_MS?'دبي، الإمارات':'Dubai, UAE',dateFrom:'2025-03-10',dateTo:'2025-03-13',daily:800,tickets:1200,hotel:1800,fees:500,otherCost:200,totalCost:4500,purpose:IS_RTL_MS?'حضور مؤتمر الهندسة الدولي':'Attending International Engineering Conference',source:'training',status:'approved',createdAt:'2025-02-15T10:00:00Z',updatedAt:'2025-02-20T10:00:00Z'},
-    {id:'MS-D4E5F6',empName:IS_RTL_MS?'فاطمة سالم القحطاني':'Fatima Al-Qahtani',empId:'QU-2020-0189',empEmail:'f.alqahtani@qu.edu.qa',dept:IS_RTL_MS?'إدارة الموارد البشرية':'HR Department',type:'training',dest:IS_RTL_MS?'لندن، المملكة المتحدة':'London, UK',dateFrom:'2025-04-05',dateTo:'2025-04-10',daily:1200,tickets:3500,hotel:4200,fees:800,otherCost:300,totalCost:10000,purpose:IS_RTL_MS?'دورة تدريبية في إدارة الموارد البشرية':'HR Management Training Course',source:'training',status:'pending',createdAt:'2025-03-01T09:00:00Z',updatedAt:'2025-03-01T09:00:00Z'},
-    {id:'MS-G7H8I9',empName:IS_RTL_MS?'خالد عبدالله الدوسري':'Khaled Al-Dosari',empId:'QU-2018-0312',empEmail:'k.aldosari@qu.edu.qa',dept:IS_RTL_MS?'كلية العلوم':'College of Science',type:'academic',dest:IS_RTL_MS?'باريس، فرنسا':'Paris, France',dateFrom:'2025-05-20',dateTo:'2025-05-25',daily:1500,tickets:4000,hotel:5000,fees:1200,otherCost:500,totalCost:12200,purpose:IS_RTL_MS?'تقديم بحث علمي في مؤتمر الكيمياء الدولي':'Presenting research paper at International Chemistry Conference',source:'college',status:'approved',createdAt:'2025-04-01T08:00:00Z',updatedAt:'2025-04-05T08:00:00Z'},
-    {id:'MS-J1K2L3',empName:IS_RTL_MS?'نورة راشد المري':'Noura Al-Marri',empId:'QU-2021-0098',empEmail:'n.almarri@qu.edu.qa',dept:IS_RTL_MS?'إدارة المالية':'Finance Department',type:'official',dest:IS_RTL_MS?'الرياض، المملكة العربية السعودية':'Riyadh, Saudi Arabia',dateFrom:'2025-06-08',dateTo:'2025-06-09',daily:600,tickets:900,hotel:700,fees:0,otherCost:100,totalCost:2300,purpose:IS_RTL_MS?'اجتماع مع وزارة المالية القطرية':'Meeting with Ministry of Finance',source:'payroll',status:'pending',createdAt:'2025-05-10T11:00:00Z',updatedAt:'2025-05-10T11:00:00Z'},
-  ];
-  saveMissions(demos);
-}
-
-/* ── init ── */
-document.addEventListener('DOMContentLoaded', function(){
-  seedDemo();
-  renderAll();
-});
-
-/* hidden field for email id */
-document.addEventListener('DOMContentLoaded',function(){
-  var h=document.createElement('input');
-  h.type='hidden'; h.id='_pendingEmailId';
-  document.body.appendChild(h);
-});
-</script>
-`
-  return c.html(staffLayout(pageTitle, content, 'missions', lang))
-})
 
 export default app
