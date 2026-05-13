@@ -6964,9 +6964,146 @@ app.get('/staff', (c) => {
     @keyframes ticker-st{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
     .badge-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-inline-end:5px}
     .ann-item:hover{background:#FAFAFA}
+
+    /* ═══ اليوم الوطني القطري ═══ */
+    @keyframes nd-shimmer{0%,100%{opacity:.55}50%{opacity:1}}
+    @keyframes nd-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+    @keyframes nd-pulse-ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.55);opacity:0}}
+    @keyframes nd-star-spin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
+    @keyframes nd-slide-in{0%{opacity:0;transform:translateY(-22px)}100%{opacity:1;transform:translateY(0)}}
+    @keyframes nd-ticker{0%{transform:translateX(100%)}100%{transform:translateX(-110%)}}
+    @keyframes nd-ticker-rtl{0%{transform:translateX(-100%)}100%{transform:translateX(110%)}}
+    @keyframes confetti-fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(120px) rotate(720deg);opacity:0}}
+    @keyframes nd-glow{0%,100%{box-shadow:0 0 18px rgba(139,26,47,.35),0 0 40px rgba(196,146,42,.2)}50%{box-shadow:0 0 32px rgba(139,26,47,.55),0 0 64px rgba(196,146,42,.4)}}
+
+    #ndBanner{animation:nd-slide-in .6s ease both, nd-glow 3s ease-in-out infinite}
+    .nd-flag-float{animation:nd-float 3.5s ease-in-out infinite}
+    .nd-star{animation:nd-star-spin 6s linear infinite}
+    .nd-shimmer{animation:nd-shimmer 2.5s ease-in-out infinite}
+    .nd-ticker-wrap{overflow:hidden;white-space:nowrap}
+    .nd-ticker-inner{display:inline-block;animation:${isRTL?'nd-ticker-rtl':'nd-ticker'} 18s linear infinite}
+    .nd-confetti-wrap{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:inherit}
+    .nd-confetti-piece{position:absolute;top:-8px;width:7px;height:7px;border-radius:1px;opacity:0;animation:confetti-fall linear infinite}
+    .nd-pulse{position:absolute;inset:0;border-radius:inherit;border:2px solid rgba(196,146,42,.5);animation:nd-pulse-ring 2s ease-out infinite}
+    .nd-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px)}
   </style>
 
   <div dir="${isRTL?'rtl':'ltr'}" class="space-y-6">
+
+    <!-- ══ NATIONAL DAY BANNER (18 Dec only) ══════════════════════════════ -->
+    <div id="ndBanner" class="hidden relative rounded-2xl overflow-hidden"
+         style="background:linear-gradient(135deg,#8B1A2F 0%,#5C0F1E 40%,#1a0a0e 100%);min-height:160px">
+
+      <!-- confetti pieces -->
+      <div class="nd-confetti-wrap" id="ndConfetti"></div>
+      <!-- pulse ring -->
+      <div class="nd-pulse"></div>
+
+      <!-- الخط الذهبي السفلي -->
+      <div class="absolute bottom-0 left-0 right-0 h-1.5"
+           style="background:linear-gradient(90deg,transparent,#C4922A,#F0C040,#C4922A,transparent)"></div>
+
+      <!-- محتوى البانر -->
+      <div class="relative z-10 p-6 flex items-center gap-5 flex-wrap ${isRTL?'flex-row-reverse':''}">
+
+        <!-- أيقونة العلم + تأثير -->
+        <div class="relative flex-shrink-0">
+          <div class="w-20 h-20 rounded-2xl flex items-center justify-center nd-flag-float"
+               style="background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2)">
+            <span class="text-5xl select-none">🇶🇦</span>
+          </div>
+          <div class="absolute -top-1 -${isRTL?'left':'right'}-1 w-5 h-5 rounded-full flex items-center justify-center"
+               style="background:var(--qu-gold)">
+            <i class="fas fa-star text-white nd-star" style="font-size:8px"></i>
+          </div>
+        </div>
+
+        <!-- النص الرئيسي -->
+        <div class="flex-1 min-w-0 ${isRTL?'text-right':''}">
+          <div class="flex items-center gap-2 mb-1 flex-wrap ${isRTL?'flex-row-reverse justify-end':''}">
+            <span class="nd-badge text-white text-xs font-bold px-3 py-1 rounded-full nd-shimmer">
+              ${isRTL?'🎉 اليوم الوطني 2025':'🎉 National Day 2025'}
+            </span>
+            <span class="text-white/60 text-xs">${isRTL?'18 ديسمبر':'December 18'}</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight tracking-wide"
+              style="text-shadow:0 2px 12px rgba(0,0,0,.5)">
+            ${isRTL
+              ? '🇶🇦 كل عام وقطر بخير'
+              : '🇶🇦 Happy National Day Qatar'}
+          </h2>
+          <p class="text-white/75 text-sm mt-1.5 nd-shimmer" style="animation-delay:.4s">
+            ${isRTL
+              ? 'تهنئ إدارة الرواتب والموارد البشرية جميع الموظفين بمناسبة اليوم الوطني الخامس والخمسين'
+              : 'HR & Payroll warmly congratulates all staff on Qatar\'s 55th National Day'}
+          </p>
+          <!-- شريط نص متحرك -->
+          <div class="nd-ticker-wrap mt-3" style="max-width:480px">
+            <span class="nd-ticker-inner text-xs font-semibold"
+                  style="color:var(--qu-gold);letter-spacing:.5px">
+              ${isRTL
+                ? '★ مكتب الرواتب مغلق يوم 18 و19 ديسمبر بمناسبة اليوم الوطني &nbsp;★&nbsp; سيتم صرف سلفة اليوم الوطني في 15 ديسمبر &nbsp;★&nbsp; عيد وطن ومسيرة عز &nbsp;★'
+                : '★ Payroll office closed Dec 18–19 for National Day &nbsp;★&nbsp; National Day advance credited Dec 15 &nbsp;★&nbsp; Proud to serve Qatar &nbsp;★'}
+            </span>
+          </div>
+        </div>
+
+        <!-- زر التقويم -->
+        <div class="flex-shrink-0 flex flex-col items-center gap-2 ${isRTL?'items-end':'items-start'}">
+          <button onclick="jumpToNationalDay()"
+                  class="px-5 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition"
+                  style="background:rgba(196,146,42,.85);border:1px solid rgba(255,255,255,.25)">
+            <i class="fas fa-calendar-day"></i>
+            ${isRTL?'عرض في التقويم':'View in Calendar'}
+          </button>
+          <span class="text-white/50 text-xs text-center">
+            ${isRTL?'اليوم الوطني الـ 55':'55th National Day'}
+          </span>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /ndBanner -->
+
+    <script>
+    (function(){
+      /* ── هل اليوم 18 ديسمبر؟ ── */
+      var now = new Date();
+      var isNatDay = (now.getMonth()===11 && now.getDate()===18); // month 11 = Dec
+      if(!isNatDay) return;
+
+      /* ── أظهر البانر ── */
+      var banner = document.getElementById('ndBanner');
+      banner.classList.remove('hidden');
+
+      /* ── confetti ── */
+      var wrap = document.getElementById('ndConfetti');
+      var colors = ['#C4922A','#F0C040','#8B1A2F','#ffffff','#e8d5a0','#a0522d'];
+      var shapes = ['◆','★','●','▲','■'];
+      for(var i=0;i<28;i++){
+        var el = document.createElement('span');
+        el.className = 'nd-confetti-piece';
+        el.textContent = shapes[i%shapes.length];
+        el.style.left  = (Math.random()*100)+'%';
+        el.style.color = colors[i%colors.length];
+        el.style.fontSize = (8+Math.random()*7)+'px';
+        el.style.animationDuration  = (3+Math.random()*5)+'s';
+        el.style.animationDelay     = (Math.random()*6)+'s';
+        wrap.appendChild(el);
+      }
+    })();
+
+    /* ── اقفز لتاريخ 18 ديسمبر في التقويم ── */
+    function jumpToNationalDay(){
+      _fullCalYear  = 2025;
+      _fullCalMonth = 11; // December
+      openFullCal();
+      setTimeout(function(){
+        renderFullCal();
+        // فتح تفاصيل اليوم تلقائياً
+        setTimeout(function(){ openDayEvents('2025-12-18'); }, 350);
+      }, 120);
+    }
+    </script>
 
     <!-- ══ WELCOME BANNER ══════════════════════════════════════════════════ -->
     <div class="rounded-2xl p-6 flex items-center justify-between gap-4 flex-wrap"
