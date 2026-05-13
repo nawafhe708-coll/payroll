@@ -6951,6 +6951,9 @@ app.get('/staff', (c) => {
     { icon:'fa-file-contract', bg:'rgba(220,38,38,0.08)', iconColor:'#DC2626', title:'New Overtime Calculation Policy – Effective May 2025', date:'April 5, 2025', badge:'Policy', bs:'#FEE2E2', bc:'#991B1B' },
   ]
 
+  // ─── بناء JSON string قبل template literal لتجنب Vite variable renaming ───
+  const QU_EVENTS_JSON: string = JSON.stringify(QU_EVENTS)
+
   const content = `
   <style>
     a.sq-card{text-decoration:none}
@@ -7278,8 +7281,73 @@ app.get('/staff', (c) => {
   const MONTH_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
   const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-  // ─── أحداث الجامعة الثابتة المُمرَّرة من الخادم ───────────────────
-  const QU_EVENTS_DATA = ${JSON.stringify(QU_EVENTS)};
+  // ─── أحداث الجامعة الثابتة — bilingual objects, اللغة تُختار في runtime ───
+  // NOTE: لا نستخدم isRTL هنا لأن Vite لا يستطيع تقييم التعابير الثلاثية داخل JSON.stringify
+  //       بدلاً من ذلك نمرر ar/en منفصلَين ونختار الصحيح بـ JS في المتصفح
+  const _IS_RTL = ${isRTL};
+  const _RAW_EVENTS = [
+    {date:"2025-01-01",type:"holiday",color:"#6B7280",icon:"fa-moon",ar:"رأس السنة الميلادية",en:"New Year's Day",dar:"إجازة رسمية",den:"Official Holiday"},
+    {date:"2025-01-29",type:"holiday",color:"#6B7280",icon:"fa-star-and-crescent",ar:"المولد النبوي الشريف",en:"Prophet's Birthday",dar:"إجازة رسمية",den:"Official Holiday"},
+    {date:"2025-03-30",type:"holiday",color:"#D97706",icon:"fa-moon",ar:"عيد الفطر – اليوم الأول",en:"Eid Al-Fitr Day 1",dar:"إجازة عيد الفطر",den:"Eid Al-Fitr Holiday"},
+    {date:"2025-03-31",type:"holiday",color:"#D97706",icon:"fa-moon",ar:"عيد الفطر – اليوم الثاني",en:"Eid Al-Fitr Day 2",dar:"إجازة عيد الفطر",den:"Eid Al-Fitr Holiday"},
+    {date:"2025-04-01",type:"holiday",color:"#D97706",icon:"fa-moon",ar:"عيد الفطر – اليوم الثالث",en:"Eid Al-Fitr Day 3",dar:"إجازة عيد الفطر",den:"Eid Al-Fitr Holiday"},
+    {date:"2025-04-02",type:"holiday",color:"#D97706",icon:"fa-moon",ar:"عيد الفطر – اليوم الرابع",en:"Eid Al-Fitr Day 4",dar:"إجازة موسعة",den:"Extended Break"},
+    {date:"2025-06-06",type:"holiday",color:"#059669",icon:"fa-moon",ar:"عيد الأضحى – اليوم الأول",en:"Eid Al-Adha Day 1",dar:"إجازة عيد الأضحى",den:"Eid Al-Adha Holiday"},
+    {date:"2025-06-07",type:"holiday",color:"#059669",icon:"fa-moon",ar:"عيد الأضحى – اليوم الثاني",en:"Eid Al-Adha Day 2",dar:"إجازة عيد الأضحى",den:"Eid Al-Adha Holiday"},
+    {date:"2025-06-08",type:"holiday",color:"#059669",icon:"fa-moon",ar:"عيد الأضحى – اليوم الثالث",en:"Eid Al-Adha Day 3",dar:"إجازة عيد الأضحى",den:"Eid Al-Adha Holiday"},
+    {date:"2025-06-09",type:"holiday",color:"#059669",icon:"fa-moon",ar:"عيد الأضحى – اليوم الرابع",en:"Eid Al-Adha Day 4",dar:"إجازة موسعة",den:"Extended Break"},
+    {date:"2025-06-26",type:"holiday",color:"#6B7280",icon:"fa-star-and-crescent",ar:"رأس السنة الهجرية 1447",en:"Islamic New Year 1447",dar:"إجازة رسمية",den:"Official Holiday"},
+    {date:"2025-12-18",type:"holiday",color:"#8B1A2F",icon:"fa-flag",ar:"اليوم الوطني القطري",en:"Qatar National Day",dar:"احتفال اليوم الوطني",den:"National Day Celebration"},
+    {date:"2025-12-19",type:"holiday",color:"#8B1A2F",icon:"fa-flag",ar:"يوم الرياضة الوطني",en:"National Sport Day",dar:"إجازة يوم الرياضة",den:"Sport Day Holiday"},
+    {date:"2025-01-12",type:"university",color:"#7C3AED",icon:"fa-calendar-check",ar:"آخر يوم تسجيل – الفصل الثاني",en:"Last Day to Register – Spring 2025",dar:"موعد إضافة/حذف المواد",den:"Add/Drop Deadline"},
+    {date:"2025-01-19",type:"university",color:"#7C3AED",icon:"fa-play-circle",ar:"بداية الفصل الثاني 2025",en:"Spring Semester 2025 Begins",dar:"أول يوم دراسة",den:"First Day of Classes"},
+    {date:"2025-02-09",type:"university",color:"#7C3AED",icon:"fa-calendar-day",ar:"آخر يوم انسحاب بلا رسوم",en:"Last Day to Withdraw – No Penalty",dar:"انسحاب بدون W",den:"Withdrawal without W"},
+    {date:"2025-03-01",type:"university",color:"#7C3AED",icon:"fa-folder-open",ar:"فتح تسجيل الفصل الصيفي",en:"Summer 2025 Registration Opens",dar:"بدء التسجيل للصيف",den:"Summer registration starts"},
+    {date:"2025-03-16",type:"university",color:"#7C3AED",icon:"fa-calendar-minus",ar:"آخر يوم انسحاب من المواد",en:"Last Day to Withdraw",dar:"انسحاب مع W في السجل",den:"Withdrawal with W on record"},
+    {date:"2025-04-27",type:"university",color:"#7C3AED",icon:"fa-book-open",ar:"أسبوع المراجعة – الفصل الثاني",en:"Spring 2025 Study Week",dar:"أسبوع المراجعة النهائية",den:"Final Review Week"},
+    {date:"2025-05-04",type:"university",color:"#7C3AED",icon:"fa-pencil-alt",ar:"الامتحانات النهائية – الفصل الثاني",en:"Spring 2025 Final Exams",dar:"فترة الامتحانات النهائية",den:"Final Examination Period"},
+    {date:"2025-05-15",type:"university",color:"#7C3AED",icon:"fa-stop-circle",ar:"نهاية الفصل الثاني 2025",en:"Spring Semester 2025 Ends",dar:"آخر يوم امتحانات",den:"Last Day of Final Exams"},
+    {date:"2025-05-25",type:"university",color:"#C4922A",icon:"fa-graduation-cap",ar:"حفل تخرج جامعة قطر 2025",en:"QU Graduation Ceremony 2025",dar:"احتفال التخرج السنوي",den:"Annual Graduation Ceremony"},
+    {date:"2025-05-25",type:"university",color:"#0891B2",icon:"fa-sun",ar:"بداية الفصل الصيفي 2025",en:"Summer Semester 2025 Begins",dar:"أول يوم صيفي",den:"First Day – Summer 2025"},
+    {date:"2025-07-31",type:"university",color:"#0891B2",icon:"fa-stop-circle",ar:"نهاية الفصل الصيفي 2025",en:"Summer Semester 2025 Ends",dar:"آخر يوم امتحانات الصيف",den:"Last Day – Summer Exams"},
+    {date:"2025-08-10",type:"university",color:"#7C3AED",icon:"fa-folder-open",ar:"فتح تسجيل الفصل الأول 2025-2026",en:"Fall 2025-26 Registration Opens",dar:"بدء التسجيل الخريفي",den:"Fall registration starts"},
+    {date:"2025-08-24",type:"university",color:"#7C3AED",icon:"fa-play-circle",ar:"بداية الفصل الأول 2025-2026",en:"Fall Semester 2025-2026 Begins",dar:"أول يوم دراسة للخريف",den:"First Day of Classes – Fall"},
+    {date:"2025-09-01",type:"university",color:"#7C3AED",icon:"fa-chalkboard-teacher",ar:"اجتماع هيئة التدريس والموظفين",en:"Faculty & Staff Assembly",dar:"الاجتماع العام السنوي",den:"Annual Assembly Meeting"},
+    {date:"2025-09-14",type:"university",color:"#7C3AED",icon:"fa-calendar-day",ar:"آخر يوم انسحاب بلا رسوم – الخريف",en:"Last Day Withdraw No Penalty (Fall)",dar:"بدون تأثير على المعدل",den:"No GPA impact"},
+    {date:"2025-10-19",type:"university",color:"#7C3AED",icon:"fa-calendar-minus",ar:"آخر يوم انسحاب – الفصل الأول",en:"Last Day to Withdraw (Fall)",dar:"انسحاب مع W في السجل",den:"Withdrawal with W recorded"},
+    {date:"2025-10-26",type:"university",color:"#7C3AED",icon:"fa-folder-open",ar:"فتح تسجيل الفصل الثاني 2025-2026",en:"Spring 2026 Registration Opens",dar:"بدء التسجيل الربيعي",den:"Spring registration starts"},
+    {date:"2025-11-30",type:"university",color:"#7C3AED",icon:"fa-book-open",ar:"أسبوع المراجعة – الفصل الأول",en:"Fall 2025 Study Week",dar:"مراجعة نهائية الخريف",den:"Fall Final Review Week"},
+    {date:"2025-12-07",type:"university",color:"#7C3AED",icon:"fa-pencil-alt",ar:"الامتحانات النهائية – الفصل الأول",en:"Fall 2025 Final Exams",dar:"فترة الامتحانات الخريفية",den:"Fall Examination Period"},
+    {date:"2025-12-20",type:"university",color:"#7C3AED",icon:"fa-stop-circle",ar:"نهاية الفصل الأول 2025-2026",en:"Fall Semester 2025-2026 Ends",dar:"نهاية الفصل والإجازة الشتوية",den:"End of Fall Semester"},
+    {date:"2025-02-16",type:"event",color:"#DB2777",icon:"fa-trophy",ar:"يوم القدرات الطلابية",en:"Student Talents Day",dar:"احتفالية الإبداع الطلابي",den:"Student Talents Celebration"},
+    {date:"2025-03-10",type:"event",color:"#DB2777",icon:"fa-flask",ar:"معرض البحث العلمي",en:"Qatar Research Exhibition",dar:"معرض الابتكار بجامعة قطر",den:"QU Research & Innovation"},
+    {date:"2025-04-06",type:"event",color:"#DB2777",icon:"fa-handshake",ar:"يوم المجتمع والشراكات",en:"Community & Partnership Day",dar:"فعالية الشراكة مع القطاع الخاص",den:"QU Community Partnership"},
+    {date:"2025-10-05",type:"event",color:"#DB2777",icon:"fa-star",ar:"اليوم المفتوح لجامعة قطر",en:"Qatar University Open Day",dar:"اليوم المفتوح للطلاب الجدد",den:"Open Day for New Students"},
+    {date:"2025-11-12",type:"event",color:"#DB2777",icon:"fa-book",ar:"معرض الكتاب الجامعي",en:"University Book Fair",dar:"معرض الكتاب السنوي",den:"Annual University Book Fair"},
+    {date:"2025-01-28",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب يناير 2025",en:"January 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-02-27",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب فبراير 2025",en:"February 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-03-27",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب مارس 2025",en:"March 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-04-28",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب أبريل 2025",en:"April 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-05-27",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب مايو 2025",en:"May 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-06-26",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب يونيو 2025",en:"June 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-07-28",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب يوليو 2025",en:"July 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-08-27",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب أغسطس 2025",en:"August 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-09-28",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب سبتمبر 2025",en:"September 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-10-28",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب أكتوبر 2025",en:"October 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-11-27",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب نوفمبر 2025",en:"November 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-12-25",type:"salary",color:"#8B1A2F",icon:"fa-money-bill-wave",ar:"صرف راتب ديسمبر 2025",en:"December 2025 Salary",dar:"إيداع الراتب الشهري",den:"Monthly Salary Deposit"},
+    {date:"2025-03-20",type:"advance",color:"#D97706",icon:"fa-hand-holding-usd",ar:"آخر موعد سلفة عيد الفطر",en:"Eid Al-Fitr Advance Deadline",dar:"الموعد النهائي للتقديم",den:"Request Deadline"},
+    {date:"2025-03-25",type:"advance",color:"#D97706",icon:"fa-hand-holding-usd",ar:"صرف سلفة عيد الفطر",en:"Eid Al-Fitr Advance Payment",dar:"إيداع سلفة العيد",den:"Eid advance deposited"},
+    {date:"2025-05-28",type:"advance",color:"#D97706",icon:"fa-hand-holding-usd",ar:"آخر موعد سلفة عيد الأضحى",en:"Eid Al-Adha Advance Deadline",dar:"الموعد النهائي للتقديم",den:"Request Deadline"},
+    {date:"2025-06-04",type:"advance",color:"#D97706",icon:"fa-hand-holding-usd",ar:"صرف سلفة عيد الأضحى",en:"Eid Al-Adha Advance Payment",dar:"إيداع سلفة العيد",den:"Eid advance deposited"},
+    {date:"2025-12-10",type:"advance",color:"#D97706",icon:"fa-hand-holding-usd",ar:"آخر موعد سلفة اليوم الوطني",en:"National Day Advance Deadline",dar:"الموعد النهائي للتقديم",den:"Request Deadline"},
+    {date:"2025-12-15",type:"advance",color:"#D97706",icon:"fa-hand-holding-usd",ar:"صرف سلفة اليوم الوطني",en:"National Day Advance Payment",dar:"إيداع سلفة اليوم الوطني",den:"National Day advance deposited"}
+  ];
+  // تحويل bilingual → title/desc حسب اللغة الحالية
+  const QU_EVENTS_DATA = _RAW_EVENTS.map(function(e){
+    return {date:e.date,type:e.type,color:e.color,icon:e.icon,
+            title:_IS_RTL?e.ar:e.en, desc:_IS_RTL?e.dar:e.den};
+  });
 
   let _calYear  = new Date().getFullYear();
   let _calMonth = new Date().getMonth();
