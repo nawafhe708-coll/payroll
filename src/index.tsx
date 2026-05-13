@@ -7065,17 +7065,26 @@ app.get('/staff', (c) => {
     </div><!-- /ndBanner -->
 
     <script>
+    /* ══════════════════════════════════════════════════════════════
+       نظام التاريخ الوهمي — للاختبار فقط
+       يقرأ nd_test_date من localStorage إن وجد، وإلا يستخدم اليوم الحقيقي
+    ══════════════════════════════════════════════════════════════ */
+    function _getNow(){
+      try{
+        var s = localStorage.getItem('nd_test_date');
+        if(s){ var d=new Date(s); if(!isNaN(d)) return d; }
+      }catch(e){}
+      return new Date();
+    }
+
     (function(){
-      /* ── هل اليوم 18 ديسمبر؟ ── */
-      var now = new Date();
-      var isNatDay = (now.getMonth()===11 && now.getDate()===18); // month 11 = Dec
+      var now = _getNow();
+      var isNatDay = (now.getMonth()===11 && now.getDate()===18);
       if(!isNatDay) return;
 
-      /* ── أظهر البانر ── */
       var banner = document.getElementById('ndBanner');
       banner.classList.remove('hidden');
 
-      /* ── confetti ── */
       var wrap = document.getElementById('ndConfetti');
       var colors = ['#C4922A','#F0C040','#8B1A2F','#ffffff','#e8d5a0','#a0522d'];
       var shapes = ['◆','★','●','▲','■'];
@@ -7092,16 +7101,115 @@ app.get('/staff', (c) => {
       }
     })();
 
-    /* ── اقفز لتاريخ 18 ديسمبر في التقويم ── */
     function jumpToNationalDay(){
-      _fullCalYear  = 2025;
-      _fullCalMonth = 11; // December
+      _fullCalYear=2025; _fullCalMonth=11;
       openFullCal();
-      setTimeout(function(){
-        renderFullCal();
-        // فتح تفاصيل اليوم تلقائياً
-        setTimeout(function(){ openDayEvents('2025-12-18'); }, 350);
-      }, 120);
+      setTimeout(function(){ renderFullCal(); setTimeout(function(){ openDayEvents('2025-12-18'); },350); },120);
+    }
+
+    /* ══ لوحة تحكم التاريخ التجريبي ══ */
+    (function(){
+      /* أنشئ الزر الصغير في الزاوية */
+      var btn = document.createElement('button');
+      btn.id = 'ndDevBtn';
+      btn.title = '${isRTL?"اختبار الثيم":"Test Theme"}';
+      btn.innerHTML = '<i class="fas fa-flask"></i>';
+      btn.style.cssText = [
+        'position:fixed','bottom:20px','${isRTL?"left":"right"}:20px','z-index:9999',
+        'width:40px','height:40px','border-radius:50%','border:none','cursor:pointer',
+        'background:linear-gradient(135deg,#1E1B4B,#4C1D95)',
+        'color:#fff','font-size:14px','box-shadow:0 4px 15px rgba(0,0,0,.35)',
+        'display:flex','align-items:center','justify-content:center','transition:transform .2s'
+      ].join(';');
+      btn.onmouseenter = function(){ btn.style.transform='scale(1.12)'; };
+      btn.onmouseleave = function(){ btn.style.transform='scale(1)'; };
+      btn.onclick = function(){ toggleDevPanel(); };
+      document.body.appendChild(btn);
+
+      /* اللوحة */
+      var panel = document.createElement('div');
+      panel.id = 'ndDevPanel';
+      var curTest = localStorage.getItem('nd_test_date')||'';
+      panel.style.cssText = [
+        'position:fixed','bottom:68px','${isRTL?"left":"right"}:12px','z-index:9999',
+        'background:#1E1B4B','border-radius:16px','padding:16px','width:260px',
+        'box-shadow:0 8px 32px rgba(0,0,0,.45)','color:#fff',
+        'font-family:inherit','display:none','direction:${isRTL?"rtl":"ltr"}'
+      ].join(';');
+      panel.innerHTML = \`
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-weight:700;font-size:13px">
+            <i class="fas fa-flask" style="color:#A78BFA;margin-inline-end:6px"></i>
+            ${isRTL?'اختبار ثيم اليوم':'Theme Test'}
+          </span>
+          <button onclick="toggleDevPanel()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:12px">✕</button>
+        </div>
+
+        <p style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:10px">
+          ${isRTL?'اختر تاريخاً لاختبار الثيم الاحتفالي:':'Pick a date to preview the celebration theme:'}
+        </p>
+
+        <input type="date" id="ndTestInput" value="\${curTest}"
+          style="width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);
+                 background:rgba(255,255,255,.08);color:#fff;font-size:13px;margin-bottom:10px;box-sizing:border-box">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <button onclick="setTestDate('2025-12-18')"
+            style="padding:7px 6px;border-radius:10px;border:1px solid rgba(196,146,42,.5);
+                   background:rgba(196,146,42,.15);color:#F0C040;font-size:11px;font-weight:700;cursor:pointer">
+            <i class="fas fa-flag" style="margin-inline-end:4px"></i>${isRTL?'18 ديسمبر':'Dec 18'}
+          </button>
+          <button onclick="setTestDate('')"
+            style="padding:7px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.15);
+                   background:rgba(255,255,255,.07);color:rgba(255,255,255,.7);font-size:11px;font-weight:700;cursor:pointer">
+            <i class="fas fa-calendar-day" style="margin-inline-end:4px"></i>${isRTL?'اليوم الحقيقي':'Real Today'}
+          </button>
+        </div>
+
+        <button onclick="applyTestDate()"
+          style="width:100%;padding:9px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:13px;
+                 background:linear-gradient(135deg,#8B1A2F,#C4922A);color:#fff">
+          <i class="fas fa-play" style="margin-inline-end:6px"></i>${isRTL?'تطبيق وتحديث الصفحة':'Apply & Reload'}
+        </button>
+
+        <div id="ndDevStatus" style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.45);text-align:center"></div>
+      \`;
+      document.body.appendChild(panel);
+
+      /* اعرض الحالة الحالية */
+      _updateDevStatus();
+    })();
+
+    function toggleDevPanel(){
+      var p = document.getElementById('ndDevPanel');
+      p.style.display = p.style.display==='none' ? 'block' : 'none';
+    }
+
+    function setTestDate(val){
+      document.getElementById('ndTestInput').value = val;
+    }
+
+    function applyTestDate(){
+      var val = document.getElementById('ndTestInput').value.trim();
+      if(val){
+        localStorage.setItem('nd_test_date', val);
+      } else {
+        localStorage.removeItem('nd_test_date');
+      }
+      location.reload();
+    }
+
+    function _updateDevStatus(){
+      var s = document.getElementById('ndDevStatus');
+      if(!s) return;
+      var cur = localStorage.getItem('nd_test_date');
+      if(cur){
+        s.innerHTML = '<i class="fas fa-vial" style="color:#A78BFA;margin-inline-end:4px"></i>'
+          + '${isRTL?"تاريخ الاختبار:":"Testing:"} <strong style="color:#F0C040">' + cur + '</strong>';
+      } else {
+        s.innerHTML = '<i class="fas fa-check-circle" style="color:#34D399;margin-inline-end:4px"></i>'
+          + '${isRTL?"يستخدم التاريخ الحقيقي":"Using real date"}';
+      }
     }
     </script>
 
