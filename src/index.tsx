@@ -6999,7 +6999,7 @@ app.get('/staff', (c) => {
 
     <!-- ══ THEME BTN ══ -->
     <div id="thBtnRow" class="flex justify-end mb-1">
-      <button onclick="var p=document.getElementById('thDevPanel');p&&(p.style.display=p.style.display==='none'?'block':'none');if(p&&p.style.display==='block')document.getElementById&&document.getElementById('_updateDevStatus')&&_updateDevStatus()"
+      <button onclick="_thToggleStaff()" id="thInlineBtnStaff"
         style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
         onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
         <i class="fas fa-palette"></i> Theme
@@ -7428,6 +7428,12 @@ app.get('/staff', (c) => {
       };
     })();
 
+    window._thToggleStaff=function(){
+      var p=document.getElementById('thDevPanel');
+      if(!p) return;
+      p.style.display=p.style.display==='none'?'block':'none';
+      if(p.style.display==='block') _updateDevStatus();
+    };
     function _updateDevStatus(){
       var s=document.getElementById('thDevStatus');
       if(!s) return;
@@ -8149,7 +8155,7 @@ app.get('/staff-dashboard', (c) => {
 
     <!-- ══ THEME BTN ══ -->
     <div id="thBtnRow" class="hidden flex justify-end mb-1">
-      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+      <button onclick="_thToggle2()" id="thInlineBtn"
         style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
         onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
         <i class="fas fa-palette"></i> Theme
@@ -8368,7 +8374,7 @@ app.get('/staff-dashboard', (c) => {
 
       document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
 
-      document.getElementById('thInlineBtn').onclick=function(){
+      window._thToggle2=function(){
         panel.style.display=panel.style.display==='none'?'block':'none';
         if(panel.style.display==='block') _thStatus2();
       };
@@ -9240,7 +9246,7 @@ app.get('/staff-forms', (c) => {
 
     <!-- ══ THEME BTN ══ -->
     <div id="thBtnRow" class="hidden flex justify-end mb-1">
-      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+      <button onclick="_thToggle2()" id="thInlineBtn"
         style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
         onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
         <i class="fas fa-palette"></i> Theme
@@ -9459,7 +9465,7 @@ app.get('/staff-forms', (c) => {
 
       document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
 
-      document.getElementById('thInlineBtn').onclick=function(){
+      window._thToggle2=function(){
         panel.style.display=panel.style.display==='none'?'block':'none';
         if(panel.style.display==='block') _thStatus2();
       };
@@ -9605,7 +9611,7 @@ app.get('/staff-contact', (c) => {
 
     <!-- ══ THEME BTN ══ -->
     <div id="thBtnRow" class="hidden flex justify-end mb-1">
-      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+      <button onclick="_thToggle2()" id="thInlineBtn"
         style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
         onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
         <i class="fas fa-palette"></i> Theme
@@ -9824,7 +9830,7 @@ app.get('/staff-contact', (c) => {
 
       document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
 
-      document.getElementById('thInlineBtn').onclick=function(){
+      window._thToggle2=function(){
         panel.style.display=panel.style.display==='none'?'block':'none';
         if(panel.style.display==='block') _thStatus2();
       };
@@ -12909,7 +12915,7 @@ app.get('/staff-request', (c) => {
 
     <!-- ══ THEME BTN ══ -->
     <div id="thBtnRow" class="hidden flex justify-end mb-1">
-      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+      <button onclick="_thToggle2()" id="thInlineBtn"
         style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
         onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
         <i class="fas fa-palette"></i> Theme
@@ -13128,7 +13134,7 @@ app.get('/staff-request', (c) => {
 
       document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
 
-      document.getElementById('thInlineBtn').onclick=function(){
+      window._thToggle2=function(){
         panel.style.display=panel.style.display==='none'?'block':'none';
         if(panel.style.display==='block') _thStatus2();
       };
