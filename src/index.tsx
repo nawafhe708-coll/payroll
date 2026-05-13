@@ -6997,6 +6997,14 @@ app.get('/staff', (c) => {
     .th-ticker-innerR{display:inline-block;padding-inline-end:100%;animation:th-tickerR 26s linear infinite}
   </style>
 
+    <!-- ══ THEME BTN ══ -->
+    <div id="thBtnRow" class="flex justify-end mb-1">
+      <button onclick="var p=document.getElementById('thDevPanel');p&&(p.style.display=p.style.display==='none'?'block':'none');if(p&&p.style.display==='block')document.getElementById&&document.getElementById('_updateDevStatus')&&_updateDevStatus()"
+        style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
+        onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
+        <i class="fas fa-palette"></i> Theme
+      </button>
+    </div>
     <!-- ══ THEME BANNER (filled by JS) ══════════════════════════════════════ -->
     <div id="themeBanner" class="hidden relative rounded-2xl overflow-hidden" style="min-height:155px"></div>
 
@@ -8139,6 +8147,14 @@ app.get('/staff-dashboard', (c) => {
     .th-ticker-innerR2{display:inline-block;padding-inline-end:100%;animation:th-tickerR 26s linear infinite}
 
 
+    <!-- ══ THEME BTN ══ -->
+    <div id="thBtnRow" class="hidden flex justify-end mb-1">
+      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+        style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
+        onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
+        <i class="fas fa-palette"></i> Theme
+      </button>
+    </div>
     <!-- ══ THEME BANNER 2 ══ -->
     <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
     <script>
@@ -8287,6 +8303,102 @@ app.get('/staff-dashboard', (c) => {
       }
       var _th=_detect2(_getNow2());
       if(_th)_render2(_th);
+    })();
+    </script>
+    <script>
+    /* ══ THEME DEV PANEL 2 (inline) ══ */
+    (function(){
+      var _b=document.getElementById('thBtnRow');
+      var _t=_detect2(_getNow2());
+      if(_t&&_b) _b.style.display='flex';
+
+      var panel=document.createElement('div');
+      panel.id='thDevPanel2';
+      panel.style.cssText='display:none;position:fixed;bottom:24px;right:24px;z-index:9999;width:310px;'
+        +'background:rgba(15,23,42,.95);border-radius:16px;padding:16px;'
+        +'box-shadow:0 8px 32px rgba(0,0,0,.6);backdrop-filter:blur(12px);'
+        +'border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-size:.83rem';
+
+      var quick=[
+        {label:'🇶🇦 اليوم الوطني',date:'2025-12-18',c:'rgba(139,26,47,.8)'},
+        {label:'🌙 عيد الفطر',date:'2025-03-30',c:'rgba(5,150,105,.8)'},
+        {label:'🕌 عيد الأضحى',date:'2025-06-07',c:'rgba(30,58,95,.9)'},
+        {label:'🌙 رمضان',date:'2025-03-05',c:'rgba(67,56,202,.8)'},
+        {label:'🌿 المولد النبوي',date:'2025-01-29',c:'rgba(20,83,45,.8)'},
+        {label:'🌸 الربيع',date:'2025-04-15',c:'rgba(5,150,105,.7)'},
+        {label:'☀️ الصيف',date:'2025-07-10',c:'rgba(194,65,12,.8)'},
+        {label:'🍂 الخريف',date:'2025-10-01',c:'rgba(120,53,15,.8)'},
+        {label:'❄️ الشتاء',date:'2025-01-15',c:'rgba(30,58,95,.9)'},
+        {label:'🎆 رأس السنة',date:'2026-01-01',c:'rgba(76,29,149,.8)'},
+        {label:'🏃 يوم الرياضة',date:'2025-12-19',c:'rgba(6,78,59,.8)'},
+        {label:'📅 اليوم الحقيقي',date:'',c:'rgba(55,65,81,.8)'}
+      ];
+      var qBtns=quick.map(function(q){
+        return '<button onclick="_thSet2(''+q.date+'')" '
+          +'style="padding:5px 8px;border:none;border-radius:8px;cursor:pointer;font-size:.75rem;'
+          +'background:'+q.c+';color:#fff;transition:.15s" '
+          +'onmouseover="this.style.filter='brightness(1.25)'" '
+          +'onmouseout="this.style.filter=''">'+q.label+'</button>';
+      }).join('');
+
+      panel.innerHTML=
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+        +'<span style="font-weight:700;color:#F0C040;font-size:.9rem">'
+        +'<i class="fas fa-palette" style="margin-inline-end:6px"></i>Theme Dev Panel</span>'
+        +'<button id="thPanel2Close" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px">'+qBtns+'</div>'
+        +'<div style="margin-bottom:8px">'
+        +'<label style="display:block;margin-bottom:4px;color:#94a3b8">تاريخ مخصص:</label>'
+        +'<input type="date" id="thDateInput2" style="width:100%;padding:6px 8px;border-radius:8px;'
+        +'border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.82rem">'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;margin-bottom:10px">'
+        +'<button onclick="_thApply2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(99,102,241,.8);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-play" style="margin-inline-end:4px"></i>تطبيق</button>'
+        +'<button onclick="_thReset2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(239,68,68,.7);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-times" style="margin-inline-end:4px"></i>إلغاء</button>'
+        +'</div>'
+        +'<div id="thDevStatus2" style="font-size:.75rem;color:#94a3b8;text-align:center;'
+        +'padding:4px;background:rgba(255,255,255,.05);border-radius:6px"></div>';
+
+      document.body.appendChild(panel);
+
+      document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
+
+      document.getElementById('thInlineBtn').onclick=function(){
+        panel.style.display=panel.style.display==='none'?'block':'none';
+        if(panel.style.display==='block') _thStatus2();
+      };
+
+      function _thStatus2(){
+        var s=document.getElementById('thDevStatus2');if(!s)return;
+        var cur=localStorage.getItem('nd_test_date');
+        s.innerHTML=cur
+          ?'<i class="fas fa-vial" style="color:#A78BFA;margin-inline-end:4px"></i>تاريخ الاختبار: <strong style="color:#F0C040">'+cur+'</strong>'
+          :'<i class="fas fa-check-circle" style="color:#34D399;margin-inline-end:4px"></i>يستخدم التاريخ الحقيقي';
+      }
+
+      function _thRefresh2(){
+        var th=_detect2(_getNow2());
+        var b2=document.getElementById('themeBanner2');
+        if(b2){b2.innerHTML='';b2.classList.add('hidden');}
+        var br=document.getElementById('thBtnRow');
+        if(th){_render2(th);if(br)br.style.display='flex';}
+        else{if(br)br.style.display='none';}
+        _thStatus2();
+      }
+
+      window._thSet2=function(d){
+        d?localStorage.setItem('nd_test_date',d):localStorage.removeItem('nd_test_date');
+        var inp=document.getElementById('thDateInput2');if(inp)inp.value=d||'';
+        _thRefresh2();
+      };
+      function _thApply2(){var inp=document.getElementById('thDateInput2');if(inp&&inp.value)_thSet2(inp.value);}
+      function _thReset2(){_thSet2('');}
+      _thStatus2();
     })();
     </script>
 </style>
@@ -9126,6 +9238,14 @@ app.get('/staff-forms', (c) => {
   const content = `
   <div dir="${isRTL?'rtl':'ltr'}">
 
+    <!-- ══ THEME BTN ══ -->
+    <div id="thBtnRow" class="hidden flex justify-end mb-1">
+      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+        style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
+        onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
+        <i class="fas fa-palette"></i> Theme
+      </button>
+    </div>
     <!-- ══ THEME BANNER 2 ══ -->
     <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
     <script>
@@ -9276,6 +9396,102 @@ app.get('/staff-forms', (c) => {
       if(_th)_render2(_th);
     })();
     </script>
+    <script>
+    /* ══ THEME DEV PANEL 2 (inline) ══ */
+    (function(){
+      var _b=document.getElementById('thBtnRow');
+      var _t=_detect2(_getNow2());
+      if(_t&&_b) _b.style.display='flex';
+
+      var panel=document.createElement('div');
+      panel.id='thDevPanel2';
+      panel.style.cssText='display:none;position:fixed;bottom:24px;right:24px;z-index:9999;width:310px;'
+        +'background:rgba(15,23,42,.95);border-radius:16px;padding:16px;'
+        +'box-shadow:0 8px 32px rgba(0,0,0,.6);backdrop-filter:blur(12px);'
+        +'border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-size:.83rem';
+
+      var quick=[
+        {label:'🇶🇦 اليوم الوطني',date:'2025-12-18',c:'rgba(139,26,47,.8)'},
+        {label:'🌙 عيد الفطر',date:'2025-03-30',c:'rgba(5,150,105,.8)'},
+        {label:'🕌 عيد الأضحى',date:'2025-06-07',c:'rgba(30,58,95,.9)'},
+        {label:'🌙 رمضان',date:'2025-03-05',c:'rgba(67,56,202,.8)'},
+        {label:'🌿 المولد النبوي',date:'2025-01-29',c:'rgba(20,83,45,.8)'},
+        {label:'🌸 الربيع',date:'2025-04-15',c:'rgba(5,150,105,.7)'},
+        {label:'☀️ الصيف',date:'2025-07-10',c:'rgba(194,65,12,.8)'},
+        {label:'🍂 الخريف',date:'2025-10-01',c:'rgba(120,53,15,.8)'},
+        {label:'❄️ الشتاء',date:'2025-01-15',c:'rgba(30,58,95,.9)'},
+        {label:'🎆 رأس السنة',date:'2026-01-01',c:'rgba(76,29,149,.8)'},
+        {label:'🏃 يوم الرياضة',date:'2025-12-19',c:'rgba(6,78,59,.8)'},
+        {label:'📅 اليوم الحقيقي',date:'',c:'rgba(55,65,81,.8)'}
+      ];
+      var qBtns=quick.map(function(q){
+        return '<button onclick="_thSet2(''+q.date+'')" '
+          +'style="padding:5px 8px;border:none;border-radius:8px;cursor:pointer;font-size:.75rem;'
+          +'background:'+q.c+';color:#fff;transition:.15s" '
+          +'onmouseover="this.style.filter='brightness(1.25)'" '
+          +'onmouseout="this.style.filter=''">'+q.label+'</button>';
+      }).join('');
+
+      panel.innerHTML=
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+        +'<span style="font-weight:700;color:#F0C040;font-size:.9rem">'
+        +'<i class="fas fa-palette" style="margin-inline-end:6px"></i>Theme Dev Panel</span>'
+        +'<button id="thPanel2Close" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px">'+qBtns+'</div>'
+        +'<div style="margin-bottom:8px">'
+        +'<label style="display:block;margin-bottom:4px;color:#94a3b8">تاريخ مخصص:</label>'
+        +'<input type="date" id="thDateInput2" style="width:100%;padding:6px 8px;border-radius:8px;'
+        +'border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.82rem">'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;margin-bottom:10px">'
+        +'<button onclick="_thApply2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(99,102,241,.8);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-play" style="margin-inline-end:4px"></i>تطبيق</button>'
+        +'<button onclick="_thReset2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(239,68,68,.7);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-times" style="margin-inline-end:4px"></i>إلغاء</button>'
+        +'</div>'
+        +'<div id="thDevStatus2" style="font-size:.75rem;color:#94a3b8;text-align:center;'
+        +'padding:4px;background:rgba(255,255,255,.05);border-radius:6px"></div>';
+
+      document.body.appendChild(panel);
+
+      document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
+
+      document.getElementById('thInlineBtn').onclick=function(){
+        panel.style.display=panel.style.display==='none'?'block':'none';
+        if(panel.style.display==='block') _thStatus2();
+      };
+
+      function _thStatus2(){
+        var s=document.getElementById('thDevStatus2');if(!s)return;
+        var cur=localStorage.getItem('nd_test_date');
+        s.innerHTML=cur
+          ?'<i class="fas fa-vial" style="color:#A78BFA;margin-inline-end:4px"></i>تاريخ الاختبار: <strong style="color:#F0C040">'+cur+'</strong>'
+          :'<i class="fas fa-check-circle" style="color:#34D399;margin-inline-end:4px"></i>يستخدم التاريخ الحقيقي';
+      }
+
+      function _thRefresh2(){
+        var th=_detect2(_getNow2());
+        var b2=document.getElementById('themeBanner2');
+        if(b2){b2.innerHTML='';b2.classList.add('hidden');}
+        var br=document.getElementById('thBtnRow');
+        if(th){_render2(th);if(br)br.style.display='flex';}
+        else{if(br)br.style.display='none';}
+        _thStatus2();
+      }
+
+      window._thSet2=function(d){
+        d?localStorage.setItem('nd_test_date',d):localStorage.removeItem('nd_test_date');
+        var inp=document.getElementById('thDateInput2');if(inp)inp.value=d||'';
+        _thRefresh2();
+      };
+      function _thApply2(){var inp=document.getElementById('thDateInput2');if(inp&&inp.value)_thSet2(inp.value);}
+      function _thReset2(){_thSet2('');}
+      _thStatus2();
+    })();
+    </script>
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 ${isRTL?'sm:flex-row-reverse':''}">
       <div class="${isRTL?'text-right':''}">
         <h1 class="text-2xl font-bold text-gray-800">${pageTitle}</h1>
@@ -9387,6 +9603,14 @@ app.get('/staff-contact', (c) => {
   const content = `
   <div dir="${isRTL?'rtl':'ltr'}">
 
+    <!-- ══ THEME BTN ══ -->
+    <div id="thBtnRow" class="hidden flex justify-end mb-1">
+      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+        style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
+        onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
+        <i class="fas fa-palette"></i> Theme
+      </button>
+    </div>
     <!-- ══ THEME BANNER 2 ══ -->
     <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
     <script>
@@ -9535,6 +9759,102 @@ app.get('/staff-contact', (c) => {
       }
       var _th=_detect2(_getNow2());
       if(_th)_render2(_th);
+    })();
+    </script>
+    <script>
+    /* ══ THEME DEV PANEL 2 (inline) ══ */
+    (function(){
+      var _b=document.getElementById('thBtnRow');
+      var _t=_detect2(_getNow2());
+      if(_t&&_b) _b.style.display='flex';
+
+      var panel=document.createElement('div');
+      panel.id='thDevPanel2';
+      panel.style.cssText='display:none;position:fixed;bottom:24px;right:24px;z-index:9999;width:310px;'
+        +'background:rgba(15,23,42,.95);border-radius:16px;padding:16px;'
+        +'box-shadow:0 8px 32px rgba(0,0,0,.6);backdrop-filter:blur(12px);'
+        +'border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-size:.83rem';
+
+      var quick=[
+        {label:'🇶🇦 اليوم الوطني',date:'2025-12-18',c:'rgba(139,26,47,.8)'},
+        {label:'🌙 عيد الفطر',date:'2025-03-30',c:'rgba(5,150,105,.8)'},
+        {label:'🕌 عيد الأضحى',date:'2025-06-07',c:'rgba(30,58,95,.9)'},
+        {label:'🌙 رمضان',date:'2025-03-05',c:'rgba(67,56,202,.8)'},
+        {label:'🌿 المولد النبوي',date:'2025-01-29',c:'rgba(20,83,45,.8)'},
+        {label:'🌸 الربيع',date:'2025-04-15',c:'rgba(5,150,105,.7)'},
+        {label:'☀️ الصيف',date:'2025-07-10',c:'rgba(194,65,12,.8)'},
+        {label:'🍂 الخريف',date:'2025-10-01',c:'rgba(120,53,15,.8)'},
+        {label:'❄️ الشتاء',date:'2025-01-15',c:'rgba(30,58,95,.9)'},
+        {label:'🎆 رأس السنة',date:'2026-01-01',c:'rgba(76,29,149,.8)'},
+        {label:'🏃 يوم الرياضة',date:'2025-12-19',c:'rgba(6,78,59,.8)'},
+        {label:'📅 اليوم الحقيقي',date:'',c:'rgba(55,65,81,.8)'}
+      ];
+      var qBtns=quick.map(function(q){
+        return '<button onclick="_thSet2(''+q.date+'')" '
+          +'style="padding:5px 8px;border:none;border-radius:8px;cursor:pointer;font-size:.75rem;'
+          +'background:'+q.c+';color:#fff;transition:.15s" '
+          +'onmouseover="this.style.filter='brightness(1.25)'" '
+          +'onmouseout="this.style.filter=''">'+q.label+'</button>';
+      }).join('');
+
+      panel.innerHTML=
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+        +'<span style="font-weight:700;color:#F0C040;font-size:.9rem">'
+        +'<i class="fas fa-palette" style="margin-inline-end:6px"></i>Theme Dev Panel</span>'
+        +'<button id="thPanel2Close" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px">'+qBtns+'</div>'
+        +'<div style="margin-bottom:8px">'
+        +'<label style="display:block;margin-bottom:4px;color:#94a3b8">تاريخ مخصص:</label>'
+        +'<input type="date" id="thDateInput2" style="width:100%;padding:6px 8px;border-radius:8px;'
+        +'border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.82rem">'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;margin-bottom:10px">'
+        +'<button onclick="_thApply2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(99,102,241,.8);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-play" style="margin-inline-end:4px"></i>تطبيق</button>'
+        +'<button onclick="_thReset2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(239,68,68,.7);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-times" style="margin-inline-end:4px"></i>إلغاء</button>'
+        +'</div>'
+        +'<div id="thDevStatus2" style="font-size:.75rem;color:#94a3b8;text-align:center;'
+        +'padding:4px;background:rgba(255,255,255,.05);border-radius:6px"></div>';
+
+      document.body.appendChild(panel);
+
+      document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
+
+      document.getElementById('thInlineBtn').onclick=function(){
+        panel.style.display=panel.style.display==='none'?'block':'none';
+        if(panel.style.display==='block') _thStatus2();
+      };
+
+      function _thStatus2(){
+        var s=document.getElementById('thDevStatus2');if(!s)return;
+        var cur=localStorage.getItem('nd_test_date');
+        s.innerHTML=cur
+          ?'<i class="fas fa-vial" style="color:#A78BFA;margin-inline-end:4px"></i>تاريخ الاختبار: <strong style="color:#F0C040">'+cur+'</strong>'
+          :'<i class="fas fa-check-circle" style="color:#34D399;margin-inline-end:4px"></i>يستخدم التاريخ الحقيقي';
+      }
+
+      function _thRefresh2(){
+        var th=_detect2(_getNow2());
+        var b2=document.getElementById('themeBanner2');
+        if(b2){b2.innerHTML='';b2.classList.add('hidden');}
+        var br=document.getElementById('thBtnRow');
+        if(th){_render2(th);if(br)br.style.display='flex';}
+        else{if(br)br.style.display='none';}
+        _thStatus2();
+      }
+
+      window._thSet2=function(d){
+        d?localStorage.setItem('nd_test_date',d):localStorage.removeItem('nd_test_date');
+        var inp=document.getElementById('thDateInput2');if(inp)inp.value=d||'';
+        _thRefresh2();
+      };
+      function _thApply2(){var inp=document.getElementById('thDateInput2');if(inp&&inp.value)_thSet2(inp.value);}
+      function _thReset2(){_thSet2('');}
+      _thStatus2();
     })();
     </script>
     <div class="mb-6 ${isRTL?'text-right':''}">
@@ -12587,6 +12907,14 @@ app.get('/staff-request', (c) => {
   const content = `
 <div dir="${isRTL?'rtl':'ltr'}">
 
+    <!-- ══ THEME BTN ══ -->
+    <div id="thBtnRow" class="hidden flex justify-end mb-1">
+      <button onclick="document.getElementById('thDevPanel')&&(document.getElementById('thDevPanel').style.display=document.getElementById('thDevPanel').style.display==='none'?'block':'none')||document.getElementById('thDevPanel2')&&(document.getElementById('thDevPanel2').style.display=document.getElementById('thDevPanel2').style.display==='none'?'block':'none')" id="thInlineBtn"
+        style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border:none;border-radius:10px;background:rgba(55,65,81,0.85);color:#F0C040;font-size:.78rem;font-weight:700;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s"
+        onmouseover="this.style.background='rgba(79,70,229,.9)'" onmouseout="this.style.background='rgba(55,65,81,0.85)'">
+        <i class="fas fa-palette"></i> Theme
+      </button>
+    </div>
     <!-- ══ THEME BANNER 2 ══ -->
     <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
     <script>
@@ -12735,6 +13063,102 @@ app.get('/staff-request', (c) => {
       }
       var _th=_detect2(_getNow2());
       if(_th)_render2(_th);
+    })();
+    </script>
+    <script>
+    /* ══ THEME DEV PANEL 2 (inline) ══ */
+    (function(){
+      var _b=document.getElementById('thBtnRow');
+      var _t=_detect2(_getNow2());
+      if(_t&&_b) _b.style.display='flex';
+
+      var panel=document.createElement('div');
+      panel.id='thDevPanel2';
+      panel.style.cssText='display:none;position:fixed;bottom:24px;right:24px;z-index:9999;width:310px;'
+        +'background:rgba(15,23,42,.95);border-radius:16px;padding:16px;'
+        +'box-shadow:0 8px 32px rgba(0,0,0,.6);backdrop-filter:blur(12px);'
+        +'border:1px solid rgba(255,255,255,.1);color:#e2e8f0;font-size:.83rem';
+
+      var quick=[
+        {label:'🇶🇦 اليوم الوطني',date:'2025-12-18',c:'rgba(139,26,47,.8)'},
+        {label:'🌙 عيد الفطر',date:'2025-03-30',c:'rgba(5,150,105,.8)'},
+        {label:'🕌 عيد الأضحى',date:'2025-06-07',c:'rgba(30,58,95,.9)'},
+        {label:'🌙 رمضان',date:'2025-03-05',c:'rgba(67,56,202,.8)'},
+        {label:'🌿 المولد النبوي',date:'2025-01-29',c:'rgba(20,83,45,.8)'},
+        {label:'🌸 الربيع',date:'2025-04-15',c:'rgba(5,150,105,.7)'},
+        {label:'☀️ الصيف',date:'2025-07-10',c:'rgba(194,65,12,.8)'},
+        {label:'🍂 الخريف',date:'2025-10-01',c:'rgba(120,53,15,.8)'},
+        {label:'❄️ الشتاء',date:'2025-01-15',c:'rgba(30,58,95,.9)'},
+        {label:'🎆 رأس السنة',date:'2026-01-01',c:'rgba(76,29,149,.8)'},
+        {label:'🏃 يوم الرياضة',date:'2025-12-19',c:'rgba(6,78,59,.8)'},
+        {label:'📅 اليوم الحقيقي',date:'',c:'rgba(55,65,81,.8)'}
+      ];
+      var qBtns=quick.map(function(q){
+        return '<button onclick="_thSet2(''+q.date+'')" '
+          +'style="padding:5px 8px;border:none;border-radius:8px;cursor:pointer;font-size:.75rem;'
+          +'background:'+q.c+';color:#fff;transition:.15s" '
+          +'onmouseover="this.style.filter='brightness(1.25)'" '
+          +'onmouseout="this.style.filter=''">'+q.label+'</button>';
+      }).join('');
+
+      panel.innerHTML=
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+        +'<span style="font-weight:700;color:#F0C040;font-size:.9rem">'
+        +'<i class="fas fa-palette" style="margin-inline-end:6px"></i>Theme Dev Panel</span>'
+        +'<button id="thPanel2Close" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px">'+qBtns+'</div>'
+        +'<div style="margin-bottom:8px">'
+        +'<label style="display:block;margin-bottom:4px;color:#94a3b8">تاريخ مخصص:</label>'
+        +'<input type="date" id="thDateInput2" style="width:100%;padding:6px 8px;border-radius:8px;'
+        +'border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.82rem">'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;margin-bottom:10px">'
+        +'<button onclick="_thApply2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(99,102,241,.8);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-play" style="margin-inline-end:4px"></i>تطبيق</button>'
+        +'<button onclick="_thReset2()" style="flex:1;padding:7px;border:none;border-radius:8px;'
+        +'background:rgba(239,68,68,.7);color:#fff;cursor:pointer;font-size:.8rem">'
+        +'<i class="fas fa-times" style="margin-inline-end:4px"></i>إلغاء</button>'
+        +'</div>'
+        +'<div id="thDevStatus2" style="font-size:.75rem;color:#94a3b8;text-align:center;'
+        +'padding:4px;background:rgba(255,255,255,.05);border-radius:6px"></div>';
+
+      document.body.appendChild(panel);
+
+      document.getElementById('thPanel2Close').onclick=function(){panel.style.display='none';};
+
+      document.getElementById('thInlineBtn').onclick=function(){
+        panel.style.display=panel.style.display==='none'?'block':'none';
+        if(panel.style.display==='block') _thStatus2();
+      };
+
+      function _thStatus2(){
+        var s=document.getElementById('thDevStatus2');if(!s)return;
+        var cur=localStorage.getItem('nd_test_date');
+        s.innerHTML=cur
+          ?'<i class="fas fa-vial" style="color:#A78BFA;margin-inline-end:4px"></i>تاريخ الاختبار: <strong style="color:#F0C040">'+cur+'</strong>'
+          :'<i class="fas fa-check-circle" style="color:#34D399;margin-inline-end:4px"></i>يستخدم التاريخ الحقيقي';
+      }
+
+      function _thRefresh2(){
+        var th=_detect2(_getNow2());
+        var b2=document.getElementById('themeBanner2');
+        if(b2){b2.innerHTML='';b2.classList.add('hidden');}
+        var br=document.getElementById('thBtnRow');
+        if(th){_render2(th);if(br)br.style.display='flex';}
+        else{if(br)br.style.display='none';}
+        _thStatus2();
+      }
+
+      window._thSet2=function(d){
+        d?localStorage.setItem('nd_test_date',d):localStorage.removeItem('nd_test_date');
+        var inp=document.getElementById('thDateInput2');if(inp)inp.value=d||'';
+        _thRefresh2();
+      };
+      function _thApply2(){var inp=document.getElementById('thDateInput2');if(inp&&inp.value)_thSet2(inp.value);}
+      function _thReset2(){_thSet2('');}
+      _thStatus2();
     })();
     </script>
 
