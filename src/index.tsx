@@ -8117,6 +8117,178 @@ app.get('/staff-dashboard', (c) => {
   .deduction-row:hover{background:#FAFAFA}
   @keyframes countUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
   .count-anim{animation:countUp 0.5s ease both}
+
+    /* ══ THEME ENGINE v2 ══ */
+    @keyframes th-slidein{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes th-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+    @keyframes th-ticker{0%{transform:translateX(110%)}100%{transform:translateX(-110%)}}
+    @keyframes th-tickerR{0%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
+    @keyframes th-confetti{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(140px) rotate(720deg);opacity:0}}
+    @keyframes th-glow-nd {0%,100%{box-shadow:0 0 18px #8B1A2F66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #C41E3ABB,0 4px 48px #00000066}}
+    @keyframes th-glow-eid{0%,100%{box-shadow:0 0 18px #05966988,0 4px 32px #00000044}50%{box-shadow:0 0 40px #10B981BB,0 4px 48px #00000066}}
+    @keyframes th-glow-ram{0%,100%{box-shadow:0 0 18px #4338CA88,0 4px 32px #00000044}50%{box-shadow:0 0 40px #6366F1BB,0 4px 48px #00000066}}
+    @keyframes th-glow-spr{0%,100%{box-shadow:0 0 18px #16A34A66,0 4px 32px #00000033}50%{box-shadow:0 0 40px #22C55E99,0 4px 48px #00000055}}
+    @keyframes th-glow-sum{0%,100%{box-shadow:0 0 18px #D9770666,0 4px 32px #00000044}50%{box-shadow:0 0 40px #F9731688,0 4px 48px #00000066}}
+    @keyframes th-glow-aut{0%,100%{box-shadow:0 0 18px #92400E66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #B4540077,0 4px 48px #00000066}}
+    @keyframes th-glow-win{0%,100%{box-shadow:0 0 18px #1E3A5F66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #2563EB88,0 4px 48px #00000066}}
+    @keyframes th-glow-nb {0%,100%{box-shadow:0 0 18px #14532D66,0 4px 32px #00000044}50%{box-shadow:0 0 40px #16A34A88,0 4px 48px #00000066}}
+    #themeBanner2{animation:th-slidein .65s cubic-bezier(.22,.68,0,1.2) both;margin-bottom:1.25rem}
+    .th-particle{position:absolute;pointer-events:none;font-size:1.3rem;animation:th-confetti 3.2s ease-in infinite}
+    .th-ticker-wrap2{overflow:hidden;white-space:nowrap;width:100%}
+    .th-ticker-inner2{display:inline-block;padding-inline-start:100%;animation:th-ticker 26s linear infinite}
+    .th-ticker-innerR2{display:inline-block;padding-inline-end:100%;animation:th-tickerR 26s linear infinite}
+
+
+    <!-- ══ THEME BANNER 2 ══ -->
+    <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
+    <script>
+    (function(){
+      /* reuse shared helpers if already defined by /staff page in same session — 
+         but since each page is standalone, we define them locally with suffix 2 */
+      function _getNow2(){
+        try{var ov=localStorage.getItem('nd_test_date');
+          if(ov){var p=ov.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+        }catch(e){}
+        return new Date();
+      }
+      var THEMES2=[
+        {id:'national',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===11&&d.getDate()===18;},
+         bg:'linear-gradient(135deg,#8B1A2F 0%,#6B0A22 40%,#1a1a2e 100%)',
+         titleAr:'🇶🇦 كل عام وقطر بخير',titleEn:'🇶🇦 Happy Qatar National Day',
+         subtitleAr:'اليوم الوطني القطري — ١٨ ديسمبر',subtitleEn:'Qatar National Day — December 18',
+         tickerAr:'🇶🇦 يوم المجد والعطاء • تحيا قطر • ١٨ ديسمبر يوم العز والكرامة • الله يحفظ قطر وقيادتها 🇶🇦',
+         tickerEn:'🇶🇦 Glory & Pride • Long Live Qatar • December 18 • God Bless Qatar 🇶🇦',
+         particles:['🇶🇦','⭐','✨','🌟','🎊','🎉','🏅','💫']},
+        {id:'eid_fitr',glow:'th-glow-eid',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===2&&dt>=29)||(m===3&&dt<=3);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 45%,#0D2B1F 100%)',
+         titleAr:'🌙 عيد الفطر المبارك',titleEn:'🌙 Eid Al-Fitr Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله صيامكم',subtitleEn:'May your fast be accepted • Happy Eid',
+         tickerAr:'🌙 عيد الفطر المبارك • تقبّل الله منا ومنكم • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Eid Al-Fitr Mubarak • May Allah accept our deeds • Happy Eid to all 🌙',
+         particles:['🌙','⭐','✨','🌟','🎊','💚','🕌','🤲']},
+        {id:'eid_adha',glow:'th-glow-eid',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=5&&d.getDate()<=10;},
+         bg:'linear-gradient(135deg,#1E3A5F 0%,#1a4a7a 45%,#0f1f36 100%)',
+         titleAr:'🕌 عيد الأضحى المبارك',titleEn:'🕌 Eid Al-Adha Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله طاعتكم',subtitleEn:'May your worship be accepted • Happy Eid',
+         tickerAr:'🕌 عيد الأضحى المبارك • تقبّل الله منا ومنكم صالح الأعمال • كل عام وأنتم بخير 🕌',
+         tickerEn:'🕌 Eid Al-Adha Mubarak • May Allah accept our sacrifices • Happy Eid to all 🕌',
+         particles:['🕌','🌙','⭐','✨','💙','🤲','🌟','🎊']},
+        {id:'ramadan',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===2&&d.getDate()>=1&&d.getDate()<=28;},
+         bg:'linear-gradient(135deg,#1E1B4B 0%,#312E81 45%,#0D0B2E 100%)',
+         titleAr:'🌙 رمضان كريم',titleEn:'🌙 Ramadan Kareem',
+         subtitleAr:'شهر الخير والبركة والعبادة',subtitleEn:'Month of Blessings & Worship',
+         tickerAr:'🌙 رمضان كريم • شهر القرآن والخير • تقبّل الله صيامكم وقيامكم 🌙',
+         tickerEn:'🌙 Ramadan Kareem • Month of Quran • May Allah accept your fasting 🌙',
+         particles:['🌙','⭐','🌟','✨','📿','🕌','🤲','💜']},
+        {id:'mawlid',glow:'th-glow-nb',
+         match:function(d){return d.getMonth()===0&&d.getDate()>=28&&d.getDate()<=30;},
+         bg:'linear-gradient(135deg,#14532D 0%,#166534 45%,#052E16 100%)',
+         titleAr:'🌿 المولد النبوي الشريف',titleEn:'🌿 Mawlid Al-Nabawi',
+         subtitleAr:'ذكرى مولد سيدنا محمد ﷺ',subtitleEn:'Birthday of Prophet Muhammad ﷺ',
+         tickerAr:'🌿 بمناسبة المولد النبوي الشريف • صلِّ على النبي محمد ﷺ 🌿',
+         tickerEn:'🌿 Happy Mawlid Al-Nabawi • Blessings upon Prophet Muhammad ﷺ 🌿',
+         particles:['🌿','🌟','⭐','✨','💚','🤲','📿','🕌']},
+        {id:'hijri_new',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=25&&d.getDate()<=27;},
+         bg:'linear-gradient(135deg,#44337A 0%,#553C9A 45%,#231942 100%)',
+         titleAr:'🌙 رأس السنة الهجرية',titleEn:'🌙 Islamic New Year',
+         subtitleAr:'عام هجري جديد مبارك',subtitleEn:'Blessed Islamic New Year',
+         tickerAr:'🌙 رأس السنة الهجرية الجديدة • عام مبارك • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Happy Islamic New Year • May this year be full of blessings 🌙',
+         particles:['🌙','⭐','✨','🌟','💜','🎊','📿','🕌']},
+        {id:'spring',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===3||(d.getMonth()===4&&d.getDate()<=31);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#052e16 100%)',
+         titleAr:'🌸 فصل الربيع',titleEn:'🌸 Spring Season',
+         subtitleAr:'الطبيعة تتجدّد والأمل يزهر',subtitleEn:'Nature renews & hope blossoms',
+         tickerAr:'🌸 مرحباً بالربيع • الأزهار والجمال • فصل الخير والتجديد 🌸',
+         tickerEn:'🌸 Welcome Spring • Flowers & Beauty • Season of renewal & hope 🌸',
+         particles:['🌸','🌺','🌻','🦋','🌿','🌱','🌼','🍀']},
+        {id:'summer',glow:'th-glow-sum',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===5&&dt>=10)||m===6||m===7;},
+         bg:'linear-gradient(135deg,#7C2D12 0%,#9A3412 40%,#431407 100%)',
+         titleAr:'☀️ فصل الصيف',titleEn:'☀️ Summer Season',
+         subtitleAr:'الحرارة والنشاط والإجازات',subtitleEn:'Heat, energy & summer holidays',
+         tickerAr:'☀️ مرحباً بالصيف • موسم الإجازات • الشمس تُشرق للجميع ☀️',
+         tickerEn:'☀️ Welcome Summer • Vacation season • Enjoy the sunny days ☀️',
+         particles:['☀️','🌞','🌊','🏖️','🌴','🍹','🌻','⭐']},
+        {id:'autumn',glow:'th-glow-aut',
+         match:function(d){return d.getMonth()>=8&&d.getMonth()<=10;},
+         bg:'linear-gradient(135deg,#78350F 0%,#92400E 40%,#3B1A08 100%)',
+         titleAr:'🍂 فصل الخريف',titleEn:'🍂 Autumn Season',
+         subtitleAr:'تتساقط الأوراق وتتجدد الأيام',subtitleEn:'Leaves fall, days refresh',
+         tickerAr:'🍂 مرحباً بالخريف • موسم التغيير والجمال • الألوان الذهبية تزيّن الطبيعة 🍂',
+         tickerEn:'🍂 Welcome Autumn • Season of change & golden colors 🍂',
+         particles:['🍂','🍁','🌾','🍄','🌰','🦔','🍃','🌙']},
+        {id:'winter',glow:'th-glow-win',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();
+           return m===0||m===1||(m===11&&dt>=20)||(m===11&&dt<=17&&dt>=1);},
+         bg:'linear-gradient(135deg,#0F172A 0%,#1E3A5F 45%,#0a0f1e 100%)',
+         titleAr:'❄️ فصل الشتاء',titleEn:'❄️ Winter Season',
+         subtitleAr:'البرد والهدوء وجمال الليالي',subtitleEn:'Cool nights & peaceful days',
+         tickerAr:'❄️ مرحباً بالشتاء • موسم الدفء والقهوة • ليالٍ هادئة وجميلة 🌌',
+         tickerEn:'❄️ Welcome Winter • Cozy season • Beautiful quiet nights in Qatar 🌌',
+         particles:['❄️','⛄','🌨️','✨','💙','🌟','🌙','⭐']},
+        {id:'new_year',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===0&&d.getDate()===1;},
+         bg:'linear-gradient(135deg,#4C1D95 0%,#6D28D9 45%,#1e0a3c 100%)',
+         titleAr:'🎆 كل عام وأنتم بخير',titleEn:'🎆 Happy New Year!',
+         subtitleAr:'عام جديد مبارك • ٢٠٢٦',subtitleEn:'Wishing you a wonderful New Year 2026',
+         tickerAr:'🎆 سنة جديدة سعيدة • كل عام وأنتم بخير • عام مليء بالخير والسعادة 🎆',
+         tickerEn:'🎆 Happy New Year 2026 • Wishing you joy, health & success 🎆',
+         particles:['🎆','🎇','✨','🎊','🎉','⭐','💜','🌟']},
+        {id:'sport_day',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===11&&d.getDate()===19;},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#022c22 100%)',
+         titleAr:'🏃 اليوم الوطني للرياضة',titleEn:'🏃 Qatar National Sport Day',
+         subtitleAr:'الرياضة حياة • قطر تتحرك',subtitleEn:'Sport is Life • Qatar Moves',
+         tickerAr:'🏃 اليوم الوطني للرياضة • الرياضة صحة وحياة • كن نشيطاً كن صحياً 🏃',
+         tickerEn:'🏃 Qatar National Sport Day • Sport is Health & Life • Stay Active 🏃',
+         particles:['🏃','⚽','🏅','🎽','💪','🌟','🏆','⭐']}
+      ];
+      function _detect2(now){for(var i=0;i<THEMES2.length;i++)if(THEMES2[i].match(now))return THEMES2[i];return null;}
+      function _spawn2(wrap,particles){
+        for(var i=0;i<20;i++){(function(i){setTimeout(function(){
+          var p=document.createElement('span');p.className='th-particle';
+          p.textContent=particles[i%particles.length];
+          p.style.left=Math.random()*100+'%';p.style.top='-20px';
+          p.style.animationDelay=(Math.random()*2)+'s';
+          p.style.animationDuration=(2.5+Math.random()*2)+'s';
+          p.style.fontSize=(0.9+Math.random()*0.7)+'rem';
+          wrap.appendChild(p);
+          setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},5000);
+        },i*160);})(i);}
+      }
+      function _render2(th){
+        var b=document.getElementById('themeBanner2');if(!b)return;
+        var isRTL=document.documentElement.dir==='rtl'||document.body.dir==='rtl';
+        b.classList.remove('hidden');
+        b.style.background=th.bg;
+        var title=isRTL?th.titleAr:th.titleEn;
+        var subtitle=isRTL?th.subtitleAr:th.subtitleEn;
+        var ticker=isRTL?th.tickerAr:th.tickerEn;
+        var tc=isRTL?'th-ticker-innerR2':'th-ticker-inner2';
+        b.innerHTML=
+          '<div style="position:relative;z-index:2;padding:18px 22px 12px;display:flex;flex-direction:column;gap:3px">'
+          +'<div style="font-size:clamp(1.2rem,2.5vw,1.55rem);font-weight:800;color:#fff;'
+          +'text-shadow:0 2px 12px rgba(0,0,0,.4);animation:th-float 3.5s ease-in-out infinite;display:inline-block">'
+          +title+'</div>'
+          +'<div style="font-size:.85rem;color:rgba(255,255,255,.8);margin-top:1px">'+subtitle+'</div>'
+          +'</div>'
+          +'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.25);'
+          +'padding:6px 0;overflow:hidden;z-index:3">'
+          +'<div class="th-ticker-wrap2"><span class="'+tc+'" '
+          +'style="color:rgba(255,255,255,.9);font-size:.78rem;letter-spacing:.03em">'+ticker+'</span></div></div>';
+        (function loop(){_spawn2(b,th.particles);setTimeout(loop,5200);})();
+      }
+      var _th=_detect2(_getNow2());
+      if(_th)_render2(_th);
+    })();
+    </script>
 </style>
 
 <div dir="${isRTL?'rtl':'ltr'}" class="space-y-6">
@@ -8953,6 +9125,157 @@ app.get('/staff-forms', (c) => {
 
   const content = `
   <div dir="${isRTL?'rtl':'ltr'}">
+
+    <!-- ══ THEME BANNER 2 ══ -->
+    <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
+    <script>
+    (function(){
+      /* reuse shared helpers if already defined by /staff page in same session — 
+         but since each page is standalone, we define them locally with suffix 2 */
+      function _getNow2(){
+        try{var ov=localStorage.getItem('nd_test_date');
+          if(ov){var p=ov.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+        }catch(e){}
+        return new Date();
+      }
+      var THEMES2=[
+        {id:'national',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===11&&d.getDate()===18;},
+         bg:'linear-gradient(135deg,#8B1A2F 0%,#6B0A22 40%,#1a1a2e 100%)',
+         titleAr:'🇶🇦 كل عام وقطر بخير',titleEn:'🇶🇦 Happy Qatar National Day',
+         subtitleAr:'اليوم الوطني القطري — ١٨ ديسمبر',subtitleEn:'Qatar National Day — December 18',
+         tickerAr:'🇶🇦 يوم المجد والعطاء • تحيا قطر • ١٨ ديسمبر يوم العز والكرامة • الله يحفظ قطر وقيادتها 🇶🇦',
+         tickerEn:'🇶🇦 Glory & Pride • Long Live Qatar • December 18 • God Bless Qatar 🇶🇦',
+         particles:['🇶🇦','⭐','✨','🌟','🎊','🎉','🏅','💫']},
+        {id:'eid_fitr',glow:'th-glow-eid',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===2&&dt>=29)||(m===3&&dt<=3);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 45%,#0D2B1F 100%)',
+         titleAr:'🌙 عيد الفطر المبارك',titleEn:'🌙 Eid Al-Fitr Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله صيامكم',subtitleEn:'May your fast be accepted • Happy Eid',
+         tickerAr:'🌙 عيد الفطر المبارك • تقبّل الله منا ومنكم • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Eid Al-Fitr Mubarak • May Allah accept our deeds • Happy Eid to all 🌙',
+         particles:['🌙','⭐','✨','🌟','🎊','💚','🕌','🤲']},
+        {id:'eid_adha',glow:'th-glow-eid',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=5&&d.getDate()<=10;},
+         bg:'linear-gradient(135deg,#1E3A5F 0%,#1a4a7a 45%,#0f1f36 100%)',
+         titleAr:'🕌 عيد الأضحى المبارك',titleEn:'🕌 Eid Al-Adha Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله طاعتكم',subtitleEn:'May your worship be accepted • Happy Eid',
+         tickerAr:'🕌 عيد الأضحى المبارك • تقبّل الله منا ومنكم صالح الأعمال • كل عام وأنتم بخير 🕌',
+         tickerEn:'🕌 Eid Al-Adha Mubarak • May Allah accept our sacrifices • Happy Eid to all 🕌',
+         particles:['🕌','🌙','⭐','✨','💙','🤲','🌟','🎊']},
+        {id:'ramadan',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===2&&d.getDate()>=1&&d.getDate()<=28;},
+         bg:'linear-gradient(135deg,#1E1B4B 0%,#312E81 45%,#0D0B2E 100%)',
+         titleAr:'🌙 رمضان كريم',titleEn:'🌙 Ramadan Kareem',
+         subtitleAr:'شهر الخير والبركة والعبادة',subtitleEn:'Month of Blessings & Worship',
+         tickerAr:'🌙 رمضان كريم • شهر القرآن والخير • تقبّل الله صيامكم وقيامكم 🌙',
+         tickerEn:'🌙 Ramadan Kareem • Month of Quran • May Allah accept your fasting 🌙',
+         particles:['🌙','⭐','🌟','✨','📿','🕌','🤲','💜']},
+        {id:'mawlid',glow:'th-glow-nb',
+         match:function(d){return d.getMonth()===0&&d.getDate()>=28&&d.getDate()<=30;},
+         bg:'linear-gradient(135deg,#14532D 0%,#166534 45%,#052E16 100%)',
+         titleAr:'🌿 المولد النبوي الشريف',titleEn:'🌿 Mawlid Al-Nabawi',
+         subtitleAr:'ذكرى مولد سيدنا محمد ﷺ',subtitleEn:'Birthday of Prophet Muhammad ﷺ',
+         tickerAr:'🌿 بمناسبة المولد النبوي الشريف • صلِّ على النبي محمد ﷺ 🌿',
+         tickerEn:'🌿 Happy Mawlid Al-Nabawi • Blessings upon Prophet Muhammad ﷺ 🌿',
+         particles:['🌿','🌟','⭐','✨','💚','🤲','📿','🕌']},
+        {id:'hijri_new',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=25&&d.getDate()<=27;},
+         bg:'linear-gradient(135deg,#44337A 0%,#553C9A 45%,#231942 100%)',
+         titleAr:'🌙 رأس السنة الهجرية',titleEn:'🌙 Islamic New Year',
+         subtitleAr:'عام هجري جديد مبارك',subtitleEn:'Blessed Islamic New Year',
+         tickerAr:'🌙 رأس السنة الهجرية الجديدة • عام مبارك • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Happy Islamic New Year • May this year be full of blessings 🌙',
+         particles:['🌙','⭐','✨','🌟','💜','🎊','📿','🕌']},
+        {id:'spring',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===3||(d.getMonth()===4&&d.getDate()<=31);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#052e16 100%)',
+         titleAr:'🌸 فصل الربيع',titleEn:'🌸 Spring Season',
+         subtitleAr:'الطبيعة تتجدّد والأمل يزهر',subtitleEn:'Nature renews & hope blossoms',
+         tickerAr:'🌸 مرحباً بالربيع • الأزهار والجمال • فصل الخير والتجديد 🌸',
+         tickerEn:'🌸 Welcome Spring • Flowers & Beauty • Season of renewal & hope 🌸',
+         particles:['🌸','🌺','🌻','🦋','🌿','🌱','🌼','🍀']},
+        {id:'summer',glow:'th-glow-sum',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===5&&dt>=10)||m===6||m===7;},
+         bg:'linear-gradient(135deg,#7C2D12 0%,#9A3412 40%,#431407 100%)',
+         titleAr:'☀️ فصل الصيف',titleEn:'☀️ Summer Season',
+         subtitleAr:'الحرارة والنشاط والإجازات',subtitleEn:'Heat, energy & summer holidays',
+         tickerAr:'☀️ مرحباً بالصيف • موسم الإجازات • الشمس تُشرق للجميع ☀️',
+         tickerEn:'☀️ Welcome Summer • Vacation season • Enjoy the sunny days ☀️',
+         particles:['☀️','🌞','🌊','🏖️','🌴','🍹','🌻','⭐']},
+        {id:'autumn',glow:'th-glow-aut',
+         match:function(d){return d.getMonth()>=8&&d.getMonth()<=10;},
+         bg:'linear-gradient(135deg,#78350F 0%,#92400E 40%,#3B1A08 100%)',
+         titleAr:'🍂 فصل الخريف',titleEn:'🍂 Autumn Season',
+         subtitleAr:'تتساقط الأوراق وتتجدد الأيام',subtitleEn:'Leaves fall, days refresh',
+         tickerAr:'🍂 مرحباً بالخريف • موسم التغيير والجمال • الألوان الذهبية تزيّن الطبيعة 🍂',
+         tickerEn:'🍂 Welcome Autumn • Season of change & golden colors 🍂',
+         particles:['🍂','🍁','🌾','🍄','🌰','🦔','🍃','🌙']},
+        {id:'winter',glow:'th-glow-win',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();
+           return m===0||m===1||(m===11&&dt>=20)||(m===11&&dt<=17&&dt>=1);},
+         bg:'linear-gradient(135deg,#0F172A 0%,#1E3A5F 45%,#0a0f1e 100%)',
+         titleAr:'❄️ فصل الشتاء',titleEn:'❄️ Winter Season',
+         subtitleAr:'البرد والهدوء وجمال الليالي',subtitleEn:'Cool nights & peaceful days',
+         tickerAr:'❄️ مرحباً بالشتاء • موسم الدفء والقهوة • ليالٍ هادئة وجميلة 🌌',
+         tickerEn:'❄️ Welcome Winter • Cozy season • Beautiful quiet nights in Qatar 🌌',
+         particles:['❄️','⛄','🌨️','✨','💙','🌟','🌙','⭐']},
+        {id:'new_year',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===0&&d.getDate()===1;},
+         bg:'linear-gradient(135deg,#4C1D95 0%,#6D28D9 45%,#1e0a3c 100%)',
+         titleAr:'🎆 كل عام وأنتم بخير',titleEn:'🎆 Happy New Year!',
+         subtitleAr:'عام جديد مبارك • ٢٠٢٦',subtitleEn:'Wishing you a wonderful New Year 2026',
+         tickerAr:'🎆 سنة جديدة سعيدة • كل عام وأنتم بخير • عام مليء بالخير والسعادة 🎆',
+         tickerEn:'🎆 Happy New Year 2026 • Wishing you joy, health & success 🎆',
+         particles:['🎆','🎇','✨','🎊','🎉','⭐','💜','🌟']},
+        {id:'sport_day',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===11&&d.getDate()===19;},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#022c22 100%)',
+         titleAr:'🏃 اليوم الوطني للرياضة',titleEn:'🏃 Qatar National Sport Day',
+         subtitleAr:'الرياضة حياة • قطر تتحرك',subtitleEn:'Sport is Life • Qatar Moves',
+         tickerAr:'🏃 اليوم الوطني للرياضة • الرياضة صحة وحياة • كن نشيطاً كن صحياً 🏃',
+         tickerEn:'🏃 Qatar National Sport Day • Sport is Health & Life • Stay Active 🏃',
+         particles:['🏃','⚽','🏅','🎽','💪','🌟','🏆','⭐']}
+      ];
+      function _detect2(now){for(var i=0;i<THEMES2.length;i++)if(THEMES2[i].match(now))return THEMES2[i];return null;}
+      function _spawn2(wrap,particles){
+        for(var i=0;i<20;i++){(function(i){setTimeout(function(){
+          var p=document.createElement('span');p.className='th-particle';
+          p.textContent=particles[i%particles.length];
+          p.style.left=Math.random()*100+'%';p.style.top='-20px';
+          p.style.animationDelay=(Math.random()*2)+'s';
+          p.style.animationDuration=(2.5+Math.random()*2)+'s';
+          p.style.fontSize=(0.9+Math.random()*0.7)+'rem';
+          wrap.appendChild(p);
+          setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},5000);
+        },i*160);})(i);}
+      }
+      function _render2(th){
+        var b=document.getElementById('themeBanner2');if(!b)return;
+        var isRTL=document.documentElement.dir==='rtl'||document.body.dir==='rtl';
+        b.classList.remove('hidden');
+        b.style.background=th.bg;
+        var title=isRTL?th.titleAr:th.titleEn;
+        var subtitle=isRTL?th.subtitleAr:th.subtitleEn;
+        var ticker=isRTL?th.tickerAr:th.tickerEn;
+        var tc=isRTL?'th-ticker-innerR2':'th-ticker-inner2';
+        b.innerHTML=
+          '<div style="position:relative;z-index:2;padding:18px 22px 12px;display:flex;flex-direction:column;gap:3px">'
+          +'<div style="font-size:clamp(1.2rem,2.5vw,1.55rem);font-weight:800;color:#fff;'
+          +'text-shadow:0 2px 12px rgba(0,0,0,.4);animation:th-float 3.5s ease-in-out infinite;display:inline-block">'
+          +title+'</div>'
+          +'<div style="font-size:.85rem;color:rgba(255,255,255,.8);margin-top:1px">'+subtitle+'</div>'
+          +'</div>'
+          +'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.25);'
+          +'padding:6px 0;overflow:hidden;z-index:3">'
+          +'<div class="th-ticker-wrap2"><span class="'+tc+'" '
+          +'style="color:rgba(255,255,255,.9);font-size:.78rem;letter-spacing:.03em">'+ticker+'</span></div></div>';
+        (function loop(){_spawn2(b,th.particles);setTimeout(loop,5200);})();
+      }
+      var _th=_detect2(_getNow2());
+      if(_th)_render2(_th);
+    })();
+    </script>
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 ${isRTL?'sm:flex-row-reverse':''}">
       <div class="${isRTL?'text-right':''}">
         <h1 class="text-2xl font-bold text-gray-800">${pageTitle}</h1>
@@ -9063,6 +9386,157 @@ app.get('/staff-contact', (c) => {
 
   const content = `
   <div dir="${isRTL?'rtl':'ltr'}">
+
+    <!-- ══ THEME BANNER 2 ══ -->
+    <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
+    <script>
+    (function(){
+      /* reuse shared helpers if already defined by /staff page in same session — 
+         but since each page is standalone, we define them locally with suffix 2 */
+      function _getNow2(){
+        try{var ov=localStorage.getItem('nd_test_date');
+          if(ov){var p=ov.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+        }catch(e){}
+        return new Date();
+      }
+      var THEMES2=[
+        {id:'national',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===11&&d.getDate()===18;},
+         bg:'linear-gradient(135deg,#8B1A2F 0%,#6B0A22 40%,#1a1a2e 100%)',
+         titleAr:'🇶🇦 كل عام وقطر بخير',titleEn:'🇶🇦 Happy Qatar National Day',
+         subtitleAr:'اليوم الوطني القطري — ١٨ ديسمبر',subtitleEn:'Qatar National Day — December 18',
+         tickerAr:'🇶🇦 يوم المجد والعطاء • تحيا قطر • ١٨ ديسمبر يوم العز والكرامة • الله يحفظ قطر وقيادتها 🇶🇦',
+         tickerEn:'🇶🇦 Glory & Pride • Long Live Qatar • December 18 • God Bless Qatar 🇶🇦',
+         particles:['🇶🇦','⭐','✨','🌟','🎊','🎉','🏅','💫']},
+        {id:'eid_fitr',glow:'th-glow-eid',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===2&&dt>=29)||(m===3&&dt<=3);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 45%,#0D2B1F 100%)',
+         titleAr:'🌙 عيد الفطر المبارك',titleEn:'🌙 Eid Al-Fitr Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله صيامكم',subtitleEn:'May your fast be accepted • Happy Eid',
+         tickerAr:'🌙 عيد الفطر المبارك • تقبّل الله منا ومنكم • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Eid Al-Fitr Mubarak • May Allah accept our deeds • Happy Eid to all 🌙',
+         particles:['🌙','⭐','✨','🌟','🎊','💚','🕌','🤲']},
+        {id:'eid_adha',glow:'th-glow-eid',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=5&&d.getDate()<=10;},
+         bg:'linear-gradient(135deg,#1E3A5F 0%,#1a4a7a 45%,#0f1f36 100%)',
+         titleAr:'🕌 عيد الأضحى المبارك',titleEn:'🕌 Eid Al-Adha Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله طاعتكم',subtitleEn:'May your worship be accepted • Happy Eid',
+         tickerAr:'🕌 عيد الأضحى المبارك • تقبّل الله منا ومنكم صالح الأعمال • كل عام وأنتم بخير 🕌',
+         tickerEn:'🕌 Eid Al-Adha Mubarak • May Allah accept our sacrifices • Happy Eid to all 🕌',
+         particles:['🕌','🌙','⭐','✨','💙','🤲','🌟','🎊']},
+        {id:'ramadan',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===2&&d.getDate()>=1&&d.getDate()<=28;},
+         bg:'linear-gradient(135deg,#1E1B4B 0%,#312E81 45%,#0D0B2E 100%)',
+         titleAr:'🌙 رمضان كريم',titleEn:'🌙 Ramadan Kareem',
+         subtitleAr:'شهر الخير والبركة والعبادة',subtitleEn:'Month of Blessings & Worship',
+         tickerAr:'🌙 رمضان كريم • شهر القرآن والخير • تقبّل الله صيامكم وقيامكم 🌙',
+         tickerEn:'🌙 Ramadan Kareem • Month of Quran • May Allah accept your fasting 🌙',
+         particles:['🌙','⭐','🌟','✨','📿','🕌','🤲','💜']},
+        {id:'mawlid',glow:'th-glow-nb',
+         match:function(d){return d.getMonth()===0&&d.getDate()>=28&&d.getDate()<=30;},
+         bg:'linear-gradient(135deg,#14532D 0%,#166534 45%,#052E16 100%)',
+         titleAr:'🌿 المولد النبوي الشريف',titleEn:'🌿 Mawlid Al-Nabawi',
+         subtitleAr:'ذكرى مولد سيدنا محمد ﷺ',subtitleEn:'Birthday of Prophet Muhammad ﷺ',
+         tickerAr:'🌿 بمناسبة المولد النبوي الشريف • صلِّ على النبي محمد ﷺ 🌿',
+         tickerEn:'🌿 Happy Mawlid Al-Nabawi • Blessings upon Prophet Muhammad ﷺ 🌿',
+         particles:['🌿','🌟','⭐','✨','💚','🤲','📿','🕌']},
+        {id:'hijri_new',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=25&&d.getDate()<=27;},
+         bg:'linear-gradient(135deg,#44337A 0%,#553C9A 45%,#231942 100%)',
+         titleAr:'🌙 رأس السنة الهجرية',titleEn:'🌙 Islamic New Year',
+         subtitleAr:'عام هجري جديد مبارك',subtitleEn:'Blessed Islamic New Year',
+         tickerAr:'🌙 رأس السنة الهجرية الجديدة • عام مبارك • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Happy Islamic New Year • May this year be full of blessings 🌙',
+         particles:['🌙','⭐','✨','🌟','💜','🎊','📿','🕌']},
+        {id:'spring',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===3||(d.getMonth()===4&&d.getDate()<=31);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#052e16 100%)',
+         titleAr:'🌸 فصل الربيع',titleEn:'🌸 Spring Season',
+         subtitleAr:'الطبيعة تتجدّد والأمل يزهر',subtitleEn:'Nature renews & hope blossoms',
+         tickerAr:'🌸 مرحباً بالربيع • الأزهار والجمال • فصل الخير والتجديد 🌸',
+         tickerEn:'🌸 Welcome Spring • Flowers & Beauty • Season of renewal & hope 🌸',
+         particles:['🌸','🌺','🌻','🦋','🌿','🌱','🌼','🍀']},
+        {id:'summer',glow:'th-glow-sum',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===5&&dt>=10)||m===6||m===7;},
+         bg:'linear-gradient(135deg,#7C2D12 0%,#9A3412 40%,#431407 100%)',
+         titleAr:'☀️ فصل الصيف',titleEn:'☀️ Summer Season',
+         subtitleAr:'الحرارة والنشاط والإجازات',subtitleEn:'Heat, energy & summer holidays',
+         tickerAr:'☀️ مرحباً بالصيف • موسم الإجازات • الشمس تُشرق للجميع ☀️',
+         tickerEn:'☀️ Welcome Summer • Vacation season • Enjoy the sunny days ☀️',
+         particles:['☀️','🌞','🌊','🏖️','🌴','🍹','🌻','⭐']},
+        {id:'autumn',glow:'th-glow-aut',
+         match:function(d){return d.getMonth()>=8&&d.getMonth()<=10;},
+         bg:'linear-gradient(135deg,#78350F 0%,#92400E 40%,#3B1A08 100%)',
+         titleAr:'🍂 فصل الخريف',titleEn:'🍂 Autumn Season',
+         subtitleAr:'تتساقط الأوراق وتتجدد الأيام',subtitleEn:'Leaves fall, days refresh',
+         tickerAr:'🍂 مرحباً بالخريف • موسم التغيير والجمال • الألوان الذهبية تزيّن الطبيعة 🍂',
+         tickerEn:'🍂 Welcome Autumn • Season of change & golden colors 🍂',
+         particles:['🍂','🍁','🌾','🍄','🌰','🦔','🍃','🌙']},
+        {id:'winter',glow:'th-glow-win',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();
+           return m===0||m===1||(m===11&&dt>=20)||(m===11&&dt<=17&&dt>=1);},
+         bg:'linear-gradient(135deg,#0F172A 0%,#1E3A5F 45%,#0a0f1e 100%)',
+         titleAr:'❄️ فصل الشتاء',titleEn:'❄️ Winter Season',
+         subtitleAr:'البرد والهدوء وجمال الليالي',subtitleEn:'Cool nights & peaceful days',
+         tickerAr:'❄️ مرحباً بالشتاء • موسم الدفء والقهوة • ليالٍ هادئة وجميلة 🌌',
+         tickerEn:'❄️ Welcome Winter • Cozy season • Beautiful quiet nights in Qatar 🌌',
+         particles:['❄️','⛄','🌨️','✨','💙','🌟','🌙','⭐']},
+        {id:'new_year',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===0&&d.getDate()===1;},
+         bg:'linear-gradient(135deg,#4C1D95 0%,#6D28D9 45%,#1e0a3c 100%)',
+         titleAr:'🎆 كل عام وأنتم بخير',titleEn:'🎆 Happy New Year!',
+         subtitleAr:'عام جديد مبارك • ٢٠٢٦',subtitleEn:'Wishing you a wonderful New Year 2026',
+         tickerAr:'🎆 سنة جديدة سعيدة • كل عام وأنتم بخير • عام مليء بالخير والسعادة 🎆',
+         tickerEn:'🎆 Happy New Year 2026 • Wishing you joy, health & success 🎆',
+         particles:['🎆','🎇','✨','🎊','🎉','⭐','💜','🌟']},
+        {id:'sport_day',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===11&&d.getDate()===19;},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#022c22 100%)',
+         titleAr:'🏃 اليوم الوطني للرياضة',titleEn:'🏃 Qatar National Sport Day',
+         subtitleAr:'الرياضة حياة • قطر تتحرك',subtitleEn:'Sport is Life • Qatar Moves',
+         tickerAr:'🏃 اليوم الوطني للرياضة • الرياضة صحة وحياة • كن نشيطاً كن صحياً 🏃',
+         tickerEn:'🏃 Qatar National Sport Day • Sport is Health & Life • Stay Active 🏃',
+         particles:['🏃','⚽','🏅','🎽','💪','🌟','🏆','⭐']}
+      ];
+      function _detect2(now){for(var i=0;i<THEMES2.length;i++)if(THEMES2[i].match(now))return THEMES2[i];return null;}
+      function _spawn2(wrap,particles){
+        for(var i=0;i<20;i++){(function(i){setTimeout(function(){
+          var p=document.createElement('span');p.className='th-particle';
+          p.textContent=particles[i%particles.length];
+          p.style.left=Math.random()*100+'%';p.style.top='-20px';
+          p.style.animationDelay=(Math.random()*2)+'s';
+          p.style.animationDuration=(2.5+Math.random()*2)+'s';
+          p.style.fontSize=(0.9+Math.random()*0.7)+'rem';
+          wrap.appendChild(p);
+          setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},5000);
+        },i*160);})(i);}
+      }
+      function _render2(th){
+        var b=document.getElementById('themeBanner2');if(!b)return;
+        var isRTL=document.documentElement.dir==='rtl'||document.body.dir==='rtl';
+        b.classList.remove('hidden');
+        b.style.background=th.bg;
+        var title=isRTL?th.titleAr:th.titleEn;
+        var subtitle=isRTL?th.subtitleAr:th.subtitleEn;
+        var ticker=isRTL?th.tickerAr:th.tickerEn;
+        var tc=isRTL?'th-ticker-innerR2':'th-ticker-inner2';
+        b.innerHTML=
+          '<div style="position:relative;z-index:2;padding:18px 22px 12px;display:flex;flex-direction:column;gap:3px">'
+          +'<div style="font-size:clamp(1.2rem,2.5vw,1.55rem);font-weight:800;color:#fff;'
+          +'text-shadow:0 2px 12px rgba(0,0,0,.4);animation:th-float 3.5s ease-in-out infinite;display:inline-block">'
+          +title+'</div>'
+          +'<div style="font-size:.85rem;color:rgba(255,255,255,.8);margin-top:1px">'+subtitle+'</div>'
+          +'</div>'
+          +'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.25);'
+          +'padding:6px 0;overflow:hidden;z-index:3">'
+          +'<div class="th-ticker-wrap2"><span class="'+tc+'" '
+          +'style="color:rgba(255,255,255,.9);font-size:.78rem;letter-spacing:.03em">'+ticker+'</span></div></div>';
+        (function loop(){_spawn2(b,th.particles);setTimeout(loop,5200);})();
+      }
+      var _th=_detect2(_getNow2());
+      if(_th)_render2(_th);
+    })();
+    </script>
     <div class="mb-6 ${isRTL?'text-right':''}">
       <h1 class="text-2xl font-bold text-gray-800">${pageTitle}</h1>
       <p class="text-gray-500 mt-1 text-sm">${isRTL?'تواصل مع الفريق المختص لأي استفسار يخص راتبك أو بدلاتك. نحن هنا لمساعدتك.':'Reach the right team for your payroll and HR inquiries. We\'re here to help.'}</p>
@@ -12112,6 +12586,157 @@ app.get('/staff-request', (c) => {
 
   const content = `
 <div dir="${isRTL?'rtl':'ltr'}">
+
+    <!-- ══ THEME BANNER 2 ══ -->
+    <div id="themeBanner2" class="hidden relative rounded-2xl overflow-hidden" style="min-height:130px"></div>
+    <script>
+    (function(){
+      /* reuse shared helpers if already defined by /staff page in same session — 
+         but since each page is standalone, we define them locally with suffix 2 */
+      function _getNow2(){
+        try{var ov=localStorage.getItem('nd_test_date');
+          if(ov){var p=ov.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+        }catch(e){}
+        return new Date();
+      }
+      var THEMES2=[
+        {id:'national',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===11&&d.getDate()===18;},
+         bg:'linear-gradient(135deg,#8B1A2F 0%,#6B0A22 40%,#1a1a2e 100%)',
+         titleAr:'🇶🇦 كل عام وقطر بخير',titleEn:'🇶🇦 Happy Qatar National Day',
+         subtitleAr:'اليوم الوطني القطري — ١٨ ديسمبر',subtitleEn:'Qatar National Day — December 18',
+         tickerAr:'🇶🇦 يوم المجد والعطاء • تحيا قطر • ١٨ ديسمبر يوم العز والكرامة • الله يحفظ قطر وقيادتها 🇶🇦',
+         tickerEn:'🇶🇦 Glory & Pride • Long Live Qatar • December 18 • God Bless Qatar 🇶🇦',
+         particles:['🇶🇦','⭐','✨','🌟','🎊','🎉','🏅','💫']},
+        {id:'eid_fitr',glow:'th-glow-eid',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===2&&dt>=29)||(m===3&&dt<=3);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 45%,#0D2B1F 100%)',
+         titleAr:'🌙 عيد الفطر المبارك',titleEn:'🌙 Eid Al-Fitr Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله صيامكم',subtitleEn:'May your fast be accepted • Happy Eid',
+         tickerAr:'🌙 عيد الفطر المبارك • تقبّل الله منا ومنكم • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Eid Al-Fitr Mubarak • May Allah accept our deeds • Happy Eid to all 🌙',
+         particles:['🌙','⭐','✨','🌟','🎊','💚','🕌','🤲']},
+        {id:'eid_adha',glow:'th-glow-eid',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=5&&d.getDate()<=10;},
+         bg:'linear-gradient(135deg,#1E3A5F 0%,#1a4a7a 45%,#0f1f36 100%)',
+         titleAr:'🕌 عيد الأضحى المبارك',titleEn:'🕌 Eid Al-Adha Mubarak',
+         subtitleAr:'كل عام وأنتم بخير • تقبّل الله طاعتكم',subtitleEn:'May your worship be accepted • Happy Eid',
+         tickerAr:'🕌 عيد الأضحى المبارك • تقبّل الله منا ومنكم صالح الأعمال • كل عام وأنتم بخير 🕌',
+         tickerEn:'🕌 Eid Al-Adha Mubarak • May Allah accept our sacrifices • Happy Eid to all 🕌',
+         particles:['🕌','🌙','⭐','✨','💙','🤲','🌟','🎊']},
+        {id:'ramadan',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===2&&d.getDate()>=1&&d.getDate()<=28;},
+         bg:'linear-gradient(135deg,#1E1B4B 0%,#312E81 45%,#0D0B2E 100%)',
+         titleAr:'🌙 رمضان كريم',titleEn:'🌙 Ramadan Kareem',
+         subtitleAr:'شهر الخير والبركة والعبادة',subtitleEn:'Month of Blessings & Worship',
+         tickerAr:'🌙 رمضان كريم • شهر القرآن والخير • تقبّل الله صيامكم وقيامكم 🌙',
+         tickerEn:'🌙 Ramadan Kareem • Month of Quran • May Allah accept your fasting 🌙',
+         particles:['🌙','⭐','🌟','✨','📿','🕌','🤲','💜']},
+        {id:'mawlid',glow:'th-glow-nb',
+         match:function(d){return d.getMonth()===0&&d.getDate()>=28&&d.getDate()<=30;},
+         bg:'linear-gradient(135deg,#14532D 0%,#166534 45%,#052E16 100%)',
+         titleAr:'🌿 المولد النبوي الشريف',titleEn:'🌿 Mawlid Al-Nabawi',
+         subtitleAr:'ذكرى مولد سيدنا محمد ﷺ',subtitleEn:'Birthday of Prophet Muhammad ﷺ',
+         tickerAr:'🌿 بمناسبة المولد النبوي الشريف • صلِّ على النبي محمد ﷺ 🌿',
+         tickerEn:'🌿 Happy Mawlid Al-Nabawi • Blessings upon Prophet Muhammad ﷺ 🌿',
+         particles:['🌿','🌟','⭐','✨','💚','🤲','📿','🕌']},
+        {id:'hijri_new',glow:'th-glow-ram',
+         match:function(d){return d.getMonth()===5&&d.getDate()>=25&&d.getDate()<=27;},
+         bg:'linear-gradient(135deg,#44337A 0%,#553C9A 45%,#231942 100%)',
+         titleAr:'🌙 رأس السنة الهجرية',titleEn:'🌙 Islamic New Year',
+         subtitleAr:'عام هجري جديد مبارك',subtitleEn:'Blessed Islamic New Year',
+         tickerAr:'🌙 رأس السنة الهجرية الجديدة • عام مبارك • كل عام وأنتم بخير 🌙',
+         tickerEn:'🌙 Happy Islamic New Year • May this year be full of blessings 🌙',
+         particles:['🌙','⭐','✨','🌟','💜','🎊','📿','🕌']},
+        {id:'spring',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===3||(d.getMonth()===4&&d.getDate()<=31);},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#052e16 100%)',
+         titleAr:'🌸 فصل الربيع',titleEn:'🌸 Spring Season',
+         subtitleAr:'الطبيعة تتجدّد والأمل يزهر',subtitleEn:'Nature renews & hope blossoms',
+         tickerAr:'🌸 مرحباً بالربيع • الأزهار والجمال • فصل الخير والتجديد 🌸',
+         tickerEn:'🌸 Welcome Spring • Flowers & Beauty • Season of renewal & hope 🌸',
+         particles:['🌸','🌺','🌻','🦋','🌿','🌱','🌼','🍀']},
+        {id:'summer',glow:'th-glow-sum',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();return(m===5&&dt>=10)||m===6||m===7;},
+         bg:'linear-gradient(135deg,#7C2D12 0%,#9A3412 40%,#431407 100%)',
+         titleAr:'☀️ فصل الصيف',titleEn:'☀️ Summer Season',
+         subtitleAr:'الحرارة والنشاط والإجازات',subtitleEn:'Heat, energy & summer holidays',
+         tickerAr:'☀️ مرحباً بالصيف • موسم الإجازات • الشمس تُشرق للجميع ☀️',
+         tickerEn:'☀️ Welcome Summer • Vacation season • Enjoy the sunny days ☀️',
+         particles:['☀️','🌞','🌊','🏖️','🌴','🍹','🌻','⭐']},
+        {id:'autumn',glow:'th-glow-aut',
+         match:function(d){return d.getMonth()>=8&&d.getMonth()<=10;},
+         bg:'linear-gradient(135deg,#78350F 0%,#92400E 40%,#3B1A08 100%)',
+         titleAr:'🍂 فصل الخريف',titleEn:'🍂 Autumn Season',
+         subtitleAr:'تتساقط الأوراق وتتجدد الأيام',subtitleEn:'Leaves fall, days refresh',
+         tickerAr:'🍂 مرحباً بالخريف • موسم التغيير والجمال • الألوان الذهبية تزيّن الطبيعة 🍂',
+         tickerEn:'🍂 Welcome Autumn • Season of change & golden colors 🍂',
+         particles:['🍂','🍁','🌾','🍄','🌰','🦔','🍃','🌙']},
+        {id:'winter',glow:'th-glow-win',
+         match:function(d){var m=d.getMonth(),dt=d.getDate();
+           return m===0||m===1||(m===11&&dt>=20)||(m===11&&dt<=17&&dt>=1);},
+         bg:'linear-gradient(135deg,#0F172A 0%,#1E3A5F 45%,#0a0f1e 100%)',
+         titleAr:'❄️ فصل الشتاء',titleEn:'❄️ Winter Season',
+         subtitleAr:'البرد والهدوء وجمال الليالي',subtitleEn:'Cool nights & peaceful days',
+         tickerAr:'❄️ مرحباً بالشتاء • موسم الدفء والقهوة • ليالٍ هادئة وجميلة 🌌',
+         tickerEn:'❄️ Welcome Winter • Cozy season • Beautiful quiet nights in Qatar 🌌',
+         particles:['❄️','⛄','🌨️','✨','💙','🌟','🌙','⭐']},
+        {id:'new_year',glow:'th-glow-nd',
+         match:function(d){return d.getMonth()===0&&d.getDate()===1;},
+         bg:'linear-gradient(135deg,#4C1D95 0%,#6D28D9 45%,#1e0a3c 100%)',
+         titleAr:'🎆 كل عام وأنتم بخير',titleEn:'🎆 Happy New Year!',
+         subtitleAr:'عام جديد مبارك • ٢٠٢٦',subtitleEn:'Wishing you a wonderful New Year 2026',
+         tickerAr:'🎆 سنة جديدة سعيدة • كل عام وأنتم بخير • عام مليء بالخير والسعادة 🎆',
+         tickerEn:'🎆 Happy New Year 2026 • Wishing you joy, health & success 🎆',
+         particles:['🎆','🎇','✨','🎊','🎉','⭐','💜','🌟']},
+        {id:'sport_day',glow:'th-glow-spr',
+         match:function(d){return d.getMonth()===11&&d.getDate()===19;},
+         bg:'linear-gradient(135deg,#064E3B 0%,#065F46 40%,#022c22 100%)',
+         titleAr:'🏃 اليوم الوطني للرياضة',titleEn:'🏃 Qatar National Sport Day',
+         subtitleAr:'الرياضة حياة • قطر تتحرك',subtitleEn:'Sport is Life • Qatar Moves',
+         tickerAr:'🏃 اليوم الوطني للرياضة • الرياضة صحة وحياة • كن نشيطاً كن صحياً 🏃',
+         tickerEn:'🏃 Qatar National Sport Day • Sport is Health & Life • Stay Active 🏃',
+         particles:['🏃','⚽','🏅','🎽','💪','🌟','🏆','⭐']}
+      ];
+      function _detect2(now){for(var i=0;i<THEMES2.length;i++)if(THEMES2[i].match(now))return THEMES2[i];return null;}
+      function _spawn2(wrap,particles){
+        for(var i=0;i<20;i++){(function(i){setTimeout(function(){
+          var p=document.createElement('span');p.className='th-particle';
+          p.textContent=particles[i%particles.length];
+          p.style.left=Math.random()*100+'%';p.style.top='-20px';
+          p.style.animationDelay=(Math.random()*2)+'s';
+          p.style.animationDuration=(2.5+Math.random()*2)+'s';
+          p.style.fontSize=(0.9+Math.random()*0.7)+'rem';
+          wrap.appendChild(p);
+          setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},5000);
+        },i*160);})(i);}
+      }
+      function _render2(th){
+        var b=document.getElementById('themeBanner2');if(!b)return;
+        var isRTL=document.documentElement.dir==='rtl'||document.body.dir==='rtl';
+        b.classList.remove('hidden');
+        b.style.background=th.bg;
+        var title=isRTL?th.titleAr:th.titleEn;
+        var subtitle=isRTL?th.subtitleAr:th.subtitleEn;
+        var ticker=isRTL?th.tickerAr:th.tickerEn;
+        var tc=isRTL?'th-ticker-innerR2':'th-ticker-inner2';
+        b.innerHTML=
+          '<div style="position:relative;z-index:2;padding:18px 22px 12px;display:flex;flex-direction:column;gap:3px">'
+          +'<div style="font-size:clamp(1.2rem,2.5vw,1.55rem);font-weight:800;color:#fff;'
+          +'text-shadow:0 2px 12px rgba(0,0,0,.4);animation:th-float 3.5s ease-in-out infinite;display:inline-block">'
+          +title+'</div>'
+          +'<div style="font-size:.85rem;color:rgba(255,255,255,.8);margin-top:1px">'+subtitle+'</div>'
+          +'</div>'
+          +'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.25);'
+          +'padding:6px 0;overflow:hidden;z-index:3">'
+          +'<div class="th-ticker-wrap2"><span class="'+tc+'" '
+          +'style="color:rgba(255,255,255,.9);font-size:.78rem;letter-spacing:.03em">'+ticker+'</span></div></div>';
+        (function loop(){_spawn2(b,th.particles);setTimeout(loop,5200);})();
+      }
+      var _th=_detect2(_getNow2());
+      if(_th)_render2(_th);
+    })();
+    </script>
 
   <!-- Tabs -->
   <div class="mb-6 flex gap-2 border-b border-gray-200 ${isRTL?'flex-row-reverse':''}">
