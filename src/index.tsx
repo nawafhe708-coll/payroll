@@ -6567,10 +6567,11 @@ function staffLayout(title: string, content: string, activePage: string, lang: L
   const otherLang: Lang = lang === 'en' ? 'ar' : 'en'
 
   const navItems = [
-    { href: '/staff',          icon: 'fa-home',            label: isRTL ? 'الرئيسية' : 'Home',               page: 'home' },
-    { href: '/staff-forms',    icon: 'fa-file-alt',        label: isRTL ? 'النماذج والوثائق' : 'Forms & Documents', page: 'forms' },
-    { href: '/staff-request',  icon: 'fa-concierge-bell',  label: isRTL ? 'طلب خدمة' : 'Request a Service',   page: 'request' },
-    { href: '/staff-contact',  icon: 'fa-envelope',        label: isRTL ? 'تواصل معنا' : 'Contact Us',        page: 'contact' },
+    { href: '/staff',           icon: 'fa-home',            label: isRTL ? 'الرئيسية' : 'Home',               page: 'home' },
+    { href: '/staff-dashboard', icon: 'fa-chart-line',      label: isRTL ? 'لوحة متابعتي' : 'My Dashboard',   page: 'dashboard' },
+    { href: '/staff-forms',     icon: 'fa-file-alt',        label: isRTL ? 'النماذج والوثائق' : 'Forms & Documents', page: 'forms' },
+    { href: '/staff-request',   icon: 'fa-concierge-bell',  label: isRTL ? 'طلب خدمة' : 'Request a Service',  page: 'request' },
+    { href: '/staff-contact',   icon: 'fa-envelope',        label: isRTL ? 'تواصل معنا' : 'Contact Us',       page: 'contact' },
   ]
 
   return `<!DOCTYPE html>
@@ -6864,42 +6865,77 @@ app.get('/staff', (c) => {
   const t     = T[lang]
   const isRTL = lang === 'ar'
 
-  // ─── أحداث الجامعة الثابتة 2025 ───────────────────────────────────────────
-  // النوع: university=جامعة، salary=راتب، advance=سلفة، mission=مهمة، holiday=إجازة
+  // ─── أحداث جامعة قطر الرسمية 2025 (التقويم الأكاديمي المعتمد) ────────────
+  // المصدر: qu.edu.qa/ar/about/office-of-the-provost/office-of-academic-affairs/academic-calendar
+  // الأنواع: university=حدث جامعي، salary=راتب، advance=سلفة، holiday=إجازة، event=فعالية
   const QU_EVENTS = [
-    // ─ إجازات رسمية وأعياد
-    { date:'2025-01-01', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'رأس السنة الميلادية':'New Year\'s Day' },
-    { date:'2025-03-30', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الفطر (يوم 1)':'Eid Al-Fitr Day 1' },
-    { date:'2025-03-31', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الفطر (يوم 2)':'Eid Al-Fitr Day 2' },
-    { date:'2025-04-01', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الفطر (يوم 3)':'Eid Al-Fitr Day 3' },
-    { date:'2025-06-06', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'يوم عيد الأضحى':'Eid Al-Adha Day 1' },
-    { date:'2025-06-07', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الأضحى (يوم 2)':'Eid Al-Adha Day 2' },
-    { date:'2025-06-08', type:'holiday', color:'#6B7280', icon:'fa-moon',          title: isRTL?'إجازة عيد الأضحى (يوم 3)':'Eid Al-Adha Day 3' },
-    { date:'2025-12-18', type:'holiday', color:'#6B7280', icon:'fa-flag',          title: isRTL?'اليوم الوطني القطري':'Qatar National Day' },
-    // ─ تقويم جامعة قطر الأكاديمي
-    { date:'2025-01-19', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'بداية الفصل الدراسي الثاني 2025':'Spring Semester 2025 Begins' },
-    { date:'2025-05-15', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'نهاية الفصل الدراسي الثاني':'Spring Semester Ends' },
-    { date:'2025-05-25', type:'university', color:'#7C3AED', icon:'fa-graduation-cap', title: isRTL?'حفل التخرج 2025':'Graduation Ceremony 2025' },
-    { date:'2025-08-24', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'بداية الفصل الأول 2025-2026':'Fall Semester 2025-2026 Begins' },
-    { date:'2025-12-20', type:'university', color:'#7C3AED', icon:'fa-university', title: isRTL?'نهاية الفصل الأول 2025-2026':'Fall Semester 2025-2026 Ends' },
-    { date:'2025-03-01', type:'university', color:'#7C3AED', icon:'fa-calendar-check', title: isRTL?'موعد تقديم طلبات القبول':'Admission Application Deadline' },
-    { date:'2025-09-01', type:'university', color:'#7C3AED', icon:'fa-chalkboard-teacher', title: isRTL?'اجتماع أعضاء هيئة التدريس':'Faculty Assembly Meeting' },
-    // ─ مواعيد صرف الرواتب
-    { date:'2025-01-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يناير 2025':'January 2025 Salary' },
-    { date:'2025-02-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب فبراير 2025':'February 2025 Salary' },
-    { date:'2025-03-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب مارس 2025':'March 2025 Salary' },
-    { date:'2025-04-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أبريل 2025':'April 2025 Salary' },
-    { date:'2025-05-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب مايو 2025':'May 2025 Salary' },
-    { date:'2025-06-26', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يونيو 2025':'June 2025 Salary' },
-    { date:'2025-07-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يوليو 2025':'July 2025 Salary' },
-    { date:'2025-08-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أغسطس 2025':'August 2025 Salary' },
-    { date:'2025-09-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب سبتمبر 2025':'September 2025 Salary' },
-    { date:'2025-10-28', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أكتوبر 2025':'October 2025 Salary' },
-    { date:'2025-11-27', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب نوفمبر 2025':'November 2025 Salary' },
-    { date:'2025-12-25', type:'salary', color:'var(--qu-maroon)', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب ديسمبر 2025':'December 2025 Salary' },
-    // ─ مواعيد السلف الافتراضية
-    { date:'2025-03-25', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'موعد صرف سلفة عيد الفطر':'Eid Al-Fitr Advance Payment' },
-    { date:'2025-06-04', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'موعد صرف سلفة عيد الأضحى':'Eid Al-Adha Advance Payment' },
+    // ══ إجازات رسمية قطرية 2025 ══
+    { date:'2025-01-01', type:'holiday', color:'#6B7280', icon:'fa-moon',             title: isRTL?'رأس السنة الميلادية':'New Year\'s Day', desc: isRTL?'إجازة رسمية':'Official Holiday' },
+    { date:'2025-01-29', type:'holiday', color:'#6B7280', icon:'fa-star-and-crescent',title: isRTL?'المولد النبوي الشريف':'Prophet\'s Birthday', desc: isRTL?'إجازة رسمية':'Official Holiday' },
+    { date:'2025-03-30', type:'holiday', color:'#D97706', icon:'fa-moon',             title: isRTL?'عيد الفطر المبارك – اليوم الأول':'Eid Al-Fitr – Day 1', desc: isRTL?'بداية إجازة عيد الفطر':'Eid Al-Fitr Break Starts' },
+    { date:'2025-03-31', type:'holiday', color:'#D97706', icon:'fa-moon',             title: isRTL?'عيد الفطر المبارك – اليوم الثاني':'Eid Al-Fitr – Day 2', desc: isRTL?'إجازة عيد الفطر':'Eid Al-Fitr Holiday' },
+    { date:'2025-04-01', type:'holiday', color:'#D97706', icon:'fa-moon',             title: isRTL?'عيد الفطر المبارك – اليوم الثالث':'Eid Al-Fitr – Day 3', desc: isRTL?'إجازة عيد الفطر':'Eid Al-Fitr Holiday' },
+    { date:'2025-04-02', type:'holiday', color:'#D97706', icon:'fa-moon',             title: isRTL?'عيد الفطر المبارك – اليوم الرابع':'Eid Al-Fitr – Day 4', desc: isRTL?'إجازة عيد الفطر موسعة':'Extended Eid Break' },
+    { date:'2025-06-06', type:'holiday', color:'#059669', icon:'fa-moon',             title: isRTL?'عيد الأضحى المبارك – اليوم الأول':'Eid Al-Adha – Day 1', desc: isRTL?'بداية إجازة عيد الأضحى':'Eid Al-Adha Break Starts' },
+    { date:'2025-06-07', type:'holiday', color:'#059669', icon:'fa-moon',             title: isRTL?'عيد الأضحى المبارك – اليوم الثاني':'Eid Al-Adha – Day 2', desc: isRTL?'إجازة عيد الأضحى':'Eid Al-Adha Holiday' },
+    { date:'2025-06-08', type:'holiday', color:'#059669', icon:'fa-moon',             title: isRTL?'عيد الأضحى المبارك – اليوم الثالث':'Eid Al-Adha – Day 3', desc: isRTL?'إجازة عيد الأضحى':'Eid Al-Adha Holiday' },
+    { date:'2025-06-09', type:'holiday', color:'#059669', icon:'fa-moon',             title: isRTL?'عيد الأضحى المبارك – اليوم الرابع':'Eid Al-Adha – Day 4', desc: isRTL?'إجازة عيد الأضحى موسعة':'Extended Eid Break' },
+    { date:'2025-06-26', type:'holiday', color:'#6B7280', icon:'fa-star-and-crescent',title: isRTL?'رأس السنة الهجرية 1447':'Islamic New Year 1447', desc: isRTL?'إجازة رسمية':'Official Holiday' },
+    { date:'2025-12-18', type:'holiday', color:'#8B1A2F', icon:'fa-flag',             title: isRTL?'اليوم الوطني لدولة قطر':'Qatar National Day', desc: isRTL?'احتفال اليوم الوطني القطري':'Qatar National Day Celebration' },
+    { date:'2025-12-19', type:'holiday', color:'#8B1A2F', icon:'fa-flag',             title: isRTL?'يوم الرياضة الوطني':'National Sport Day', desc: isRTL?'إجازة يوم الرياضة':'National Sport Day Holiday' },
+
+    // ══ التقويم الأكاديمي لجامعة قطر 2025 ══
+    // ── الفصل الثاني (ربيع 2025)
+    { date:'2025-01-12', type:'university', color:'#7C3AED', icon:'fa-calendar-check', title: isRTL?'آخر يوم للتسجيل – الفصل الثاني':'Last Day to Register – Spring 2025', desc: isRTL?'الموعد النهائي لإضافة/حذف المواد':'Add/Drop Deadline' },
+    { date:'2025-01-19', type:'university', color:'#7C3AED', icon:'fa-play-circle',    title: isRTL?'بداية الفصل الدراسي الثاني 2025':'Spring Semester 2025 Begins', desc: isRTL?'أول يوم دراسة للفصل الثاني':'First Day of Classes – Spring 2025' },
+    { date:'2025-02-09', type:'university', color:'#7C3AED', icon:'fa-calendar-day',   title: isRTL?'آخر يوم للانسحاب بلا رسوم':'Last Day to Withdraw – No Penalty', desc: isRTL?'انسحاب بدون تسجيل W في السجل':'Withdrawal without W on transcript' },
+    { date:'2025-03-16', type:'university', color:'#7C3AED', icon:'fa-calendar-minus', title: isRTL?'آخر يوم للانسحاب من المواد':'Last Day to Withdraw from Courses', desc: isRTL?'انسحاب مع تسجيل W في السجل الأكاديمي':'Withdrawal with W on academic record' },
+    { date:'2025-03-01', type:'university', color:'#7C3AED', icon:'fa-folder-open',    title: isRTL?'فتح تسجيل الفصل الصيفي 2025':'Summer 2025 Registration Opens', desc: isRTL?'بدء تقديم طلبات التسجيل للصيف':'Summer semester registration starts' },
+    { date:'2025-04-27', type:'university', color:'#7C3AED', icon:'fa-book-open',      title: isRTL?'بداية أسبوع المراجعة – الفصل الثاني':'Spring 2025 Study Week Begins', desc: isRTL?'أسبوع المراجعة النهائية':'Final Review Week' },
+    { date:'2025-05-04', type:'university', color:'#7C3AED', icon:'fa-pencil-alt',     title: isRTL?'بداية الامتحانات النهائية – الفصل الثاني':'Spring 2025 Final Exams Begin', desc: isRTL?'فترة الامتحانات النهائية':'Final Examination Period' },
+    { date:'2025-05-15', type:'university', color:'#7C3AED', icon:'fa-stop-circle',    title: isRTL?'نهاية الفصل الدراسي الثاني 2025':'Spring Semester 2025 Ends', desc: isRTL?'آخر يوم من الامتحانات النهائية':'Last Day of Final Exams' },
+    { date:'2025-05-25', type:'university', color:'#C4922A', icon:'fa-graduation-cap', title: isRTL?'حفل تخرج جامعة قطر 2025':'Qatar University Graduation Ceremony 2025', desc: isRTL?'احتفال التخرج السنوي لدفعة 2025':'Annual Graduation for Class of 2025' },
+    // ── الفصل الصيفي (صيف 2025)
+    { date:'2025-05-25', type:'university', color:'#0891B2', icon:'fa-sun',            title: isRTL?'بداية الفصل الصيفي 2025':'Summer Semester 2025 Begins', desc: isRTL?'أول يوم للدراسة الصيفية':'First Day – Summer 2025' },
+    { date:'2025-07-31', type:'university', color:'#0891B2', icon:'fa-stop-circle',    title: isRTL?'نهاية الفصل الصيفي 2025':'Summer Semester 2025 Ends', desc: isRTL?'آخر يوم امتحانات الفصل الصيفي':'Last Day of Summer Final Exams' },
+    // ── الفصل الأول (خريف 2025–2026)
+    { date:'2025-08-10', type:'university', color:'#7C3AED', icon:'fa-folder-open',    title: isRTL?'فتح تسجيل الفصل الأول 2025-2026':'Fall 2025–26 Registration Opens', desc: isRTL?'بدء تسجيل الفصل الخريفي':'Fall semester registration starts' },
+    { date:'2025-08-24', type:'university', color:'#7C3AED', icon:'fa-play-circle',    title: isRTL?'بداية الفصل الأول 2025-2026':'Fall Semester 2025–2026 Begins', desc: isRTL?'أول يوم دراسة للفصل الأول':'First Day of Classes – Fall 2025' },
+    { date:'2025-09-01', type:'university', color:'#7C3AED', icon:'fa-chalkboard-teacher', title: isRTL?'اجتماع هيئة التدريس والموظفين':'Faculty & Staff Assembly Meeting', desc: isRTL?'الاجتماع العام لأعضاء الهيئة التدريسية':'Annual Faculty Assembly' },
+    { date:'2025-09-14', type:'university', color:'#7C3AED', icon:'fa-calendar-day',   title: isRTL?'آخر يوم للانسحاب بلا رسوم – الفصل الأول':'Last Day to Withdraw – No Penalty (Fall)', desc: isRTL?'الانسحاب بدون تأثير على المعدل':'Withdrawal without GPA impact' },
+    { date:'2025-10-19', type:'university', color:'#7C3AED', icon:'fa-calendar-minus', title: isRTL?'آخر يوم للانسحاب من المواد – الفصل الأول':'Last Day to Withdraw (Fall 2025)', desc: isRTL?'انسحاب مع W في السجل الأكاديمي':'Withdrawal with W recorded' },
+    { date:'2025-10-26', type:'university', color:'#7C3AED', icon:'fa-folder-open',    title: isRTL?'فتح تسجيل الفصل الثاني 2025-2026':'Spring 2026 Registration Opens', desc: isRTL?'بدء تسجيل الفصل الربيعي':'Spring semester registration starts' },
+    { date:'2025-11-30', type:'university', color:'#7C3AED', icon:'fa-book-open',      title: isRTL?'بداية أسبوع المراجعة – الفصل الأول':'Fall 2025 Study Week Begins', desc: isRTL?'أسبوع المراجعة النهائية للفصل الأول':'Final Review Week – Fall 2025' },
+    { date:'2025-12-07', type:'university', color:'#7C3AED', icon:'fa-pencil-alt',     title: isRTL?'بداية الامتحانات النهائية – الفصل الأول':'Fall 2025 Final Exams Begin', desc: isRTL?'فترة الامتحانات النهائية للفصل الأول':'Final Examination Period – Fall' },
+    { date:'2025-12-20', type:'university', color:'#7C3AED', icon:'fa-stop-circle',    title: isRTL?'نهاية الفصل الأول 2025-2026':'Fall Semester 2025–2026 Ends', desc: isRTL?'نهاية الفصل الأول وبداية الإجازة الشتوية':'End of Fall Semester' },
+    // ── فعاليات وأحداث جامعية
+    { date:'2025-02-16', type:'event', color:'#DB2777', icon:'fa-trophy',              title: isRTL?'يوم القدرات الطلابية':'Student Talents Day', desc: isRTL?'احتفالية القدرات والإبداع الطلابي':'Annual Student Talents Celebration' },
+    { date:'2025-03-10', type:'event', color:'#DB2777', icon:'fa-flask',               title: isRTL?'معرض القطر للبحث العلمي':'Qatar Research Exhibition', desc: isRTL?'معرض جامعة قطر للبحث والابتكار':'QU Research & Innovation Exhibition' },
+    { date:'2025-04-06', type:'event', color:'#DB2777', icon:'fa-handshake',           title: isRTL?'يوم المجتمع والشراكات':'Community & Partnership Day', desc: isRTL?'فعالية الشراكة مع المجتمع والقطاع الخاص':'QU Community Partnership Event' },
+    { date:'2025-10-05', type:'event', color:'#DB2777', icon:'fa-star',               title: isRTL?'يوم جامعة قطر المفتوح':'Qatar University Open Day', desc: isRTL?'اليوم المفتوح للطلاب الجدد والأسر':'Open Day for Prospective Students' },
+    { date:'2025-11-12', type:'event', color:'#DB2777', icon:'fa-book',               title: isRTL?'معرض الكتاب الجامعي':'University Book Fair', desc: isRTL?'معرض الكتاب السنوي بجامعة قطر':'Annual University Book Fair' },
+
+    // ══ مواعيد صرف الرواتب 2025 ══
+    { date:'2025-01-28', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يناير 2025':'January 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-02-27', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب فبراير 2025':'February 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-03-27', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب مارس 2025':'March 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-04-28', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أبريل 2025':'April 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-05-27', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب مايو 2025':'May 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-06-26', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يونيو 2025':'June 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-07-28', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب يوليو 2025':'July 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-08-27', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أغسطس 2025':'August 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-09-28', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب سبتمبر 2025':'September 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-10-28', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب أكتوبر 2025':'October 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-11-27', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب نوفمبر 2025':'November 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+    { date:'2025-12-25', type:'salary', color:'#8B1A2F', icon:'fa-money-bill-wave', title: isRTL?'صرف راتب ديسمبر 2025':'December 2025 Salary', desc: isRTL?'موعد إيداع الراتب الشهري':'Monthly Salary Deposit Date', amount: isRTL?'راتب كامل':'Full Salary' },
+
+    // ══ مواعيد السلف والبدلات 2025 ══
+    { date:'2025-03-20', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'آخر موعد لتقديم طلب سلفة عيد الفطر':'Eid Al-Fitr Advance – Request Deadline', desc: isRTL?'الموعد النهائي لتقديم طلب السلفة':'Advance Request Deadline' },
+    { date:'2025-03-25', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'صرف سلفة عيد الفطر':'Eid Al-Fitr Advance Payment', desc: isRTL?'موعد إيداع سلفة عيد الفطر في الحساب':'Eid Al-Fitr advance deposited', amount: isRTL?'سلفة عيد':'Eid Advance' },
+    { date:'2025-05-28', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'آخر موعد لتقديم طلب سلفة عيد الأضحى':'Eid Al-Adha Advance – Request Deadline', desc: isRTL?'الموعد النهائي لتقديم طلب السلفة':'Advance Request Deadline' },
+    { date:'2025-06-04', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'صرف سلفة عيد الأضحى':'Eid Al-Adha Advance Payment', desc: isRTL?'موعد إيداع سلفة عيد الأضحى في الحساب':'Eid Al-Adha advance deposited', amount: isRTL?'سلفة عيد':'Eid Advance' },
+    { date:'2025-12-10', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'آخر موعد لطلب سلفة اليوم الوطني':'National Day Advance – Request Deadline', desc: isRTL?'الموعد النهائي لطلب سلفة اليوم الوطني':'National Day advance request deadline' },
+    { date:'2025-12-15', type:'advance', color:'#D97706', icon:'fa-hand-holding-usd', title: isRTL?'صرف سلفة اليوم الوطني':'National Day Advance Payment', desc: isRTL?'موعد صرف سلفة اليوم الوطني':'National Day advance deposited', amount: isRTL?'سلفة وطنية':'National Day Advance' },
   ]
 
   // إعلانات افتراضية – تُستبدل من localStorage
@@ -7155,6 +7191,24 @@ app.get('/staff', (c) => {
         </a>
       </div>
     </div>
+
+    <!-- ══ DASHBOARD PROMO CARD ══════════════════════════════════════════ -->
+    <a href="/staff-dashboard?lang=${lang}" class="card p-5 flex items-center gap-4 ${isRTL?'flex-row-reverse':''} sq-card"
+       style="background:linear-gradient(135deg,#1E1B4B 0%,#312E81 100%);text-decoration:none">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 sq-icon" style="background:rgba(255,255,255,0.15)">
+        <i class="fas fa-chart-line text-white text-lg"></i>
+      </div>
+      <div class="flex-1 ${isRTL?'text-right':''}">
+        <h3 class="font-bold text-white text-sm">${isRTL?'لوحة متابعتي الشخصية':'My Personal Dashboard'}</h3>
+        <p class="text-white/70 text-xs mt-1">${isRTL?'تتبع السلف والخصميات وحالة طلباتك بشكل مفصّل':'Track advances, deductions & request status in detail'}</p>
+      </div>
+      <div class="flex-shrink-0 flex flex-col items-center gap-1">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background:rgba(196,146,42,0.8)">
+          <i class="fas fa-arrow-${isRTL?'left':'right'} text-white text-xs"></i>
+        </div>
+        <span class="text-white/60 text-xs">${isRTL?'عرض':'View'}</span>
+      </div>
+    </a>
 
     <!-- ══ EMERGENCY CONTACT ═════════════════════════════════════════════ -->
     <div class="card p-4 flex items-center gap-4 ${isRTL?'flex-row-reverse':''}" style="border-${isRTL?'right':'left'}:4px solid var(--qu-maroon)">
@@ -7503,6 +7557,853 @@ app.get('/staff', (c) => {
   </script>`
 
   return c.html(staffLayout(isRTL?'الرئيسية':'Home', content, 'home', lang))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  STAFF DASHBOARD  /staff-dashboard  — لوحة متابعة الموظف
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/staff-dashboard', (c) => {
+  const lang  = getLang(c)
+  const isRTL = lang === 'ar'
+
+  const content = `
+<style>
+  .dash-card{background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);transition:box-shadow 0.2s,transform 0.2s}
+  .dash-card:hover{box-shadow:0 8px 28px rgba(139,26,47,0.13);transform:translateY(-2px)}
+  .prog-bar{height:8px;border-radius:999px;background:#F3F4F6;overflow:hidden}
+  .prog-fill{height:100%;border-radius:999px;transition:width 0.6s cubic-bezier(.4,0,.2,1)}
+  .status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}
+  .tab-btn2{padding:8px 18px;border-radius:12px;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s}
+  .tab-btn2.active2{background:linear-gradient(135deg,#8B1A2F,#A52840);color:white;box-shadow:0 4px 12px rgba(139,26,47,0.3)}
+  .tab-btn2:not(.active2){background:#F3F4F6;color:#6B7280}
+  .tab-btn2:not(.active2):hover{background:#E5E7EB;color:#374151}
+  .timeline-line{position:absolute;${isRTL?'right':'left'}:19px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#8B1A2F20,#8B1A2F60,#8B1A2F20)}
+  .deduction-row{border-bottom:1px solid #F3F4F6;transition:background 0.15s}
+  .deduction-row:hover{background:#FAFAFA}
+  @keyframes countUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .count-anim{animation:countUp 0.5s ease both}
+</style>
+
+<div dir="${isRTL?'rtl':'ltr'}" class="space-y-6">
+
+  <!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
+  <div class="dash-card p-6" style="background:linear-gradient(135deg,#8B1A2F 0%,#6B1223 100%)">
+    <div class="flex items-center justify-between flex-wrap gap-4 ${isRTL?'flex-row-reverse':''}">
+      <div class="${isRTL?'text-right':''}">
+        <p class="text-white/60 text-sm mb-1">${isRTL?'لوحة متابعتي الشخصية':'My Personal Dashboard'}</p>
+        <h1 class="text-2xl font-bold text-white">${isRTL?'مرحباً، الموظف':'Welcome, Employee'}</h1>
+        <p class="text-white/70 text-sm mt-1" id="dashSubtitle">${isRTL?'جاري تحميل بياناتك...':'Loading your data...'}</p>
+      </div>
+      <div class="flex gap-3 flex-wrap ${isRTL?'flex-row-reverse':''}">
+        <a href="/staff-request?lang=${lang}" class="px-4 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition"
+           style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3)">
+          <i class="fas fa-plus-circle"></i>${isRTL?'طلب جديد':'New Request'}
+        </a>
+        <button onclick="refreshDash()" class="px-4 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 hover:opacity-90 transition"
+           style="background:rgba(196,146,42,0.8);border:1px solid rgba(196,146,42,0.5)">
+          <i class="fas fa-sync-alt" id="refreshIcon"></i>${isRTL?'تحديث':'Refresh'}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ KPI CARDS ════════════════════════════════════════════════════════ -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="kpiCards">
+    <div class="dash-card p-5 count-anim" style="border-top:4px solid #8B1A2F">
+      <div class="flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(139,26,47,0.1)">
+          <i class="fas fa-file-alt" style="color:#8B1A2F"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <p class="text-2xl font-black text-gray-800" id="kpi_total">—</p>
+          <p class="text-xs text-gray-500 font-medium">${isRTL?'إجمالي الطلبات':'Total Requests'}</p>
+        </div>
+      </div>
+    </div>
+    <div class="dash-card p-5 count-anim" style="border-top:4px solid #059669;animation-delay:0.1s">
+      <div class="flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(5,150,105,0.1)">
+          <i class="fas fa-check-circle" style="color:#059669"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <p class="text-2xl font-black text-gray-800" id="kpi_done">—</p>
+          <p class="text-xs text-gray-500 font-medium">${isRTL?'منجزة':'Completed'}</p>
+        </div>
+      </div>
+    </div>
+    <div class="dash-card p-5 count-anim" style="border-top:4px solid #D97706;animation-delay:0.2s">
+      <div class="flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(217,119,6,0.1)">
+          <i class="fas fa-hand-holding-usd" style="color:#D97706"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <p class="text-2xl font-black text-gray-800" id="kpi_advances">—</p>
+          <p class="text-xs text-gray-500 font-medium">${isRTL?'طلبات سلفة':'Advance Requests'}</p>
+        </div>
+      </div>
+    </div>
+    <div class="dash-card p-5 count-anim" style="border-top:4px solid #7C3AED;animation-delay:0.3s">
+      <div class="flex items-center gap-3 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(124,58,237,0.1)">
+          <i class="fas fa-clock" style="color:#7C3AED"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <p class="text-2xl font-black text-gray-800" id="kpi_pending">—</p>
+          <p class="text-xs text-gray-500 font-medium">${isRTL?'قيد المعالجة':'In Progress'}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN GRID ════════════════════════════════════════════════════════ -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- ── COL LEFT: السلف والخصميات ───────────────────────────────────── -->
+    <div class="lg:col-span-2 space-y-6">
+
+      <!-- TABS -->
+      <div class="flex gap-2 ${isRTL?'flex-row-reverse':''}">
+        <button class="tab-btn2 active2" onclick="switchTab('advances',this)">${isRTL?'السلف':'Advances'}</button>
+        <button class="tab-btn2" onclick="switchTab('deductions',this)">${isRTL?'الخصميات':'Deductions'}</button>
+        <button class="tab-btn2" onclick="switchTab('requests',this)">${isRTL?'سجل الطلبات':'Request Log'}</button>
+      </div>
+
+      <!-- ── تاب السلف ──────────────────────────────────────── -->
+      <div id="tab_advances">
+
+        <!-- ملخص السلف الحالية -->
+        <div class="dash-card p-5 mb-4">
+          <div class="flex items-center justify-between mb-4 ${isRTL?'flex-row-reverse':''}">
+            <h3 class="font-bold text-gray-800 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+              <i class="fas fa-hand-holding-usd text-sm" style="color:#D97706"></i>
+              ${isRTL?'ملخص السلف الحالية':'Current Advances Summary'}
+            </h3>
+            <span class="text-xs text-gray-400" id="advLastUpdate"></span>
+          </div>
+
+          <!-- رصيد السلف -->
+          <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="rounded-xl p-3 text-center" style="background:rgba(217,119,6,0.08)">
+              <p class="text-xl font-black" style="color:#D97706" id="adv_total_amount">0</p>
+              <p class="text-xs text-gray-500 mt-0.5">${isRTL?'إجمالي السلف (ر.ق)':'Total Advances (QAR)'}</p>
+            </div>
+            <div class="rounded-xl p-3 text-center" style="background:rgba(220,38,38,0.08)">
+              <p class="text-xl font-black text-red-600" id="adv_remaining">0</p>
+              <p class="text-xs text-gray-500 mt-0.5">${isRTL?'المتبقي (ر.ق)':'Remaining (QAR)'}</p>
+            </div>
+            <div class="rounded-xl p-3 text-center" style="background:rgba(5,150,105,0.08)">
+              <p class="text-xl font-black text-green-600" id="adv_paid">0</p>
+              <p class="text-xs text-gray-500 mt-0.5">${isRTL?'المسدَّد (ر.ق)':'Paid (QAR)'}</p>
+            </div>
+          </div>
+
+          <!-- قائمة السلف -->
+          <div id="advancesList" class="space-y-3"></div>
+
+          <div id="advancesEmpty" class="hidden text-center py-8">
+            <i class="fas fa-hand-holding-usd text-3xl text-gray-200 mb-2"></i>
+            <p class="text-sm text-gray-400">${isRTL?'لا توجد سلف حالية':'No current advances'}</p>
+            <a href="/staff-request?lang=${lang}" class="inline-block mt-3 text-xs font-bold px-4 py-2 rounded-xl text-white" style="background:#D97706">${isRTL?'تقديم طلب سلفة':'Request an Advance'}</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── تاب الخصميات ──────────────────────────────────── -->
+      <div id="tab_deductions" class="hidden">
+        <div class="dash-card p-5">
+          <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+            <i class="fas fa-minus-circle text-sm text-red-500"></i>
+            ${isRTL?'كشف الخصميات الشهرية':'Monthly Deductions Statement'}
+          </h3>
+
+          <!-- ملخص شهري -->
+          <div class="rounded-xl p-4 mb-4 flex items-center justify-between ${isRTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,#FEF2F2,#FEE2E2)">
+            <div class="${isRTL?'text-right':''}">
+              <p class="text-xs text-red-600 font-semibold mb-1">${isRTL?'إجمالي الخصميات الشهرية':'Total Monthly Deductions'}</p>
+              <p class="text-2xl font-black text-red-700" id="ded_total">0 ${isRTL?'ر.ق':'QAR'}</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,0.12)">
+              <i class="fas fa-calculator text-red-500 text-lg"></i>
+            </div>
+          </div>
+
+          <!-- جدول الخصميات -->
+          <div class="overflow-hidden rounded-xl border border-gray-100">
+            <table class="w-full text-sm">
+              <thead>
+                <tr style="background:#F9FAFB">
+                  <th class="px-4 py-3 font-bold text-gray-600 text-${isRTL?'right':'left'} text-xs uppercase">${isRTL?'نوع الخصم':'Deduction Type'}</th>
+                  <th class="px-4 py-3 font-bold text-gray-600 text-center text-xs uppercase">${isRTL?'المبلغ (ر.ق)':'Amount (QAR)'}</th>
+                  <th class="px-4 py-3 font-bold text-gray-600 text-center text-xs uppercase">${isRTL?'الشهر':'Month'}</th>
+                  <th class="px-4 py-3 font-bold text-gray-600 text-center text-xs uppercase">${isRTL?'الحالة':'Status'}</th>
+                </tr>
+              </thead>
+              <tbody id="deductionsBody">
+                <tr><td colspan="4" class="text-center py-8 text-gray-400 text-sm">${isRTL?'جاري التحميل...':'Loading...'}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── تاب سجل الطلبات ──────────────────────────────── -->
+      <div id="tab_requests" class="hidden">
+        <div class="dash-card p-5">
+          <div class="flex items-center justify-between mb-4 ${isRTL?'flex-row-reverse':''}">
+            <h3 class="font-bold text-gray-800 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+              <i class="fas fa-list-ul text-sm" style="color:#8B1A2F"></i>
+              ${isRTL?'سجل جميع طلباتي':'All My Requests Log'}
+            </h3>
+            <select id="reqTypeFilter" onchange="renderRequestsTab()" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none">
+              <option value="all">${isRTL?'جميع الأنواع':'All Types'}</option>
+              <option value="salary">${isRTL?'راتب':'Salary'}</option>
+              <option value="advance">${isRTL?'سلفة':'Advance'}</option>
+              <option value="allowance">${isRTL?'بدل':'Allowance'}</option>
+              <option value="certificate">${isRTL?'شهادة':'Certificate'}</option>
+              <option value="eos">${isRTL?'نهاية خدمة':'End of Service'}</option>
+              <option value="other">${isRTL?'أخرى':'Other'}</option>
+            </select>
+          </div>
+
+          <!-- Timeline -->
+          <div class="relative" id="requestTimeline">
+            <div class="text-center py-8 text-gray-400 text-sm">${isRTL?'جاري التحميل...':'Loading...'}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── COL RIGHT: تتبع الطلبات + تقويم مدمج ───────────────────────── -->
+    <div class="space-y-5">
+
+      <!-- بطاقة تتبع الطلب الأخير -->
+      <div class="dash-card p-5">
+        <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-search-location text-sm" style="color:#8B1A2F"></i>
+          ${isRTL?'تتبع آخر طلب':'Track Latest Request'}
+        </h3>
+        <div id="trackLatestCard">
+          <div class="text-center py-6">
+            <div class="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center" style="background:rgba(139,26,47,0.08)">
+              <i class="fas fa-inbox" style="color:#8B1A2F"></i>
+            </div>
+            <p class="text-sm text-gray-400">${isRTL?'لا يوجد طلب حالياً':'No active request'}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- رصيد السلف المتبقي — progress visual -->
+      <div class="dash-card p-5">
+        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-wallet text-sm" style="color:#D97706"></i>
+          ${isRTL?'رصيد السلف':'Advance Balance'}
+        </h3>
+        <div id="advanceBalanceViz">
+          <p class="text-xs text-gray-400 text-center py-4">${isRTL?'لا توجد سلف نشطة':'No active advances'}</p>
+        </div>
+      </div>
+
+      <!-- أقرب الأحداث من تقويم الجامعة -->
+      <div class="dash-card p-5">
+        <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+          <i class="fas fa-calendar-alt text-sm" style="color:#7C3AED"></i>
+          ${isRTL?'أقرب أحداث الجامعة':'Upcoming QU Events'}
+        </h3>
+        <div id="upcomingQU" class="space-y-2"></div>
+        <a href="/staff?lang=${lang}#fullCalSection" class="mt-3 block text-center text-xs font-bold py-2 rounded-xl transition"
+           style="background:rgba(124,58,237,0.08);color:#7C3AED">${isRTL?'عرض التقويم الكامل':'View Full Calendar'}</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MODAL: تفاصيل الطلب ══════════════════════════════════════════ -->
+  <div id="reqDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.5)">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg" dir="${isRTL?'rtl':'ltr'}">
+      <div class="px-6 py-4 flex items-center justify-between ${isRTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,#8B1A2F,#A52840);border-radius:16px 16px 0 0">
+        <h3 class="font-bold text-white" id="rdm_title">${isRTL?'تفاصيل الطلب':'Request Details'}</h3>
+        <button onclick="closeReqModal()" class="w-7 h-7 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition">×</button>
+      </div>
+      <div class="p-6 space-y-4" id="rdm_body"></div>
+      <div class="px-6 pb-5 flex gap-3 ${isRTL?'flex-row-reverse':''}">
+        <button onclick="closeReqModal()" class="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">${isRTL?'إغلاق':'Close'}</button>
+        <a id="rdm_newReqBtn" href="/staff-request?lang=${lang}" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white text-center transition" style="background:linear-gradient(135deg,#8B1A2F,#A52840)">${isRTL?'طلب جديد':'New Request'}</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+//   STAFF DASHBOARD — لوحة متابعة الموظف
+// ═══════════════════════════════════════════════════════════════════════════
+const IS_RTL_D = ${isRTL};
+
+// ─── بيانات تقويم جامعة قطر المُمرَّرة من الخادم ───────────────────────
+const QU_CAL_EVENTS = ${JSON.stringify(
+  (() => {
+    const QU_EVENTS_FOR_DASH = [
+      { date:'2025-01-01', type:'holiday', icon:'fa-moon',             title: isRTL?'رأس السنة الميلادية':'New Year\'s Day' },
+      { date:'2025-01-28', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب يناير':'January Salary' },
+      { date:'2025-01-29', type:'holiday', icon:'fa-star-and-crescent',title: isRTL?'المولد النبوي الشريف':'Prophet\'s Birthday' },
+      { date:'2025-02-27', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب فبراير':'February Salary' },
+      { date:'2025-03-20', type:'advance', icon:'fa-hand-holding-usd', title: isRTL?'آخر موعد سلفة عيد الفطر':'Eid Advance Deadline' },
+      { date:'2025-03-25', type:'advance', icon:'fa-hand-holding-usd', title: isRTL?'صرف سلفة عيد الفطر':'Eid Al-Fitr Advance' },
+      { date:'2025-03-27', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب مارس':'March Salary' },
+      { date:'2025-03-30', type:'holiday', icon:'fa-moon',             title: isRTL?'عيد الفطر (يوم 1)':'Eid Al-Fitr Day 1' },
+      { date:'2025-03-31', type:'holiday', icon:'fa-moon',             title: isRTL?'عيد الفطر (يوم 2)':'Eid Al-Fitr Day 2' },
+      { date:'2025-04-01', type:'holiday', icon:'fa-moon',             title: isRTL?'عيد الفطر (يوم 3)':'Eid Al-Fitr Day 3' },
+      { date:'2025-04-28', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب أبريل':'April Salary' },
+      { date:'2025-05-04', type:'university',icon:'fa-pencil-alt',     title: isRTL?'امتحانات نهائية – فصل ربيع':'Final Exams – Spring' },
+      { date:'2025-05-15', type:'university',icon:'fa-stop-circle',    title: isRTL?'نهاية الفصل الثاني':'Spring Semester Ends' },
+      { date:'2025-05-25', type:'university',icon:'fa-graduation-cap', title: isRTL?'حفل التخرج 2025':'Graduation Ceremony 2025' },
+      { date:'2025-05-27', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب مايو':'May Salary' },
+      { date:'2025-05-28', type:'advance', icon:'fa-hand-holding-usd', title: isRTL?'آخر موعد سلفة عيد الأضحى':'Eid Adha Advance Deadline' },
+      { date:'2025-06-04', type:'advance', icon:'fa-hand-holding-usd', title: isRTL?'صرف سلفة عيد الأضحى':'Eid Al-Adha Advance' },
+      { date:'2025-06-06', type:'holiday', icon:'fa-moon',             title: isRTL?'عيد الأضحى (يوم 1)':'Eid Al-Adha Day 1' },
+      { date:'2025-06-07', type:'holiday', icon:'fa-moon',             title: isRTL?'عيد الأضحى (يوم 2)':'Eid Al-Adha Day 2' },
+      { date:'2025-06-08', type:'holiday', icon:'fa-moon',             title: isRTL?'عيد الأضحى (يوم 3)':'Eid Al-Adha Day 3' },
+      { date:'2025-06-26', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب يونيو':'June Salary' },
+      { date:'2025-07-28', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب يوليو':'July Salary' },
+      { date:'2025-08-24', type:'university',icon:'fa-play-circle',    title: isRTL?'بداية الفصل الأول':'Fall Semester Begins' },
+      { date:'2025-08-27', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب أغسطس':'August Salary' },
+      { date:'2025-09-01', type:'university',icon:'fa-chalkboard-teacher',title:isRTL?'اجتماع هيئة التدريس':'Faculty Assembly' },
+      { date:'2025-09-28', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب سبتمبر':'September Salary' },
+      { date:'2025-10-05', type:'event',   icon:'fa-star',             title: isRTL?'اليوم المفتوح لجامعة قطر':'QU Open Day' },
+      { date:'2025-10-28', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب أكتوبر':'October Salary' },
+      { date:'2025-11-12', type:'event',   icon:'fa-book',             title: isRTL?'معرض الكتاب الجامعي':'University Book Fair' },
+      { date:'2025-11-27', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب نوفمبر':'November Salary' },
+      { date:'2025-12-07', type:'university',icon:'fa-pencil-alt',     title: isRTL?'امتحانات نهائية – فصل أول':'Final Exams – Fall' },
+      { date:'2025-12-10', type:'advance', icon:'fa-hand-holding-usd', title: isRTL?'آخر موعد سلفة اليوم الوطني':'National Day Advance Deadline' },
+      { date:'2025-12-15', type:'advance', icon:'fa-hand-holding-usd', title: isRTL?'صرف سلفة اليوم الوطني':'National Day Advance' },
+      { date:'2025-12-18', type:'holiday', icon:'fa-flag',             title: isRTL?'اليوم الوطني القطري':'Qatar National Day' },
+      { date:'2025-12-20', type:'university',icon:'fa-stop-circle',    title: isRTL?'نهاية الفصل الأول':'Fall Semester Ends' },
+      { date:'2025-12-25', type:'salary',  icon:'fa-money-bill-wave',  title: isRTL?'صرف راتب ديسمبر':'December Salary' },
+    ];
+    return QU_EVENTS_FOR_DASH;
+  })()
+)};
+
+// ─── تعريفات الأنواع ─────────────────────────────────────────────────────
+const TYPE_LABEL = {
+  salary:      IS_RTL_D?'استفسار راتب':'Salary Inquiry',
+  advance:     IS_RTL_D?'سلفة':'Advance',
+  allowance:   IS_RTL_D?'طلب بدل':'Allowance',
+  certificate: IS_RTL_D?'شهادة راتب':'Salary Certificate',
+  eos:         IS_RTL_D?'نهاية خدمة':'End of Service',
+  mission:     IS_RTL_D?'مهمة علمية':'Scientific Mission',
+  other:       IS_RTL_D?'أخرى':'Other'
+};
+const TYPE_COLOR = {salary:'#8B1A2F',advance:'#D97706',allowance:'#0891B2',certificate:'#7C3AED',eos:'#DC2626',mission:'#D97706',other:'#6B7280'};
+const TYPE_ICON  = {salary:'fa-money-bill-wave',advance:'fa-hand-holding-usd',allowance:'fa-home',certificate:'fa-file-alt',eos:'fa-door-open',mission:'fa-plane',other:'fa-bell'};
+const STATUS_LABEL = {
+  pending:   IS_RTL_D?'قيد الانتظار':'Pending',
+  review:    IS_RTL_D?'قيد المراجعة':'Under Review',
+  approved:  IS_RTL_D?'موافق عليه':'Approved',
+  done:      IS_RTL_D?'منجز':'Completed',
+  rejected:  IS_RTL_D?'مرفوض':'Rejected',
+  returned:  IS_RTL_D?'مُعاد للتعديل':'Returned'
+};
+const STATUS_COLOR = {pending:'#D97706',review:'#7C3AED',approved:'#0891B2',done:'#059669',rejected:'#DC2626',returned:'#F97316'};
+const STATUS_BG    = {pending:'#FEF3C7',review:'#EDE9FE',approved:'#CFFAFE',done:'#D1FAE5',rejected:'#FEE2E2',returned:'#FFEDD5'};
+
+// ─── خطوات تتبع الطلب ───────────────────────────────────────────────────
+const TRACK_STEPS = IS_RTL_D
+  ? ['تقديم الطلب','قيد المراجعة','موافقة رئيس القسم','معالجة الرواتب','منجز']
+  : ['Submitted','Under Review','Dept Head Approval','Payroll Processing','Completed'];
+const STEP_STATUS_MAP = {pending:0,review:1,approved:2,done:4,rejected:-1,returned:-1};
+
+// ─── بيانات الخصميات التجريبية ───────────────────────────────────────────
+const DEMO_DEDUCTIONS = [
+  { type: IS_RTL_D?'استقطاع سلفة':'Advance Deduction',      amount:1500, month: IS_RTL_D?'مايو 2025':'May 2025',      status:'active',  ref:'ADV-001' },
+  { type: IS_RTL_D?'تأمين طبي':'Medical Insurance',           amount:250,  month: IS_RTL_D?'مايو 2025':'May 2025',      status:'active',  ref:'INS-2025' },
+  { type: IS_RTL_D?'استقطاع سلفة':'Advance Deduction',       amount:1500, month: IS_RTL_D?'أبريل 2025':'April 2025',   status:'paid',    ref:'ADV-001' },
+  { type: IS_RTL_D?'تأمين طبي':'Medical Insurance',           amount:250,  month: IS_RTL_D?'أبريل 2025':'April 2025',   status:'paid',    ref:'INS-2025' },
+  { type: IS_RTL_D?'مخالفة انضباطية':'Disciplinary Fine',    amount:500,  month: IS_RTL_D?'مارس 2025':'March 2025',    status:'paid',    ref:'DSC-012' },
+  { type: IS_RTL_D?'استقطاع سلفة':'Advance Deduction',       amount:1500, month: IS_RTL_D?'مارس 2025':'March 2025',    status:'paid',    ref:'ADV-001' },
+  { type: IS_RTL_D?'تأمين طبي':'Medical Insurance',           amount:250,  month: IS_RTL_D?'مارس 2025':'March 2025',    status:'paid',    ref:'INS-2025' },
+];
+
+// ─── بيانات السلف التجريبية ──────────────────────────────────────────────
+const DEMO_ADVANCES = [
+  {
+    id:'ADV-001', type: IS_RTL_D?'سلفة عيد الفطر':'Eid Al-Fitr Advance',
+    total:6000, paid:4500, remaining:1500,
+    monthlyDeduction:1500, startDate:'2025-02-01', expectedEnd:'2025-05-27',
+    status:'active', installments:4, paidInstallments:3
+  },
+];
+
+let _activeTab = 'advances';
+let _allRequests = [];
+
+// ══════════════════════════════════════════════════════════════════════════
+//   FUNCTIONS
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── تحميل الطلبات من localStorage ──────────────────────────────────────
+function loadRequests(){
+  try{ _allRequests = JSON.parse(localStorage.getItem('sla_requests')||'[]'); }
+  catch(e){ _allRequests = []; }
+}
+
+// ── تحديث KPIs ──────────────────────────────────────────────────────────
+function updateKPIs(){
+  const total    = _allRequests.length;
+  const done     = _allRequests.filter(function(r){ return r.status==='done'; }).length;
+  const advances = _allRequests.filter(function(r){ return r.type==='advance'||r.type==='mission'; }).length;
+  const pending  = _allRequests.filter(function(r){ return r.status==='pending'||r.status==='review'||r.status==='approved'; }).length;
+  document.getElementById('kpi_total').textContent    = total;
+  document.getElementById('kpi_done').textContent     = done;
+  document.getElementById('kpi_advances').textContent = advances;
+  document.getElementById('kpi_pending').textContent  = pending;
+
+  // الـ subtitle
+  const today = new Date();
+  const opts = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
+  document.getElementById('dashSubtitle').textContent =
+    (IS_RTL_D?'آخر تحديث: ':'Last updated: ') + today.toLocaleDateString(IS_RTL_D?'ar-QA':'en-US',opts);
+}
+
+// ── رسم تاب السلف ───────────────────────────────────────────────────────
+function renderAdvancesTab(){
+  const myAdvances = _allRequests.filter(function(r){ return r.type==='advance'||r.type==='mission'; });
+  const allAdvances = [...DEMO_ADVANCES];
+
+  // احسب الإجماليات
+  let totalAmt=0,remAmt=0,paidAmt=0;
+  allAdvances.forEach(function(a){ totalAmt+=a.total; remAmt+=a.remaining; paidAmt+=a.paid; });
+
+  document.getElementById('adv_total_amount').textContent = totalAmt.toLocaleString();
+  document.getElementById('adv_remaining').textContent    = remAmt.toLocaleString();
+  document.getElementById('adv_paid').textContent         = paidAmt.toLocaleString();
+  document.getElementById('advLastUpdate').textContent    = IS_RTL_D?'آخر تحديث: مايو 2025':'Last update: May 2025';
+
+  const list = document.getElementById('advancesList');
+  const empty = document.getElementById('advancesEmpty');
+
+  if(allAdvances.length===0){
+    list.innerHTML='';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  list.innerHTML = allAdvances.map(function(adv){
+    const pct = Math.round((adv.paid/adv.total)*100);
+    const instPct = Math.round((adv.paidInstallments/adv.installments)*100);
+    const endDate = new Date(adv.expectedEnd);
+    const today   = new Date();
+    const daysLeft = Math.ceil((endDate-today)/(1000*60*60*24));
+    const daysLabel = daysLeft>0
+      ? (IS_RTL_D ? daysLeft+' يوم متبقٍ' : daysLeft+' days left')
+      : (IS_RTL_D?'انتهت مدة السلفة':'Advance period ended');
+
+    return '<div class="rounded-xl border-2 p-4 space-y-3" style="border-color:#D97706;background:linear-gradient(135deg,#FFFBEB,#FEF9E7)">'
+      + '<div class="flex items-start justify-between gap-2 '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+      +   '<div class="'+(IS_RTL_D?'text-right':'')+'">'
+      +     '<p class="font-bold text-gray-800">'+adv.type+'</p>'
+      +     '<p class="text-xs text-gray-500 mt-0.5">'+IS_RTL_D?'رقم السلفة:':'Advance ID:'+'</p>'
+      +     '<p class="text-xs font-mono text-amber-700">'+adv.id+'</p>'
+      +   '</div>'
+      +   '<span class="status-pill" style="background:#FEF3C7;color:#92400E">'
+      +     '<i class="fas fa-circle text-amber-500" style="font-size:6px"></i>'
+      +     (IS_RTL_D?'نشطة':'Active')
+      +   '</span>'
+      + '</div>'
+      + '<div class="grid grid-cols-3 gap-2 text-center">'
+      +   buildMiniStat(IS_RTL_D?'الإجمالي':'Total', adv.total.toLocaleString()+' '+( IS_RTL_D?'ر.ق':'QAR'), '#D97706')
+      +   buildMiniStat(IS_RTL_D?'المسدَّد':'Paid',  adv.paid.toLocaleString()+' '+(IS_RTL_D?'ر.ق':'QAR'), '#059669')
+      +   buildMiniStat(IS_RTL_D?'المتبقي':'Remaining', adv.remaining.toLocaleString()+' '+(IS_RTL_D?'ر.ق':'QAR'), '#DC2626')
+      + '</div>'
+      + '<div>'
+      +   '<div class="flex justify-between text-xs text-gray-500 mb-1 '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+      +     '<span>'+(IS_RTL_D?'تقدم السداد:':'Payment Progress:')+'</span>'
+      +     '<span class="font-bold text-amber-700">'+pct+'%</span>'
+      +   '</div>'
+      +   '<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#D97706,#F59E0B)"></div></div>'
+      + '</div>'
+      + '<div class="grid grid-cols-2 gap-2 text-xs '+(IS_RTL_D?'text-right':'')+'">'
+      +   '<div class="rounded-lg p-2" style="background:rgba(217,119,6,0.06)">'
+      +     '<p class="text-gray-500">'+(IS_RTL_D?'الاستقطاع الشهري':'Monthly Deduction')+'</p>'
+      +     '<p class="font-bold text-amber-700">'+adv.monthlyDeduction.toLocaleString()+' '+(IS_RTL_D?'ر.ق':'QAR')+'</p>'
+      +   '</div>'
+      +   '<div class="rounded-lg p-2" style="background:rgba(217,119,6,0.06)">'
+      +     '<p class="text-gray-500">'+(IS_RTL_D?'الأقساط المتبقية':'Remaining Installments')+'</p>'
+      +     '<p class="font-bold text-amber-700">'+( adv.installments-adv.paidInstallments)+' / '+adv.installments+'</p>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="flex items-center gap-2 text-xs '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+      +   '<i class="fas fa-calendar-check text-amber-600"></i>'
+      +   '<span class="text-gray-600">'+(IS_RTL_D?'متوقع الانتهاء: ':'Expected end: ')+formatDate(adv.expectedEnd)+'</span>'
+      +   '<span class="'+(daysLeft<=30?'text-red-600 font-bold':'text-gray-400')+'">— '+daysLabel+'</span>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  // render advance balance in sidebar too
+  renderAdvanceBalance(allAdvances);
+}
+
+function buildMiniStat(label, value, color){
+  return '<div class="rounded-lg p-2" style="background:white;border:1px solid #E5E7EB">'
+    + '<p class="font-black text-sm" style="color:'+color+'">'+value+'</p>'
+    + '<p class="text-xs text-gray-400">'+label+'</p>'
+    + '</div>';
+}
+
+function renderAdvanceBalance(advances){
+  const viz = document.getElementById('advanceBalanceViz');
+  if(!advances||advances.length===0){
+    viz.innerHTML='<p class="text-xs text-gray-400 text-center py-4">'+(IS_RTL_D?'لا توجد سلف نشطة':'No active advances')+'</p>';
+    return;
+  }
+  viz.innerHTML = advances.map(function(adv){
+    const pct = Math.round((adv.paid/adv.total)*100);
+    const remPct = 100-pct;
+    return '<div class="space-y-2">'
+      + '<div class="flex justify-between text-sm '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+      +   '<span class="font-semibold text-gray-700">'+adv.type+'</span>'
+      +   '<span class="text-xs text-gray-400">'+adv.id+'</span>'
+      + '</div>'
+      + '<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#059669,#34D399)"></div></div>'
+      + '<div class="flex justify-between text-xs '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+      +   '<span class="text-green-600 font-bold">'+IS_RTL_D?'مسدَّد:':'Paid:'+' '+pct+'%</span>'
+      +   '<span class="text-red-500 font-bold">'+IS_RTL_D?'متبقٍ:':'Rem:'+' '+remPct+'%</span>'
+      + '</div>'
+      + '<div class="mt-2 flex items-center justify-between rounded-xl p-3 '+(IS_RTL_D?'flex-row-reverse':'')+'" style="background:#FEF9E7;border:1px dashed #D97706">'
+      +   '<div class="'+(IS_RTL_D?'text-right':'')+'">'
+      +     '<p class="text-xs text-gray-500">'+(IS_RTL_D?'المتبقي':'Remaining')+'</p>'
+      +     '<p class="text-lg font-black text-red-600">'+adv.remaining.toLocaleString()+' <span class="text-xs font-normal">'+(IS_RTL_D?'ر.ق':'QAR')+'</span></p>'
+      +   '</div>'
+      +   '<div class="'+(IS_RTL_D?'text-right':'')+'">'
+      +     '<p class="text-xs text-gray-500">'+(IS_RTL_D?'الاستقطاع الشهري':'Monthly')+'</p>'
+      +     '<p class="text-base font-bold text-amber-700">'+adv.monthlyDeduction.toLocaleString()+' <span class="text-xs font-normal">'+(IS_RTL_D?'ر.ق':'QAR')+'</span></p>'
+      +   '</div>'
+      + '</div>'
+      + '<p class="text-xs text-center text-gray-400">'+(IS_RTL_D?'انتهاء السلفة: ':'Advance ends: ')+formatDate(adv.expectedEnd)+'</p>'
+      + '</div>';
+  }).join('');
+}
+
+// ── رسم تاب الخصميات ────────────────────────────────────────────────────
+function renderDeductionsTab(){
+  const body = document.getElementById('deductionsBody');
+  const total = DEMO_DEDUCTIONS.filter(function(d){ return d.status==='active'; }).reduce(function(s,d){ return s+d.amount; },0);
+  document.getElementById('ded_total').textContent = total.toLocaleString()+' '+(IS_RTL_D?'ر.ق':'QAR');
+
+  body.innerHTML = DEMO_DEDUCTIONS.map(function(d){
+    const isPaid = d.status==='paid';
+    return '<tr class="deduction-row">'
+      + '<td class="px-4 py-3 '+(IS_RTL_D?'text-right':'')+'">'
+      +   '<div class="flex items-center gap-2 '+(IS_RTL_D?'flex-row-reverse justify-end':'')+'">'
+      +     '<div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:'+(isPaid?'#D1FAE5':'#FEE2E2')+'">'
+      +       '<i class="fas '+(isPaid?'fa-check':'fa-minus')+' text-xs" style="color:'+(isPaid?'#059669':'#DC2626')+'"></i>'
+      +     '</div>'
+      +     '<div>'
+      +       '<p class="text-sm font-semibold text-gray-800">'+d.type+'</p>'
+      +       '<p class="text-xs text-gray-400">'+d.ref+'</p>'
+      +     '</div>'
+      +   '</div>'
+      + '</td>'
+      + '<td class="px-4 py-3 text-center"><span class="font-bold '+(isPaid?'text-gray-400':'text-red-600')+'">'+d.amount.toLocaleString()+'</span></td>'
+      + '<td class="px-4 py-3 text-center text-xs text-gray-500">'+d.month+'</td>'
+      + '<td class="px-4 py-3 text-center">'
+      +   '<span class="status-pill" style="background:'+(isPaid?'#D1FAE5':'#FEE2E2')+';color:'+(isPaid?'#059669':'#DC2626')+'">'
+      +     '<i class="fas '+(isPaid?'fa-check-circle':'fa-clock')+'" style="font-size:9px"></i>'
+      +     (isPaid?(IS_RTL_D?'مسدَّد':'Paid'):(IS_RTL_D?'نشط':'Active'))
+      +   '</span>'
+      + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+// ── رسم تاب سجل الطلبات (timeline) ─────────────────────────────────────
+function renderRequestsTab(){
+  const filter = document.getElementById('reqTypeFilter').value;
+  const filtered = filter==='all' ? _allRequests : _allRequests.filter(function(r){ return r.type===filter; });
+  const container = document.getElementById('requestTimeline');
+
+  if(filtered.length===0){
+    container.innerHTML = '<div class="text-center py-10"><i class="fas fa-inbox text-3xl text-gray-200 mb-2"></i><p class="text-sm text-gray-400">'+(IS_RTL_D?'لا توجد طلبات':'No requests found')+'</p></div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="relative ps-10 space-y-4"><div class="timeline-line"></div>'
+    + filtered.slice().reverse().map(function(req,idx){
+        const color  = TYPE_COLOR[req.type]||'#6B7280';
+        const icon   = TYPE_ICON[req.type]||'fa-bell';
+        const status = req.status||'pending';
+        const sColor = STATUS_COLOR[status]||'#6B7280';
+        const sBG    = STATUS_BG[status]||'#F3F4F6';
+        const sLabel = STATUS_LABEL[status]||status;
+        const typeLabel = TYPE_LABEL[req.type]||req.type;
+        const date = req.submittedAt ? formatDate(req.submittedAt) : '—';
+        const step = STEP_STATUS_MAP[status]!==undefined ? STEP_STATUS_MAP[status] : 0;
+        const stepPct = status==='done'?100:status==='rejected'||status==='returned'?0:Math.round((step/4)*100);
+
+        return '<div class="relative cursor-pointer" onclick="openReqDetail('+JSON.stringify(req).replace(/"/g,'&quot;')+')">'
+          + '<div class="absolute '+(IS_RTL_D?'right-0 -translate-x-2':'left-0 -translate-x-2')+' top-4 w-9 h-9 rounded-full flex items-center justify-center shadow-md" style="background:'+color+';transform:translateX('+(IS_RTL_D?'12':'-12')+'px)">'
+          +   '<i class="fas '+icon+' text-white text-xs"></i>'
+          + '</div>'
+          + '<div class="dash-card p-4 hover:shadow-lg">'
+          +   '<div class="flex items-start justify-between gap-2 mb-2 '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+          +     '<div class="'+(IS_RTL_D?'text-right':'')+'">'
+          +       '<p class="font-bold text-gray-800 text-sm">'+typeLabel+'</p>'
+          +       '<p class="text-xs text-gray-400 mt-0.5 font-mono">'+req.id+'</p>'
+          +     '</div>'
+          +     '<span class="status-pill flex-shrink-0" style="background:'+sBG+';color:'+sColor+'">'+sLabel+'</span>'
+          +   '</div>'
+          +   '<div class="prog-bar mb-1"><div class="prog-fill" style="width:'+stepPct+'%;background:'+color+'"></div></div>'
+          +   '<div class="flex justify-between text-xs text-gray-400 '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+          +     '<span><i class="fas fa-calendar-alt me-1"></i>'+date+'</span>'
+          +     '<span>'+(IS_RTL_D?'خطوة ':'Step ')+(status==='done'?TRACK_STEPS.length:(step+1))+'/'+TRACK_STEPS.length+'</span>'
+          +   '</div>'
+          + '</div>'
+          + '</div>';
+      }).join('')
+    + '</div>';
+}
+
+// ── تتبع آخر طلب ────────────────────────────────────────────────────────
+function renderLatestTracker(){
+  const card = document.getElementById('trackLatestCard');
+  const active = _allRequests.filter(function(r){ return r.status!=='done'&&r.status!=='rejected'; });
+  const req = active.length>0 ? active[0] : (_allRequests.length>0 ? _allRequests[0] : null);
+
+  if(!req){
+    card.innerHTML = '<div class="text-center py-6"><div class="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center" style="background:rgba(139,26,47,0.08)"><i class="fas fa-inbox" style="color:#8B1A2F"></i></div><p class="text-sm text-gray-400">'+(IS_RTL_D?'لا يوجد طلب حالياً':'No active request')+'</p><a href="/staff-request?lang=${lang}" class="inline-block mt-3 text-xs font-bold px-4 py-2 rounded-xl text-white" style="background:#8B1A2F">'+(IS_RTL_D?'قدّم طلبك':'Submit Request')+'</a></div>';
+    return;
+  }
+
+  const color  = TYPE_COLOR[req.type]||'#6B7280';
+  const icon   = TYPE_ICON[req.type]||'fa-bell';
+  const status = req.status||'pending';
+  const sColor = STATUS_COLOR[status]||'#6B7280';
+  const sBG    = STATUS_BG[status]||'#F3F4F6';
+  const step   = STEP_STATUS_MAP[status]!==undefined?STEP_STATUS_MAP[status]:0;
+
+  card.innerHTML = '<div class="space-y-3">'
+    // رأس البطاقة
+    + '<div class="rounded-xl p-3 flex items-center gap-3 '+(IS_RTL_D?'flex-row-reverse':'')+'" style="background:'+color+'18">'
+    +   '<div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:'+color+'">'
+    +     '<i class="fas '+icon+' text-white text-sm"></i>'
+    +   '</div>'
+    +   '<div class="flex-1 '+(IS_RTL_D?'text-right':'')+'">'
+    +     '<p class="font-bold text-gray-800 text-sm">'+(TYPE_LABEL[req.type]||req.type)+'</p>'
+    +     '<p class="text-xs font-mono text-gray-400">'+req.id+'</p>'
+    +   '</div>'
+    +   '<span class="status-pill" style="background:'+sBG+';color:'+sColor+'">'+(STATUS_LABEL[status]||status)+'</span>'
+    + '</div>'
+    // خطوات التتبع
+    + '<div class="space-y-1.5">'
+    + TRACK_STEPS.map(function(label,i){
+        const done    = status==='done' ? true : i<step;
+        const current = status!=='done' && i===step;
+        const rejected= (status==='rejected'||status==='returned') && i===step;
+        let bg,txtC,dotC,iconI;
+        if(done){        bg='#D1FAE5';txtC='#059669';dotC='#059669';iconI='fa-check-circle'; }
+        else if(current){ bg='rgba(139,26,47,0.08)';txtC='#8B1A2F';dotC='#8B1A2F';iconI='fa-dot-circle'; }
+        else if(rejected){bg='#FEE2E2';txtC='#DC2626';dotC='#DC2626';iconI='fa-times-circle'; }
+        else{             bg='transparent';txtC='#9CA3AF';dotC='#D1D5DB';iconI='fa-circle'; }
+        return '<div class="flex items-center gap-2 rounded-lg px-3 py-2 '+(IS_RTL_D?'flex-row-reverse':'')+'" style="background:'+bg+'">'
+          + '<i class="fas '+iconI+' text-xs" style="color:'+dotC+'"></i>'
+          + '<span class="text-xs font-semibold flex-1 '+(IS_RTL_D?'text-right':'')+'" style="color:'+txtC+'">'+label+'</span>'
+          + (current?'<span class="text-xs text-gray-400 animate-pulse">'+(IS_RTL_D?'الآن':'Now')+'</span>':'')
+          + '</div>';
+      }).join('')
+    + '</div>'
+    // تاريخ التقديم
+    + '<p class="text-xs text-gray-400 text-center">'
+    +   '<i class="fas fa-calendar-alt me-1"></i>'
+    +   (IS_RTL_D?'تاريخ التقديم: ':'Submitted: ')+(req.submittedAt?formatDate(req.submittedAt):'—')
+    + '</p>'
+    + '<button onclick="openReqDetail(JSON.parse(this.dataset.req))" data-req="'+JSON.stringify(req).replace(/"/g,'&quot;')+'" class="w-full py-2 rounded-xl text-xs font-bold text-white transition" style="background:'+color+'">'
+    +   (IS_RTL_D?'عرض تفاصيل الطلب':'View Request Details')+'</button>'
+    + '</div>';
+}
+
+// ── عرض الأحداث القادمة من تقويم جامعة قطر ──────────────────────────────
+function renderUpcomingQU(){
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const todayStr = today.toISOString().substring(0,10);
+  const in30 = new Date(today); in30.setDate(in30.getDate()+60);
+  const in30Str = in30.toISOString().substring(0,10);
+
+  const upcoming = QU_CAL_EVENTS.filter(function(ev){
+    return ev.date >= todayStr && ev.date <= in30Str;
+  }).sort(function(a,b){ return a.date.localeCompare(b.date); }).slice(0,5);
+
+  const container = document.getElementById('upcomingQU');
+  if(upcoming.length===0){
+    container.innerHTML='<p class="text-xs text-gray-400 text-center py-3">'+(IS_RTL_D?'لا أحداث قادمة':'No upcoming events')+'</p>';
+    return;
+  }
+
+  const typeColor={'holiday':'#6B7280','salary':'#8B1A2F','advance':'#D97706','university':'#7C3AED','event':'#DB2777'};
+  container.innerHTML = upcoming.map(function(ev){
+    const d = new Date(ev.date);
+    const day = d.getDate();
+    const mon = IS_RTL_D
+      ? ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][d.getMonth()]
+      : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+    const diff = Math.ceil((d-today)/(1000*60*60*24));
+    const diffLabel = diff===0?(IS_RTL_D?'اليوم':'Today'):diff===1?(IS_RTL_D?'غداً':'Tomorrow'):(IS_RTL_D?'بعد '+diff+' يوم':'in '+diff+' days');
+    const c = typeColor[ev.type]||'#6B7280';
+    return '<div class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-gray-50 transition '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+      + '<div class="w-10 h-10 rounded-xl flex flex-col items-center justify-center flex-shrink-0" style="background:'+c+'18">'
+      +   '<span class="text-base font-black leading-none" style="color:'+c+'">'+day+'</span>'
+      +   '<span class="text-xs leading-none" style="color:'+c+'">'+mon+'</span>'
+      + '</div>'
+      + '<div class="flex-1 min-w-0 '+(IS_RTL_D?'text-right':'')+'">'
+      +   '<p class="text-xs font-semibold text-gray-800 truncate">'+ev.title+'</p>'
+      +   '<p class="text-xs" style="color:'+c+'">'+diffLabel+'</p>'
+      + '</div>'
+      + '<i class="fas '+ev.icon+' text-xs flex-shrink-0" style="color:'+c+'"></i>'
+      + '</div>';
+  }).join('');
+}
+
+// ── Modal تفاصيل الطلب ──────────────────────────────────────────────────
+function openReqDetail(req){
+  if(typeof req==='string') req=JSON.parse(req);
+  const color  = TYPE_COLOR[req.type]||'#6B7280';
+  const status = req.status||'pending';
+  const step   = STEP_STATUS_MAP[status]!==undefined?STEP_STATUS_MAP[status]:0;
+  const stepPct= status==='done'?100:Math.round((step/4)*100);
+
+  document.getElementById('rdm_title').textContent = (TYPE_LABEL[req.type]||req.type)+' — '+req.id;
+
+  document.getElementById('rdm_body').innerHTML =
+    // معلومات أساسية
+    '<div class="grid grid-cols-2 gap-3">'
+    + infoChip(IS_RTL_D?'رقم الطلب':'Request ID', req.id, 'fa-hashtag')
+    + infoChip(IS_RTL_D?'النوع':'Type', TYPE_LABEL[req.type]||req.type, 'fa-tag')
+    + infoChip(IS_RTL_D?'الحالة':'Status', STATUS_LABEL[status]||status, 'fa-info-circle', STATUS_COLOR[status])
+    + infoChip(IS_RTL_D?'تاريخ التقديم':'Submitted', req.submittedAt?formatDate(req.submittedAt):'—', 'fa-calendar-alt')
+    + infoChip(IS_RTL_D?'الأولوية':'Priority', req.priority||'normal', 'fa-flag')
+    + infoChip(IS_RTL_D?'الموظف':'Employee', req.emp||'—', 'fa-user')
+    + '</div>'
+    // وصف الطلب
+    + '<div class="rounded-xl p-3" style="background:#F9FAFB">'
+    +   '<p class="text-xs font-bold text-gray-500 mb-1">'+(IS_RTL_D?'وصف الطلب:':'Description:')+'</p>'
+    +   '<p class="text-sm text-gray-700">'+(req.desc||req.description||'—')+'</p>'
+    + '</div>'
+    // شريط التقدم
+    + '<div>'
+    +   '<div class="flex justify-between text-xs text-gray-500 mb-1 '+(IS_RTL_D?'flex-row-reverse':'')+'">'
+    +     '<span>'+(IS_RTL_D?'تقدم الطلب:':'Progress:')+'</span>'
+    +     '<span class="font-bold" style="color:'+color+'">'+stepPct+'%</span>'
+    +   '</div>'
+    +   '<div class="prog-bar"><div class="prog-fill" style="width:'+stepPct+'%;background:'+color+'"></div></div>'
+    + '</div>'
+    // خطوات التتبع
+    + '<div class="space-y-1">'
+    + TRACK_STEPS.map(function(label,i){
+        const done    = status==='done'?true:i<step;
+        const current = status!=='done'&&i===step;
+        const rejected= (status==='rejected'||status==='returned')&&i===step;
+        let bg='transparent',txtC='#9CA3AF',iconI='fa-circle';
+        if(done){        bg='#D1FAE5';txtC='#059669';iconI='fa-check-circle'; }
+        else if(current){ bg='rgba(139,26,47,0.08)';txtC='#8B1A2F';iconI='fa-dot-circle'; }
+        else if(rejected){bg='#FEE2E2';txtC='#DC2626';iconI='fa-times-circle'; }
+        return '<div class="flex items-center gap-2 rounded-lg px-3 py-1.5 '+(IS_RTL_D?'flex-row-reverse':'')+'" style="background:'+bg+'">'
+          + '<i class="fas '+iconI+' text-xs" style="color:'+txtC+'"></i>'
+          + '<span class="text-xs '+(IS_RTL_D?'text-right':'')+'" style="color:'+txtC+'">'+label+'</span>'
+          + (current?'<i class="fas fa-angle-double-'+(IS_RTL_D?'left':'right')+' ms-auto text-xs animate-pulse" style="color:'+txtC+'"></i>':'')
+          + '</div>';
+      }).join('')
+    + '</div>'
+    // إذا كان سلفة — معلومات إضافية
+    + (req.type==='advance'?
+        '<div class="rounded-xl p-3 '+(IS_RTL_D?'text-right':'')+'" style="background:#FEF9E7;border:1px dashed #D97706">'
+        + '<p class="text-xs font-bold text-amber-700 mb-2">'+(IS_RTL_D?'تفاصيل السلفة':'Advance Details')+'</p>'
+        + '<div class="grid grid-cols-2 gap-2 text-xs">'
+        + infoChipSmall(IS_RTL_D?'الإجمالي المطلوب':'Amount Requested', '— '+( IS_RTL_D?'ر.ق':'QAR'))
+        + infoChipSmall(IS_RTL_D?'عدد الأقساط':'Installments', '— '+( IS_RTL_D?'قسط':'installments'))
+        + '</div>'
+        + '</div>'
+      : '')
+    // تعليق رئيس القسم إن وجد
+    + (req.assignedNote||req.adminNote?
+        '<div class="rounded-xl p-3 '+(IS_RTL_D?'text-right':'')+'" style="background:#EFF6FF">'
+        + '<p class="text-xs font-bold text-blue-700 mb-1"><i class="fas fa-comment-dots me-1"></i>'+(IS_RTL_D?'ملاحظة الجهة المختصة:':'Dept Note:')+'</p>'
+        + '<p class="text-xs text-blue-600">'+(req.assignedNote||req.adminNote)+'</p>'
+        + '</div>'
+      : '');
+
+  document.getElementById('reqDetailModal').classList.remove('hidden');
+}
+
+function infoChip(label, value, icon, color){
+  color = color||'#6B7280';
+  return '<div class="rounded-xl p-2.5 '+(IS_RTL_D?'text-right':'')+'" style="background:#F9FAFB">'
+    + '<p class="text-xs text-gray-400 mb-0.5"><i class="fas '+icon+' me-1"></i>'+label+'</p>'
+    + '<p class="text-sm font-bold" style="color:'+color+'">'+value+'</p>'
+    + '</div>';
+}
+function infoChipSmall(label, value){
+  return '<div class="'+(IS_RTL_D?'text-right':'')+'">'
+    + '<p class="text-gray-400 mb-0.5">'+label+'</p>'
+    + '<p class="font-bold text-gray-700">'+value+'</p>'
+    + '</div>';
+}
+
+function closeReqModal(){ document.getElementById('reqDetailModal').classList.add('hidden'); }
+
+// ── Tab switching ────────────────────────────────────────────────────────
+function switchTab(tab, btn){
+  _activeTab = tab;
+  ['advances','deductions','requests'].forEach(function(t){
+    const el = document.getElementById('tab_'+t);
+    if(el) el.classList.toggle('hidden', t!==tab);
+  });
+  document.querySelectorAll('.tab-btn2').forEach(function(b){ b.classList.remove('active2'); });
+  if(btn) btn.classList.add('active2');
+  if(tab==='deductions') renderDeductionsTab();
+  if(tab==='requests') renderRequestsTab();
+}
+
+// ── format date helper ───────────────────────────────────────────────────
+function formatDate(dateStr){
+  if(!dateStr) return '—';
+  const d = new Date(dateStr);
+  const day = d.getDate();
+  const mon = IS_RTL_D
+    ? ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'][d.getMonth()]
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  return day+' '+mon+' '+d.getFullYear();
+}
+
+// ── refresh ──────────────────────────────────────────────────────────────
+function refreshDash(){
+  const icon = document.getElementById('refreshIcon');
+  icon.classList.add('fa-spin');
+  setTimeout(function(){
+    loadRequests();
+    updateKPIs();
+    renderAdvancesTab();
+    renderLatestTracker();
+    renderUpcomingQU();
+    if(_activeTab==='deductions') renderDeductionsTab();
+    if(_activeTab==='requests') renderRequestsTab();
+    icon.classList.remove('fa-spin');
+  }, 600);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+loadRequests();
+updateKPIs();
+renderAdvancesTab();
+renderLatestTracker();
+renderUpcomingQU();
+</script>`
+
+  return c.html(staffLayout(isRTL?'لوحة متابعتي':'My Dashboard', content, 'dashboard', lang))
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
