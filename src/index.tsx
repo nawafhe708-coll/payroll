@@ -15652,7 +15652,7 @@ function apvViewDetail(id){
       +'</div>'
       // description
       +'<div class="rounded-xl p-4 '+(IS_RTL?'text-right':'')+'" style="background:#F9FAFB">'
-        +'<p class="text-xs font-bold text-gray-500 mb-2">'+IS_RTL?'التفاصيل':'Details'+'</p>'
+        +'<p class="text-xs font-bold text-gray-500 mb-2">'+(IS_RTL?'التفاصيل':'Details')+'</p>'
         +'<p class="text-sm text-gray-700 leading-relaxed">'+r.details+'</p>'
       +'</div>'
       // files
