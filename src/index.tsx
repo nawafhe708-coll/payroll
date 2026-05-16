@@ -32,6 +32,7 @@ const T = {
     navScholarshipRules: 'Scholarship Rules',
     navScholarshipProcedures: 'Scholarship Procedures',
     navScholarshipTracking: 'Scholar Tracking',
+    navPayrollDept: 'Payroll Department',
     navLogin: 'Employee Login',
     
     // ── SCHOLARSHIP ──
@@ -467,6 +468,7 @@ const T = {
     navScholarshipProcedures: 'إجراءات التقديم',
     navScholarshipTracking: 'متابعة المبتعثين',
     navEmailTemplates: 'أرشيف قوالب الإيميل',
+    navPayrollDept: 'قسم الرواتب',
     navLogin: 'دخول الموظف',
     
     // ── الابتعاث ──
@@ -1123,6 +1125,7 @@ const layout = (title: string, content: string, activePage: string, lang: Lang) 
       { href: '/email-templates', icon: 'fa-envelope-open-text', label: t.navEmailTemplates, page: 'email-templates' },
       { href: '/scholarship', icon: 'fa-graduation-cap', label: t.navScholarship, page: 'scholarship' },
       { href: '/sla', icon: 'fa-chart-gantt', label: isRTL ? 'إدارة طلبات SLA' : 'SLA Management', page: 'sla' },
+      { href: '/payroll-dept', icon: 'fa-building-columns', label: t.navPayrollDept, page: 'payroll-dept' },
       { href: '/admin/news', icon: 'fa-newspaper', label: isRTL ? 'إدارة الأخبار' : 'News Manager', page: 'admin-news' },
     ].map(item => `
     <a href="${item.href}?lang=${lang}" class="sidebar-link ${activePage === item.page ? 'active' : ''} flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 text-sm mb-1 ${isRTL ? 'flex-row-reverse' : ''}">
@@ -7503,6 +7506,7 @@ function staffLayout(title: string, content: string, activePage: string, lang: L
     { href: '/staff-forms',      icon: 'fa-file-alt',        label: isRTL ? 'النماذج والوثائق' : 'Forms & Documents', page: 'forms' },
     { href: '/staff-request',    icon: 'fa-concierge-bell',  label: isRTL ? 'طلب خدمة' : 'Request a Service',  page: 'request' },
     { href: '/staff-contact',    icon: 'fa-envelope',        label: isRTL ? 'تواصل معنا' : 'Contact Us',       page: 'contact' },
+    { href: '/payroll-dept',     icon: 'fa-building-columns', label: isRTL ? 'قسم الرواتب' : 'Payroll Dept.',    page: 'payroll-dept' },
   ]
 
   return `<!DOCTYPE html>
@@ -14474,6 +14478,589 @@ function setTheme(id){
 </body>
 </html>`)
 })
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  PAYROLL DEPARTMENT PAGE  /payroll-dept
+// ─────────────────────────────────────────────────────────────────────────────
+app.get('/payroll-dept', (c) => {
+  const lang: Lang = (c.req.query('lang') === 'en' ? 'en' : 'ar') as Lang
+  const isRTL = lang === 'ar'
+  const t = T[lang]
+
+  const pageHTML = `
+<!-- ══════════════════════════════════════════
+     صفحة قسم الرواتب – Payroll Department
+══════════════════════════════════════════ -->
+
+<!-- Hero -->
+<div class="relative overflow-hidden rounded-2xl mb-8" style="background:linear-gradient(135deg,#8B1A2F 0%,#6B1422 40%,#1e3a5f 100%)">
+  <div class="absolute inset-0 opacity-10" style="background-image:url('data:image/svg+xml,<svg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'><g fill=\'none\' fill-rule=\'evenodd\'><g fill=\'%23ffffff\' fill-opacity=\'1\'><path d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/></g></g></svg>')"></div>
+  <div class="relative px-8 py-10 flex flex-col md:flex-row items-start md:items-center gap-6">
+    <div class="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-xl" style="background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.3)">
+      <i class="fas fa-building-columns text-4xl text-white"></i>
+    </div>
+    <div class="${isRTL?'text-right':''}">
+      <div class="flex items-center gap-3 mb-2 ${isRTL?'flex-row-reverse justify-end':''}">
+        <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(255,255,255,0.2);color:#fff">${isRTL?'جامعة قطر':'Qatar University'}</span>
+        <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(197,160,60,0.35);color:#F5D68A">${isRTL?'إدارة الموارد البشرية':'Human Resources'}</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">${isRTL?'قسم الرواتب':'Payroll Department'}</h1>
+      <p class="text-white/75 text-base max-w-2xl">${isRTL?'مرجعكم الشامل لجميع خدمات الرواتب والمزايا المالية لموظفي جامعة قطر — أحكام، إجراءات، فريق العمل، وقنوات التواصل.':'Your complete reference for all payroll and financial benefits services at Qatar University — policies, procedures, team, and contact channels.'}</p>
+    </div>
+  </div>
+  <!-- Stats bar -->
+  <div class="grid grid-cols-2 md:grid-cols-4 border-t border-white/10">
+    ${[
+      {n: isRTL?'4,200+':'4,200+', l: isRTL?'موظف مخدوم':'Employees Served', ic:'fa-users'},
+      {n: isRTL?'12':'12',         l: isRTL?'نوع خدمة':'Service Types',     ic:'fa-layer-group'},
+      {n: isRTL?'4 ساعات':'4 hrs', l: isRTL?'متوسط الاستجابة':'Avg. Response', ic:'fa-clock'},
+      {n: isRTL?'7:30–3:30':'7:30–3:30', l: isRTL?'ساعات العمل':'Working Hours', ic:'fa-calendar-check'},
+    ].map(s=>`
+    <div class="px-6 py-4 ${isRTL?'text-right':''}">
+      <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse justify-end':''}">
+        <i class="fas ${s.ic} text-white/50 text-xs"></i>
+        <p class="text-2xl font-extrabold text-white">${s.n}</p>
+      </div>
+      <p class="text-white/55 text-xs mt-0.5">${s.l}</p>
+    </div>`).join('')}
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="flex gap-2 flex-wrap mb-6" id="pdTabs">
+  ${[
+    {id:'overview',  ic:'fa-th-large',         ar:'نظرة عامة',           en:'Overview'},
+    {id:'services',  ic:'fa-concierge-bell',   ar:'الخدمات',             en:'Services'},
+    {id:'team',      ic:'fa-users-gear',        ar:'فريق العمل',          en:'Our Team'},
+    {id:'policies',  ic:'fa-book-open',         ar:'السياسات والأنظمة',   en:'Policies'},
+    {id:'calendar',  ic:'fa-calendar-alt',      ar:'مواعيد الرواتب',      en:'Pay Calendar'},
+    {id:'contact',   ic:'fa-headset',           ar:'تواصل معنا',          en:'Contact'},
+  ].map((tb,i)=>`
+  <button onclick="pdShowTab('${tb.id}')" id="pdTab-${tb.id}"
+    class="pd-tab flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all border ${i===0?'active-tab':'border-gray-200 text-gray-500 hover:border-maroon hover:text-maroon bg-white'}"
+    style="${i===0?'background:var(--qu-maroon);color:#fff;border-color:var(--qu-maroon)':''}">
+    <i class="fas ${tb.ic}"></i>
+    ${isRTL?tb.ar:tb.en}
+  </button>`).join('')}
+</div>
+
+<!-- ── TAB: Overview ── -->
+<div id="pdPanel-overview" class="pd-panel">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- رسالة القسم -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div class="flex items-center gap-3 mb-4 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#FEF2F2"><i class="fas fa-bullseye text-red-700"></i></div>
+        <h3 class="font-bold text-gray-800">${isRTL?'رسالتنا':'Our Mission'}</h3>
+      </div>
+      <p class="text-gray-600 text-sm leading-relaxed ${isRTL?'text-right':''}">${isRTL?'نسعى في قسم الرواتب إلى تقديم خدمات مالية دقيقة وشفافة لجميع موظفي جامعة قطر، من خلال فريق متخصص يعمل وفق أعلى معايير الجودة والامتثال للوائح والأنظمة المعمول بها في الدولة.':'The Payroll Department is committed to delivering accurate, transparent, and timely financial services to all Qatar University staff, upholding the highest standards of quality and regulatory compliance.'}</p>
+    </div>
+    <!-- رؤية القسم -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div class="flex items-center gap-3 mb-4 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#EFF6FF"><i class="fas fa-eye text-blue-700"></i></div>
+        <h3 class="font-bold text-gray-800">${isRTL?'رؤيتنا':'Our Vision'}</h3>
+      </div>
+      <p class="text-gray-600 text-sm leading-relaxed ${isRTL?'text-right':''}">${isRTL?'أن نكون قسم الرواتب الأكثر احترافيةً وكفاءةً في المؤسسات الأكاديمية الخليجية، مستخدمين أحدث الأنظمة المالية لضمان حقوق الموظفين وتطوير تجربتهم المالية.':'To be the most professional and efficient payroll unit among Gulf academic institutions, leveraging modern financial systems to safeguard employee rights and enhance their financial experience.'}</p>
+    </div>
+  </div>
+
+  <!-- الخدمات السريعة -->
+  <h3 class="font-bold text-gray-700 mb-4 text-lg ${isRTL?'text-right':''}">${isRTL?'خدماتنا الرئيسية':'Main Services'}</h3>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+    ${[
+      {ic:'fa-file-invoice-dollar', bg:'#EFF6FF', cl:'#1D4ED8', ar:'قسيمة الراتب',         en:'Payslip',              href:'/forms'},
+      {ic:'fa-hand-holding-usd',   bg:'#F0FDF4', cl:'#15803D', ar:'بدلات ومزايا',          en:'Allowances',           href:'/allowances'},
+      {ic:'fa-plane-departure',    bg:'#FDF4FF', cl:'#7C3AED', ar:'مهام رسمية',             en:'Official Missions',    href:'/missions'},
+      {ic:'fa-person-walking-arrow-right',bg:'#FFF7ED',cl:'#C2410C',ar:'مكافأة نهاية الخدمة',en:'End of Service',     href:'/end-of-service'},
+      {ic:'fa-ranking-star',       bg:'#F0FDF4', cl:'#15803D', ar:'الترقيات الإدارية',      en:'Promotions',           href:'/promotions'},
+      {ic:'fa-graduation-cap',     bg:'#FEF9C3', cl:'#A16207', ar:'الابتعاث',               en:'Scholarship',          href:'/scholarship'},
+      {ic:'fa-envelope-open-text', bg:'#FEF2F2', cl:'#991B1B', ar:'قوالب المراسلات',        en:'Email Templates',      href:'/email-templates'},
+      {ic:'fa-chart-gantt',        bg:'#F0F9FF', cl:'#0369A1', ar:'إدارة SLA',              en:'SLA Management',       href:'/sla'},
+    ].map(s=>`
+    <a href="${s.href}?lang=${lang}" class="flex flex-col items-center gap-2 p-4 rounded-2xl border border-gray-100 bg-white hover:shadow-md transition-all group text-center">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background:${s.bg}">
+        <i class="fas ${s.ic} text-xl" style="color:${s.cl}"></i>
+      </div>
+      <span class="text-xs font-bold text-gray-700">${isRTL?s.ar:s.en}</span>
+    </a>`).join('')}
+  </div>
+
+  <!-- إعلان / تنبيه -->
+  <div class="rounded-2xl p-5 flex items-start gap-4 ${isRTL?'flex-row-reverse':''}" style="background:linear-gradient(135deg,#FFFBEB,#FEF9C3);border:1px solid #FDE68A">
+    <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:#FDE68A"><i class="fas fa-bullhorn text-yellow-700"></i></div>
+    <div class="${isRTL?'text-right':''}">
+      <p class="font-bold text-yellow-800 mb-1">${isRTL?'تنبيه: مواعيد صرف رواتب شهر يونيو 2025':'Notice: June 2025 Salary Payment Dates'}</p>
+      <p class="text-yellow-700 text-sm">${isRTL?'سيتم صرف رواتب شهر يونيو 2025 بتاريخ الأربعاء 25 يونيو 2025. يُرجى التأكد من صحة بياناتكم البنكية قبل 15 يونيو.':'June 2025 salaries will be disbursed on Wednesday, June 25, 2025. Please verify your bank details before June 15.'}</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB: Services ── -->
+<div id="pdPanel-services" class="pd-panel hidden">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    ${[
+      {
+        ic:'fa-file-invoice-dollar', bg:'#EFF6FF', cl:'#1D4ED8', brd:'#BFDBFE',
+        ar_t:'قسيمة الراتب الشهرية', en_t:'Monthly Payslip',
+        ar_d:'استلام نسخة مفصّلة من راتبك الشهري تتضمن المكوّنات والخصومات والصافي.', en_d:'Receive a detailed monthly salary slip including all components, deductions, and net pay.',
+        ar_steps:['تسجيل الدخول لبوابة الموظفين','الانتقال إلى النماذج والوثائق','تحديد قسيمة الراتب وتنزيلها'],
+        en_steps:['Login to the Staff Portal','Navigate to Forms & Documents','Select and download your payslip'],
+        sla:'24 hr', href:'/forms'
+      },
+      {
+        ic:'fa-hand-holding-usd', bg:'#F0FDF4', cl:'#15803D', brd:'#BBF7D0',
+        ar_t:'طلب بدل أو مزية', en_t:'Allowance / Benefit Request',
+        ar_d:'تقديم طلب لأي من البدلات (سكن، مواصلات، اتصالات) أو المزايا المالية الأخرى.', en_d:'Submit requests for housing, transportation, telecom allowances, or any other financial benefits.',
+        ar_steps:['تعبئة نموذج طلب البدل','رفع المستندات المطلوبة','متابعة الحالة عبر البوابة'],
+        en_steps:['Fill the allowance request form','Upload required documents','Track status via the portal'],
+        sla:'3 days', href:'/allowances'
+      },
+      {
+        ic:'fa-plane-departure', bg:'#FDF4FF', cl:'#7C3AED', brd:'#E9D5FF',
+        ar_t:'إدارة المهام الرسمية', en_t:'Official Mission Management',
+        ar_d:'رفع وإدارة طلبات المهام الرسمية والعلمية مع حساب المستحقات المالية تلقائياً.', en_d:'Submit and manage official and academic mission requests with automatic financial entitlement calculation.',
+        ar_steps:['فتح صفحة إدارة المهام','إضافة تفاصيل المهمة والوجهة','مراجعة المستحقات والاعتماد'],
+        en_steps:['Open Mission Management page','Add mission details and destination','Review entitlements and approve'],
+        sla:'2 days', href:'/missions'
+      },
+      {
+        ic:'fa-person-walking-arrow-right', bg:'#FFF7ED', cl:'#C2410C', brd:'#FED7AA',
+        ar_t:'احتساب مكافأة نهاية الخدمة', en_t:'End of Service Calculation',
+        ar_d:'حساب تقديري شفاف لمكافأة نهاية الخدمة استناداً إلى قانون العمل القطري ومدة الخدمة.', en_d:'Transparent estimate of end-of-service gratuity based on Qatari Labor Law and years of service.',
+        ar_steps:['إدخال بيانات التوظيف','اختيار سبب إنهاء الخدمة','الاطلاع على التقدير التفصيلي'],
+        en_steps:['Enter employment data','Select termination reason','View detailed estimate'],
+        sla:'Instant', href:'/end-of-service'
+      },
+      {
+        ic:'fa-ranking-star', bg:'#F0FDF4', cl:'#15803D', brd:'#BBF7D0',
+        ar_t:'الترقيات الإدارية', en_t:'Administrative Promotions',
+        ar_d:'الاطلاع على شروط الترقية ومسارات التقدم الوظيفي وسلّم الرواتب المعتمد.', en_d:'View promotion criteria, career progression paths, and the approved salary scale.',
+        ar_steps:['مراجعة شروط الترقية','التحقق من استيفاء المعايير','تقديم طلب الترقية'],
+        en_steps:['Review promotion criteria','Verify eligibility','Submit promotion request'],
+        sla:'5 days', href:'/promotions'
+      },
+      {
+        ic:'fa-graduation-cap', bg:'#FEF9C3', cl:'#A16207', brd:'#FDE68A',
+        ar_t:'برنامج الابتعاث', en_t:'Scholarship Program',
+        ar_d:'تقديم طلبات الابتعاث الخارجي ومتابعة الدفعات المالية للمبتعثين.', en_d:'Submit external scholarship applications and track scholarship payment disbursements.',
+        ar_steps:['قراءة شروط الابتعاث','تعبئة نموذج التقديم','متابعة حالة الطلب'],
+        en_steps:['Read scholarship terms','Fill the application form','Track application status'],
+        sla:'10 days', href:'/scholarship'
+      },
+    ].map(s=>`
+    <div class="bg-white rounded-2xl border p-6 hover:shadow-md transition-all" style="border-color:${s.brd}">
+      <div class="flex items-start gap-4 mb-4 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:${s.bg}">
+          <i class="fas ${s.ic} text-xl" style="color:${s.cl}"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <h4 class="font-bold text-gray-800 mb-1">${isRTL?s.ar_t:s.en_t}</h4>
+          <p class="text-gray-500 text-xs leading-relaxed">${isRTL?s.ar_d:s.en_d}</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-50 pt-4">
+        <p class="text-xs font-bold text-gray-400 mb-2 ${isRTL?'text-right':''}">${isRTL?'خطوات الخدمة:':'Service Steps:'}</p>
+        <ol class="space-y-1.5 ${isRTL?'text-right':''}">
+          ${(isRTL?s.ar_steps:s.en_steps).map((st,idx)=>`
+          <li class="flex items-center gap-2 text-xs text-gray-600 ${isRTL?'flex-row-reverse':''}">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="background:${s.cl};font-size:10px">${idx+1}</span>
+            ${st}
+          </li>`).join('')}
+        </ol>
+        <div class="flex items-center justify-between mt-4 ${isRTL?'flex-row-reverse':''}">
+          <span class="text-xs text-gray-400"><i class="fas fa-clock mr-1"></i>${isRTL?'وقت الاستجابة: ':'Response time: '}<strong>${s.sla}</strong></span>
+          <a href="${s.href}?lang=${lang}" class="text-xs font-bold px-3 py-1.5 rounded-lg text-white transition" style="background:${s.cl}">${isRTL?'انتقل للخدمة':'Go to Service'} <i class="fas fa-arrow-${isRTL?'left':'right'} ms-1"></i></a>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>
+</div>
+
+<!-- ── TAB: Team ── -->
+<div id="pdPanel-team" class="pd-panel hidden">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    ${[
+      {
+        name_ar:'أ. خالد بن سعد الهاجري',  name_en:'Khalid Al-Hajri',
+        role_ar:'رئيس قسم الرواتب',         role_en:'Head of Payroll Department',
+        dept_ar:'الإدارة العليا',             dept_en:'Senior Management',
+        email:'k.alhajri@qu.edu.qa', ext:'4100',
+        avatar:'KH', bg:'#8B1A2F', spec_ar:'الإشراف العام، السياسات المالية', spec_en:'General Oversight, Financial Policies'
+      },
+      {
+        name_ar:'أ. سارة محمد العمادي',    name_en:'Sara Al-Amadi',
+        role_ar:'مشرفة رواتب أعضاء هيئة التدريس', role_en:'Faculty Payroll Supervisor',
+        dept_ar:'رواتب الأكاديميين',          dept_en:'Academic Payroll',
+        email:'s.alamadi@qu.edu.qa', ext:'4102',
+        avatar:'SA', bg:'#1e3a5f', spec_ar:'رواتب أعضاء هيئة التدريس، العلاوات', spec_en:'Faculty Salaries, Academic Allowances'
+      },
+      {
+        name_ar:'أ. محمد راشد الكواري',     name_en:'Mohammed Al-Kuwari',
+        role_ar:'مشرف رواتب الموظفين الإداريين', role_en:'Admin Staff Payroll Supervisor',
+        dept_ar:'رواتب الإداريين',            dept_en:'Administrative Payroll',
+        email:'m.alkuwari@qu.edu.qa', ext:'4103',
+        avatar:'MK', bg:'#15803D', spec_ar:'رواتب الكوادر الإدارية، الخصومات', spec_en:'Admin Staff Salaries, Deductions'
+      },
+      {
+        name_ar:'أ. فاطمة يوسف النعيمي',   name_en:'Fatima Al-Nuaimi',
+        role_ar:'أخصائية بدلات ومزايا',      role_en:'Allowances & Benefits Specialist',
+        dept_ar:'المزايا المالية',            dept_en:'Financial Benefits',
+        email:'f.alnuaimi@qu.edu.qa', ext:'4104',
+        avatar:'FN', bg:'#7C3AED', spec_ar:'البدلات، المكافآت، الحوافز', spec_en:'Allowances, Bonuses, Incentives'
+      },
+      {
+        name_ar:'أ. عبدالله ناصر الشمري',  name_en:'Abdullah Al-Shammari',
+        role_ar:'أخصائي نهاية الخدمة والمعاشات', role_en:'EOS & Pensions Specialist',
+        dept_ar:'نهاية الخدمة',              dept_en:'End of Service',
+        email:'a.alshammari@qu.edu.qa', ext:'4105',
+        avatar:'AS', bg:'#C2410C', spec_ar:'مكافآت نهاية الخدمة، التقاعد', spec_en:'Gratuity, Retirement Benefits'
+      },
+      {
+        name_ar:'أ. نورة علي المناعي',      name_en:'Noura Al-Manaai',
+        role_ar:'أخصائية المهام والسفريات',   role_en:'Missions & Travel Specialist',
+        dept_ar:'المهام الرسمية',             dept_en:'Official Missions',
+        email:'n.almanaai@qu.edu.qa', ext:'4106',
+        avatar:'NM', bg:'#0369A1', spec_ar:'المهام الرسمية والعلمية، السفريات', spec_en:'Official & Academic Missions, Travel'
+      },
+    ].map(m=>`
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-md transition-all">
+      <div class="flex items-start gap-4 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0 shadow-md" style="background:${m.bg}">${m.avatar}</div>
+        <div class="flex-1 ${isRTL?'text-right':''}">
+          <h4 class="font-bold text-gray-800 text-sm">${isRTL?m.name_ar:m.name_en}</h4>
+          <p class="text-xs font-semibold mb-1" style="color:${m.bg}">${isRTL?m.role_ar:m.role_en}</p>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">${isRTL?m.dept_ar:m.dept_en}</span>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-gray-50 space-y-2">
+        <p class="text-xs text-gray-500 ${isRTL?'text-right':''}"><i class="fas fa-star ms-0 me-1.5 text-yellow-400"></i>${isRTL?m.spec_ar:m.spec_en}</p>
+        <div class="flex items-center gap-3 ${isRTL?'flex-row-reverse justify-end':''}">
+          <a href="mailto:${m.email}" class="flex items-center gap-1.5 text-xs text-blue-600 hover:underline"><i class="fas fa-envelope"></i>${m.email}</a>
+        </div>
+        <p class="text-xs text-gray-400"><i class="fas fa-phone me-1.5"></i>${isRTL?'تحويلة: ':'Ext. '}${m.ext}</p>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <!-- ساعات العمل -->
+  <div class="mt-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+      <i class="fas fa-clock" style="color:var(--qu-maroon)"></i>
+      ${isRTL?'ساعات عمل القسم':'Department Working Hours'}
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      ${[
+        {d_ar:'الأحد – الخميس', d_en:'Sunday – Thursday', h:'7:30 AM – 3:30 PM', ic:'fa-sun', cl:'#D97706'},
+        {d_ar:'الجمعة – السبت', d_en:'Friday – Saturday',  h:isRTL?'إجازة رسمية':'Official Holiday', ic:'fa-moon', cl:'#6B7280'},
+        {d_ar:'المواعيد الخاصة', d_en:'Special Appointments', h:isRTL?'بالتنسيق المسبق':'By Prior Arrangement', ic:'fa-calendar-check', cl:'#1D4ED8'},
+      ].map(d=>`
+      <div class="flex items-center gap-3 p-4 rounded-xl ${isRTL?'flex-row-reverse':''}" style="background:#F9FAFB">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#fff;border:1px solid #E5E7EB">
+          <i class="fas ${d.ic}" style="color:${d.cl}"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <p class="text-xs font-bold text-gray-700">${isRTL?d.d_ar:d.d_en}</p>
+          <p class="text-xs text-gray-500">${d.h}</p>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB: Policies ── -->
+<div id="pdPanel-policies" class="pd-panel hidden">
+  <div class="space-y-4">
+    ${[
+      {
+        ic:'fa-scale-balanced', bg:'#EFF6FF', cl:'#1D4ED8',
+        ar_t:'سياسة الرواتب والمزايا', en_t:'Salary & Benefits Policy',
+        ar_d:'تُحدَّد رواتب موظفي جامعة قطر وفقاً للوائح الموارد البشرية المعتمدة ونظام الدرجات والرتب الوظيفية. تشمل المنظومة الراتب الأساسي والبدلات القانونية والمكافآت السنوية.',
+        en_d:'Qatar University staff salaries are determined per approved HR regulations and the grading system. The package includes basic salary, statutory allowances, and annual bonuses.',
+        points_ar:['يُصرف الراتب في آخر يوم عمل من كل شهر','تُراجَع الرواتب سنوياً بناءً على تقييم الأداء','تخضع جميع المدفوعات للائحة المالية للجامعة'],
+        points_en:['Salary is paid on the last working day of each month','Salaries are reviewed annually based on performance evaluations','All payments are subject to University Financial Regulations']
+      },
+      {
+        ic:'fa-home', bg:'#F0FDF4', cl:'#15803D',
+        ar_t:'سياسة بدل السكن', en_t:'Housing Allowance Policy',
+        ar_d:'يُمنح بدل السكن للموظفين المؤهلين وفقاً لفئتهم الوظيفية وحالتهم الاجتماعية وشروط العقد.',
+        en_d:'Housing allowance is granted to eligible employees based on their job grade, family status, and contract terms.',
+        points_ar:['يُحسب البدل شهرياً ضمن الراتب','يستلزم تقديم عقد إيجار سنوي','يختلف المبلغ حسب الدرجة الوظيفية'],
+        points_en:['Allowance is calculated monthly within the salary','Annual rental contract submission required','Amount varies by job grade']
+      },
+      {
+        ic:'fa-car', bg:'#FFF7ED', cl:'#C2410C',
+        ar_t:'سياسة بدل المواصلات', en_t:'Transportation Allowance Policy',
+        ar_d:'يُمنح بدل المواصلات للموظفين غير المقيمين في سكن الجامعة.',
+        en_d:'Transportation allowance is granted to employees not residing in university accommodation.',
+        points_ar:['بدل ثابت يُضاف للراتب الشهري','لا يُصرف جزئياً في حالة الغياب المتكرر','يُستثنى الموظفون المقيمون في سكن الجامعة'],
+        points_en:['Fixed allowance added to monthly salary','May be withheld in case of repeated absence','Employees in university housing are excluded']
+      },
+      {
+        ic:'fa-shield-halved', bg:'#FDF4FF', cl:'#7C3AED',
+        ar_t:'سياسة التأمين الطبي', en_t:'Medical Insurance Policy',
+        ar_d:'يتمتع جميع الموظفين الدائمون ومعالوهم بتغطية طبية شاملة من خلال مزود التأمين المعتمد.',
+        en_d:'All permanent employees and their dependents enjoy comprehensive medical coverage through the approved insurance provider.',
+        points_ar:['تغطية شاملة للموظف والعائلة','لا توجد رسوم اشتراك على الموظف','يُجدَّد التأمين تلقائياً مع بداية كل سنة مالية'],
+        points_en:['Full coverage for employee and family','No subscription fees for the employee','Insurance auto-renewed at the start of each fiscal year']
+      },
+      {
+        ic:'fa-receipt', bg:'#F0F9FF', cl:'#0369A1',
+        ar_t:'سياسة الخصومات والاستقطاعات', en_t:'Deductions Policy',
+        ar_d:'تُطبَّق الخصومات وفقاً لقانون العمل القطري وأنظمة الجامعة الداخلية في حالات محددة.',
+        en_d:'Deductions are applied per Qatari Labour Law and internal university regulations in specified cases.',
+        points_ar:['خصومات الغياب بدون إذن حسب اللوائح','استقطاع السلف والقروض بالاتفاق','يوضَّح كل خصم بشكل مفصّل في قسيمة الراتب'],
+        points_en:['Unauthorized absence deductions per regulations','Salary advances/loans deducted by agreement','Each deduction itemized in the payslip']
+      },
+    ].map(p=>`
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="flex items-center gap-4 p-5 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${p.bg}">
+          <i class="fas ${p.ic} text-xl" style="color:${p.cl}"></i>
+        </div>
+        <div class="flex-1 ${isRTL?'text-right':''}">
+          <h4 class="font-bold text-gray-800">${isRTL?p.ar_t:p.en_t}</h4>
+          <p class="text-sm text-gray-500 mt-0.5">${isRTL?p.ar_d:p.en_d}</p>
+        </div>
+        <button onclick="this.closest('.bg-white').querySelector('.policy-body').classList.toggle('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition flex-shrink-0">
+          <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+        </button>
+      </div>
+      <div class="policy-body hidden border-t border-gray-50 px-5 pb-5 pt-4">
+        <ul class="space-y-2">
+          ${(isRTL?p.points_ar:p.points_en).map(pt=>`
+          <li class="flex items-start gap-2 text-sm text-gray-600 ${isRTL?'flex-row-reverse text-right':''}">
+            <i class="fas fa-check-circle mt-0.5 flex-shrink-0" style="color:${p.cl}"></i>
+            ${pt}
+          </li>`).join('')}
+        </ul>
+      </div>
+    </div>`).join('')}
+  </div>
+</div>
+
+<!-- ── TAB: Pay Calendar ── -->
+<div id="pdPanel-calendar" class="pd-panel hidden">
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-6">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between" style="background:linear-gradient(135deg,#8B1A2F,#6B1422)">
+      <h3 class="font-bold text-white flex items-center gap-2"><i class="fas fa-calendar-alt"></i> ${isRTL?'جدول صرف رواتب عام 2025':'2025 Salary Disbursement Schedule'}</h3>
+      <span class="text-white/70 text-xs">${isRTL?'الرواتب تُصرف في آخر يوم عمل بالشهر':'Salaries paid on last working day of month'}</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr style="background:#F9FAFB">
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 ${isRTL?'text-right':'text-left'}">${isRTL?'الشهر':'Month'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 text-center">${isRTL?'تاريخ الصرف':'Payment Date'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 text-center">${isRTL?'اليوم':'Day'}</th>
+            <th class="px-4 py-3 text-xs font-bold text-gray-500 text-center">${isRTL?'الحالة':'Status'}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${[
+            {m_ar:'يناير 2025',   m_en:'January 2025',   d:'29 Jan 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:true},
+            {m_ar:'فبراير 2025',  m_en:'February 2025',  d:'26 Feb 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:true},
+            {m_ar:'مارس 2025',    m_en:'March 2025',     d:'27 Mar 2025',  day_ar:'الخميس',   day_en:'Thursday',  done:true},
+            {m_ar:'أبريل 2025',   m_en:'April 2025',     d:'29 Apr 2025',  day_ar:'الثلاثاء', day_en:'Tuesday',   done:true},
+            {m_ar:'مايو 2025',    m_en:'May 2025',       d:'28 May 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:true},
+            {m_ar:'يونيو 2025',   m_en:'June 2025',      d:'25 Jun 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:false, current:true},
+            {m_ar:'يوليو 2025',   m_en:'July 2025',      d:'30 Jul 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:false},
+            {m_ar:'أغسطس 2025',  m_en:'August 2025',    d:'27 Aug 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:false},
+            {m_ar:'سبتمبر 2025',  m_en:'September 2025', d:'29 Sep 2025',  day_ar:'الاثنين',  day_en:'Monday',    done:false},
+            {m_ar:'أكتوبر 2025',  m_en:'October 2025',   d:'29 Oct 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:false},
+            {m_ar:'نوفمبر 2025',  m_en:'November 2025',  d:'26 Nov 2025',  day_ar:'الأربعاء', day_en:'Wednesday', done:false},
+            {m_ar:'ديسمبر 2025',  m_en:'December 2025',  d:'29 Dec 2025',  day_ar:'الاثنين',  day_en:'Monday',    done:false},
+          ].map(r=>`
+          <tr class="border-b border-gray-50 ${r.current?'bg-yellow-50':''} hover:bg-gray-50 transition">
+            <td class="px-4 py-3 font-bold text-sm text-gray-800 ${isRTL?'text-right':''}">${isRTL?r.m_ar:r.m_en} ${r.current?`<span class="text-xs px-2 py-0.5 rounded-full font-bold ms-2" style="background:#FDE68A;color:#92400E">${isRTL?'الشهر الحالي':'Current'}</span>`:''}</td>
+            <td class="px-4 py-3 text-sm text-gray-700 text-center font-mono">${r.d}</td>
+            <td class="px-4 py-3 text-xs text-gray-500 text-center">${isRTL?r.day_ar:r.day_en}</td>
+            <td class="px-4 py-3 text-center">
+              ${r.done
+                ? `<span class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full" style="background:#DCFCE7;color:#15803D"><i class="fas fa-check-circle"></i>${isRTL?'صُرف':'Paid'}</span>`
+                : r.current
+                  ? `<span class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full" style="background:#FEF9C3;color:#92400E"><i class="fas fa-hourglass-half"></i>${isRTL?'قادم':'Upcoming'}</span>`
+                  : `<span class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full" style="background:#F3F4F6;color:#6B7280"><i class="fas fa-clock"></i>${isRTL?'مجدول':'Scheduled'}</span>`
+              }
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ملاحظات التقويم -->
+  <div class="rounded-2xl p-5" style="background:#F0FDF4;border:1px solid #BBF7D0">
+    <h4 class="font-bold text-green-800 mb-3 flex items-center gap-2"><i class="fas fa-info-circle"></i>${isRTL?'ملاحظات مهمة':'Important Notes'}</h4>
+    <ul class="space-y-2">
+      ${(isRTL?[
+        'في حال صادف تاريخ الصرف عطلة رسمية، يُصرف الراتب في اليوم العمل السابق مباشرةً.',
+        'رواتب شهر رمضان وأعياد الفطر والأضحى قد تُصرف مبكراً وفقاً لتعميم الجامعة.',
+        'يُرجى التأكد من صحة تفاصيل حسابك البنكي قبل 10 أيام من موعد الصرف.',
+      ]:[
+        'If the payment date falls on a public holiday, salary will be paid on the immediately preceding working day.',
+        'Ramadan, Eid Al-Fitr, and Eid Al-Adha salaries may be paid earlier per university circular.',
+        'Please verify your bank account details at least 10 days before the payment date.',
+      ]).map(n=>`
+      <li class="flex items-start gap-2 text-sm text-green-700 ${isRTL?'flex-row-reverse text-right':''}">
+        <i class="fas fa-check-circle mt-0.5 flex-shrink-0 text-green-500"></i>${n}
+      </li>`).join('')}
+    </ul>
+  </div>
+</div>
+
+<!-- ── TAB: Contact ── -->
+<div id="pdPanel-contact" class="pd-panel hidden">
+  <!-- بطاقات التواصل -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+    ${[
+      {
+        ic:'fa-phone-volume', bg:'#EFF6FF', cl:'#1D4ED8', brd:'#BFDBFE',
+        ar_t:'الهاتف المباشر', en_t:'Direct Phone',
+        ar_v:'تحويلة 4100 / 4101', en_v:'Ext. 4100 / 4101',
+        ar_h:'أحد–خميس: 7:30 ص – 3:30 م', en_h:'Sun–Thu: 7:30 AM – 3:30 PM',
+        action:'tel:+97444974100', ar_btn:'اتصل الآن', en_btn:'Call Now'
+      },
+      {
+        ic:'fa-envelope', bg:'#F0FDF4', cl:'#15803D', brd:'#BBF7D0',
+        ar_t:'البريد الإلكتروني', en_t:'Email',
+        ar_v:'payroll@qu.edu.qa', en_v:'payroll@qu.edu.qa',
+        ar_h:'الرد خلال 4 ساعات عمل', en_h:'Response within 4 working hours',
+        action:'mailto:payroll@qu.edu.qa', ar_btn:'أرسل إيميل', en_btn:'Send Email'
+      },
+      {
+        ic:'fa-location-dot', bg:'#FDF4FF', cl:'#7C3AED', brd:'#E9D5FF',
+        ar_t:'الموقع', en_t:'Location',
+        ar_v:'مبنى الإدارة الرئيسي – الدور الثاني', en_v:'Main Admin Building – 2nd Floor',
+        ar_h:'حرم جامعة قطر الرئيسي', en_h:'Qatar University Main Campus',
+        action:'https://maps.google.com', ar_btn:'الخريطة', en_btn:'View Map'
+      },
+      {
+        ic:'fa-concierge-bell', bg:'#FFF7ED', cl:'#C2410C', brd:'#FED7AA',
+        ar_t:'طلب خدمة عبر البوابة', en_t:'Request via Portal',
+        ar_v:'بوابة الموظفين – طلب خدمة', en_v:'Staff Portal – Request a Service',
+        ar_h:'متاح 24/7 | استجابة خلال 2–4 ساعات', en_h:'Available 24/7 | 2–4 hour response',
+        action:'/staff-request?lang='+lang, ar_btn:'قدّم طلبك', en_btn:'Submit Request'
+      },
+    ].map(c=>`
+    <div class="bg-white rounded-2xl p-5 border hover:shadow-md transition-all" style="border-color:${c.brd}">
+      <div class="flex items-start gap-4 mb-4 ${isRTL?'flex-row-reverse':''}">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${c.bg}">
+          <i class="fas ${c.ic} text-xl" style="color:${c.cl}"></i>
+        </div>
+        <div class="${isRTL?'text-right':''}">
+          <h4 class="font-bold text-gray-800 text-sm mb-1">${isRTL?c.ar_t:c.en_t}</h4>
+          <p class="font-mono text-sm font-bold" style="color:${c.cl}">${isRTL?c.ar_v:c.en_v}</p>
+          <p class="text-xs text-gray-400 mt-0.5">${isRTL?c.ar_h:c.en_h}</p>
+        </div>
+      </div>
+      <a href="${c.action}" class="flex items-center justify-center gap-2 w-full py-2 rounded-xl text-sm font-bold text-white transition hover:opacity-90" style="background:${c.cl}">
+        <i class="fas ${c.ic}"></i> ${isRTL?c.ar_btn:c.en_btn}
+      </a>
+    </div>`).join('')}
+  </div>
+
+  <!-- نموذج تواصل سريع -->
+  <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+    <h3 class="font-bold text-gray-800 mb-5 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+      <i class="fas fa-paper-plane" style="color:var(--qu-maroon)"></i>
+      ${isRTL?'راسلنا مباشرة':'Send Us a Direct Message'}
+    </h3>
+    <form onsubmit="pdSendMsg(event)" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'الاسم الكامل':'Full Name'} <span class="text-red-500">*</span></label>
+          <input id="pdName" type="text" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${isRTL?'text-right':''}" style="--tw-ring-color:var(--qu-maroon)" placeholder="${isRTL?'أدخل اسمك الكامل':'Enter your full name'}">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'الرقم الوظيفي':'Employee ID'} <span class="text-red-500">*</span></label>
+          <input id="pdEmpId" type="text" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${isRTL?'text-right':''}" placeholder="${isRTL?'مثال: QU-2023-0001':'e.g. QU-2023-0001'}">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'البريد الإلكتروني':'Email'} <span class="text-red-500">*</span></label>
+          <input id="pdEmail" type="email" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${isRTL?'text-right':''}" placeholder="name@qu.edu.qa">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'موضوع الاستفسار':'Subject'} <span class="text-red-500">*</span></label>
+          <select id="pdSubject" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${isRTL?'text-right':''}">
+            <option value="">${isRTL?'-- اختر الموضوع --':'-- Select Subject --'}</option>
+            <option>${isRTL?'استفسار عن الراتب':'Salary Inquiry'}</option>
+            <option>${isRTL?'بدلات ومزايا':'Allowances & Benefits'}</option>
+            <option>${isRTL?'قسيمة الراتب':'Payslip'}</option>
+            <option>${isRTL?'مهمة رسمية':'Official Mission'}</option>
+            <option>${isRTL?'نهاية الخدمة':'End of Service'}</option>
+            <option>${isRTL?'أخرى':'Other'}</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-gray-600 mb-1.5 ${isRTL?'text-right':''}">${isRTL?'تفاصيل الاستفسار':'Message Details'} <span class="text-red-500">*</span></label>
+        <textarea id="pdMsg" required rows="4" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 resize-none ${isRTL?'text-right':''}" placeholder="${isRTL?'اكتب استفسارك هنا...':'Write your inquiry here...'}"></textarea>
+      </div>
+      <button type="submit" class="flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold text-sm hover:opacity-90 transition" style="background:var(--qu-maroon)">
+        <i class="fas fa-paper-plane"></i>
+        ${isRTL?'إرسال الاستفسار':'Send Inquiry'}
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="pdToast" class="fixed bottom-6 ${isRTL?'left-6':'right-6'} z-50 hidden">
+  <div class="flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl text-white font-bold text-sm" style="background:#15803D">
+    <i class="fas fa-check-circle text-lg"></i>
+    <span id="pdToastMsg"></span>
+  </div>
+</div>
+
+<script>
+// Tabs
+function pdShowTab(id){
+  document.querySelectorAll('.pd-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.pd-tab').forEach(b=>{
+    b.style.background=''; b.style.color=''; b.style.borderColor='';
+    b.classList.remove('active-tab');
+    b.classList.add('border-gray-200','text-gray-500');
+  });
+  document.getElementById('pdPanel-'+id).classList.remove('hidden');
+  var btn=document.getElementById('pdTab-'+id);
+  btn.style.background='var(--qu-maroon)'; btn.style.color='#fff'; btn.style.borderColor='var(--qu-maroon)';
+  btn.classList.remove('border-gray-200','text-gray-500');
+}
+
+// Contact form
+function pdSendMsg(e){
+  e.preventDefault();
+  var n=document.getElementById('pdName').value;
+  var ei=document.getElementById('pdEmpId').value;
+  var em=document.getElementById('pdEmail').value;
+  var s=document.getElementById('pdSubject').value;
+  var m=document.getElementById('pdMsg').value;
+  if(!n||!ei||!em||!s||!m){ pdToast('${isRTL?'يُرجى تعبئة جميع الحقول المطلوبة':'Please fill all required fields'}','#DC2626'); return; }
+  pdToast('${isRTL?'تم إرسال استفسارك بنجاح! سيتم التواصل معك خلال 4 ساعات عمل.':'Your inquiry was sent successfully! We will contact you within 4 working hours.'}','#15803D');
+  e.target.reset();
+}
+
+function pdToast(msg,color){
+  var t=document.getElementById('pdToast');
+  document.getElementById('pdToastMsg').textContent=msg;
+  t.firstElementChild.style.background=color;
+  t.classList.remove('hidden');
+  setTimeout(function(){ t.classList.add('hidden'); }, 4000);
+}
+</script>
+`
+
+  return c.html(layout(
+    isRTL ? 'قسم الرواتب – جامعة قطر' : 'Payroll Department – Qatar University',
+    pageHTML,
+    'payroll-dept',
+    lang
+  ))
+})
+
 
 
 export default app
