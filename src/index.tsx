@@ -1379,7 +1379,7 @@ const layout = (title: string, content: string, activePage: string, lang: Lang) 
 //  HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 function getLang(c: any): Lang {
-  return (c.req.query('lang') === 'ar' ? 'ar' : 'en') as Lang
+  return (c.req.query('lang') === 'en' ? 'en' : 'ar') as Lang
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -7633,11 +7633,18 @@ function staffLayout(title: string, content: string, activePage: string, lang: L
   style="background:var(--qu-maroon)"><i class="fas fa-arrow-up text-sm"></i></button>
 
 <script>
+  // ── Lang persistence ──
+  (function(){
+    // Save current page lang to localStorage
+    var PAGE_LANG = '${lang}';
+    localStorage.setItem('staffLang', PAGE_LANG);
+  })();
   // ── Auth guard ──
   (function(){
     const sess = localStorage.getItem('staffSession');
     if (!sess && !window.location.pathname.includes('staff-login')) {
-      window.location.href = '/staff-login?lang=${lang}';
+      var savedLang = localStorage.getItem('staffLang') || '${lang}';
+      window.location.href = '/staff-login?lang=' + savedLang;
     } else if (sess) {
       try {
         const data = JSON.parse(sess);
@@ -7648,7 +7655,8 @@ function staffLayout(title: string, content: string, activePage: string, lang: L
   })();
   function staffLogout(lang) {
     localStorage.removeItem('staffSession');
-    window.location.href = '/staff-login?lang=' + lang;
+    var savedLang = localStorage.getItem('staffLang') || lang;
+    window.location.href = '/staff-login?lang=' + savedLang;
   }
   // ── Back to top ──
   const _sbtt = document.getElementById('s_btt');
@@ -7758,9 +7766,18 @@ app.get('/staff-login', (c) => {
   </div>
 
   <script>
+    // ── Restore saved lang if not in URL ──
+    (function(){
+      var urlLang = new URLSearchParams(window.location.search).get('lang');
+      if (!urlLang) {
+        var saved = localStorage.getItem('staffLang') || 'ar';
+        window.location.replace('/staff-login?lang=' + saved);
+      }
+    })();
     // Check if already logged in
     if (localStorage.getItem('staffSession')) {
-      window.location.href = '/staff?lang=${lang}';
+      var _savedLang = localStorage.getItem('staffLang') || '${lang}';
+      window.location.href = '/staff?lang=' + _savedLang;
     }
 
     // Known users (client-side check for demo – in production use server-side auth)
@@ -7777,6 +7794,7 @@ app.get('/staff-login', (c) => {
       setTimeout(() => {
         if (USERS[u] && USERS[u] === p) {
           localStorage.setItem('staffSession', JSON.stringify({ username: u, loginAt: Date.now() }));
+          localStorage.setItem('staffLang', '${lang}');
           window.location.href = '/staff?lang=${lang}';
         } else {
           window.location.href = '/staff-login?lang=${lang}&error=1';
