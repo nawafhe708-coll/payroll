@@ -7509,7 +7509,6 @@ function staffLayout(title: string, content: string, activePage: string, lang: L
     { href: '/staff-forms',      icon: 'fa-file-alt',        label: isRTL ? 'النماذج والوثائق' : 'Forms & Documents', page: 'forms' },
     { href: '/staff-request',    icon: 'fa-concierge-bell',  label: isRTL ? 'طلب خدمة' : 'Request a Service',  page: 'request' },
     { href: '/staff-contact',    icon: 'fa-envelope',        label: isRTL ? 'تواصل معنا' : 'Contact Us',       page: 'contact' },
-    { href: '/approvals',         icon: 'fa-stamp',            label: isRTL ? 'الموافقات' : 'Approvals',          page: 'approvals' },
     { href: '/payroll-dept',     icon: 'fa-building-columns', label: isRTL ? 'قسم الرواتب' : 'Payroll Dept.',    page: 'payroll-dept' },
   ]
 
