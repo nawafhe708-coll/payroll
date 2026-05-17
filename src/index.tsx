@@ -15074,737 +15074,872 @@ app.get('/approvals', (c) => {
   const isRTL = lang === 'ar'
 
   const pageHTML = `
+<!-- ══ APPROVALS PAGE ══════════════════════════════════════════ -->
 
-<!-- ══ Hero ══ -->
-<div class="relative overflow-hidden rounded-2xl mb-8" style="background:linear-gradient(135deg,#1e3a5f 0%,#0f2440 50%,#8B1A2F 100%)">
-  <div class="absolute inset-0 opacity-5" style="background-image:url('data:image/svg+xml,<svg width=60 height=60 xmlns=http://www.w3.org/2000/svg><rect width=60 height=60 fill=none/><circle cx=30 cy=30 r=28 stroke=white stroke-width=1 fill=none/><line x1=0 y1=30 x2=60 y2=30 stroke=white stroke-width=.5/><line x1=30 y1=0 x2=30 y2=60 stroke=white stroke-width=.5/></svg>')"></div>
-  <div class="relative px-8 py-10 flex flex-col md:flex-row items-start md:items-center gap-6">
-    <div class="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-2xl" style="background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25)">
-      <i class="fas fa-stamp text-4xl text-white"></i>
-    </div>
-    <div class="${isRTL?'text-right':''}">
-      <div class="flex items-center gap-2 mb-2 flex-wrap ${isRTL?'flex-row-reverse justify-end':''}">
-        <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(255,255,255,.15);color:#fff">${isRTL?'جامعة قطر – إدارة الرواتب':'Qatar University – Payroll'}</span>
-        <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(197,160,60,.35);color:#F5D68A">${isRTL?'الإدارة العليا':'Senior Management'}</span>
+<!-- Hero Banner -->
+<div class="relative overflow-hidden rounded-2xl mb-8" style="background:linear-gradient(135deg,#1e3a5f 0%,#0f2440 55%,#7B1228 100%)">
+  <div class="absolute inset-0 opacity-5" style="background-image:url('data:image/svg+xml,<svg width=80 height=80 xmlns=http://www.w3.org/2000/svg><circle cx=40 cy=40 r=38 stroke=white stroke-width=1 fill=none/><line x1=0 y1=40 x2=80 y2=40 stroke=white stroke-width=.4/><line x1=40 y1=0 x2=40 y2=80 stroke=white stroke-width=.4/></svg>');background-size:80px"></div>
+  <div class="relative px-6 py-8 md:px-10 md:py-10">
+    <div class="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
+      <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25)">
+        <i class="fas fa-stamp text-3xl md:text-4xl text-white"></i>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">${isRTL?'الموافقات والاعتمادات':'Approvals & Endorsements'}</h1>
-      <p class="text-white/70 text-sm max-w-2xl">${isRTL?'نظام متكامل لإدارة الموافقات الإدارية متعدد المراحل: رئيس القسم ← مدير الإدارة ← النواب، مع إمكانية رفع ملفات متعددة لمواضيع مختلفة وإعادة الطلب عند الحاجة.':'Integrated multi-stage approval system: Dept. Head ← Admin Director ← Deputies, with multi-file upload for different topics and request return capability.'}</p>
+      <div class="${isRTL?'text-right':''}">
+        <div class="flex flex-wrap items-center gap-2 mb-2 ${isRTL?'flex-row-reverse justify-end':''}">
+          <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(255,255,255,.15);color:#fff">${isRTL?'جامعة قطر – إدارة الرواتب':'Qatar University – Payroll'}</span>
+          <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(197,160,60,.3);color:#F5D68A"><i class="fas fa-crown me-1"></i>${isRTL?'مدير الإدارة':'Admin Director'}</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-1">${isRTL?'الموافقات والاعتمادات':'Approvals & Endorsements'}</h1>
+        <p class="text-white/65 text-sm">${isRTL?'إدارة طلبات الاعتماد متعددة المراحل لمهام الموظفين والقرارات الإدارية':'Multi-stage approval management for employee missions and administrative decisions'}</p>
+      </div>
+      <div class="md:ms-auto flex gap-3 ${isRTL?'flex-row-reverse':''}">
+        <button onclick="apvOpenNew()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition" style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3)" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.18)'">
+          <i class="fas fa-plus-circle"></i>${isRTL?'طلب اعتماد جديد':'New Approval Request'}
+        </button>
+        <button onclick="apvSyncMissions()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition" style="background:rgba(197,160,60,.25);color:#F5D68A;border:1.5px solid rgba(197,160,60,.4)" onmouseover="this.style.background='rgba(197,160,60,.4)'" onmouseout="this.style.background='rgba(197,160,60,.25)'">
+          <i class="fas fa-sync-alt"></i>${isRTL?'مزامنة المهام':'Sync Missions'}
+        </button>
+      </div>
+    </div>
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
+        <div class="text-2xl font-extrabold text-white" id="heroStat0">0</div>
+        <div class="text-xs text-white/60 mt-0.5"><i class="fas fa-hourglass-half me-1"></i>${isRTL?'قيد المراجعة':'Pending'}</div>
+      </div>
+      <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
+        <div class="text-2xl font-extrabold text-emerald-400" id="heroStat1">0</div>
+        <div class="text-xs text-white/60 mt-0.5"><i class="fas fa-check-double me-1"></i>${isRTL?'معتمدة':'Approved'}</div>
+      </div>
+      <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
+        <div class="text-2xl font-extrabold text-amber-400" id="heroStat2">0</div>
+        <div class="text-xs text-white/60 mt-0.5"><i class="fas fa-rotate-left me-1"></i>${isRTL?'مُعادة':'Returned'}</div>
+      </div>
+      <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
+        <div class="text-2xl font-extrabold text-rose-400" id="heroStat3">0</div>
+        <div class="text-xs text-white/60 mt-0.5"><i class="fas fa-times-circle me-1"></i>${isRTL?'مرفوضة':'Rejected'}</div>
+      </div>
+      <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
+        <div class="text-2xl font-extrabold text-white" id="heroStat4">0</div>
+        <div class="text-xs text-white/60 mt-0.5"><i class="fas fa-layer-group me-1"></i>${isRTL?'الإجمالي':'Total'}</div>
+      </div>
     </div>
   </div>
-  <div class="grid grid-cols-2 md:grid-cols-4 border-t border-white/10">
+</div>
+
+<!-- Pipeline Visual - مراحل الاعتماد -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+  <h3 class="font-bold text-gray-700 text-sm mb-4 flex items-center gap-2 ${isRTL?'flex-row-reverse':''}">
+    <i class="fas fa-route" style="color:#1e3a5f"></i>
+    ${isRTL?'مسار الاعتماد المؤسسي':'Institutional Approval Pipeline'}
+  </h3>
+  <div class="flex flex-col md:flex-row items-center justify-between gap-2">
     ${[
-      {n:'0', l:isRTL?'قيد المراجعة':'Pending', ic:'fa-hourglass-half', id:'heroStat0'},
-      {n:'0', l:isRTL?'معتمدة':'Approved',       ic:'fa-check-double',   id:'heroStat1'},
-      {n:'0', l:isRTL?'مُعادة':'Returned',        ic:'fa-rotate-left',    id:'heroStat2'},
-      {n:'0', l:isRTL?'إجمالي الطلبات':'Total',   ic:'fa-layer-group',    id:'heroStat3'},
-    ].map(s=>`
-    <div class="px-6 py-4 ${isRTL?'text-right':''}">
-      <div class="flex items-center gap-2 ${isRTL?'flex-row-reverse justify-end':''}">
-        <i class="fas ${s.ic} text-white/40 text-xs"></i>
-        <p class="text-2xl font-extrabold text-white" id="${s.id}">0</p>
+      {key:'pending_head',     ar:'رئيس القسم',    en:'Dept. Head',     ic:'fa-user-tie',    cl:'#7C3AED', bg:'#FAF5FF', bd:'#DDD6FE', cnt:'pipeCount0'},
+      {key:'pending_director', ar:'مدير الإدارة',  en:'Admin Director', ic:'fa-user-shield', cl:'#15803D', bg:'#F0FDF4', bd:'#BBF7D0', cnt:'pipeCount1'},
+      {key:'pending_deputy',   ar:'النواب',         en:'Deputies',       ic:'fa-users-gear',  cl:'#0369A1', bg:'#F0F9FF', bd:'#BAE6FD', cnt:'pipeCount2'},
+      {key:'approved',         ar:'معتمدة نهائياً','en':'Final Approval',ic:'fa-check-circle',cl:'#15803D', bg:'#DCFCE7', bd:'#86EFAC', cnt:'pipeCount3'},
+    ].map((s,i)=>`
+    <div class="flex items-center gap-2 flex-1 min-w-0">
+      <div class="flex-1 rounded-xl px-3 py-3 text-center border-2 transition" style="background:${s.bg};border-color:${s.bd}">
+        <i class="fas ${s.ic} text-xl mb-1" style="color:${s.cl}"></i>
+        <div class="text-xs font-bold mt-1" style="color:${s.cl}">${isRTL?s.ar:s.en}</div>
+        <div class="text-lg font-extrabold mt-0.5" style="color:${s.cl}" id="${s.cnt}">0</div>
       </div>
-      <p class="text-white/50 text-xs mt-0.5">${s.l}</p>
+      ${i<3?`<i class="fas fa-chevron-${isRTL?'left':'right'} text-gray-300 flex-shrink-0 hidden md:block text-lg"></i>`:''}
     </div>`).join('')}
   </div>
 </div>
 
-<!-- ══ Action bar ══ -->
-<div class="flex flex-wrap items-center gap-3 mb-6 ${isRTL?'flex-row-reverse':''}">
-  <button onclick="apvOpenNew()" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white font-bold text-sm shadow-lg hover:opacity-90 transition" style="background:linear-gradient(135deg,#1e3a5f,#2d5490)">
-    <i class="fas fa-plus-circle"></i> ${isRTL?'طلب اعتماد جديد':'New Approval Request'}
-  </button>
-  <div class="flex items-center gap-2 bg-white rounded-xl border border-gray-200 px-3 py-2.5 flex-1 min-w-48">
-    <i class="fas fa-search text-gray-400 text-sm"></i>
-    <input id="apvSearch" type="text" placeholder="${isRTL?'بحث بالاسم أو رقم الطلب...':'Search by name or request ID...'}" class="flex-1 text-sm outline-none bg-transparent ${isRTL?'text-right':''}" oninput="apvRenderAll()">
-  </div>
-  <select id="apvFilter" onchange="apvRenderAll()" class="border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white outline-none">
-    <option value="">${isRTL?'كل الحالات':'All Status'}</option>
-    <option value="pending_head">${isRTL?'بانتظار رئيس القسم':'Pending Dept. Head'}</option>
-    <option value="pending_director">${isRTL?'بانتظار مدير الإدارة':'Pending Admin Director'}</option>
-    <option value="pending_deputy">${isRTL?'بانتظار النواب':'Pending Deputies'}</option>
-    <option value="approved">${isRTL?'معتمدة':'Approved'}</option>
-    <option value="returned">${isRTL?'مُعادة':'Returned'}</option>
-    <option value="rejected">${isRTL?'مرفوضة':'Rejected'}</option>
-  </select>
-  <select id="apvTypeFilter" onchange="apvRenderAll()" class="border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white outline-none">
-    <option value="">${isRTL?'كل الأنواع':'All Types'}</option>
-    <option value="financial">${isRTL?'مالي':'Financial'}</option>
-    <option value="admin">${isRTL?'إداري':'Administrative'}</option>
-    <option value="hr">${isRTL?'موارد بشرية':'Human Resources'}</option>
-    <option value="technical">${isRTL?'تقني':'Technical'}</option>
-    <option value="legal">${isRTL?'قانوني':'Legal'}</option>
-    <option value="other">${isRTL?'أخرى':'Other'}</option>
-  </select>
-</div>
-
-<!-- ══ Requests list ══ -->
-<div id="apvList" class="space-y-4 mb-8"></div>
-<div id="apvEmpty" class="hidden text-center py-20">
-  <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background:#F3F4F6">
-    <i class="fas fa-stamp text-3xl text-gray-300"></i>
-  </div>
-  <p class="text-gray-400 font-bold">${isRTL?'لا توجد طلبات بعد':'No requests yet'}</p>
-  <p class="text-gray-300 text-sm mt-1">${isRTL?'اضغط "طلب اعتماد جديد" لإنشاء أول طلب':'Click "New Approval Request" to create the first'}</p>
-</div>
-
-<!-- ════════════════════════════════════════════
-     MODAL: New / Edit Request
-════════════════════════════════════════════ -->
-<div id="apvModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="background:rgba(0,0,0,.55)">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto" dir="${isRTL?'rtl':'ltr'}">
-    <!-- Header -->
-    <div class="sticky top-0 flex items-center justify-between px-6 py-4 rounded-t-2xl border-b border-gray-100 z-10" style="background:linear-gradient(135deg,#1e3a5f,#2d5490)">
-      <h2 class="text-white font-bold text-lg flex items-center gap-2"><i class="fas fa-stamp"></i><span id="apvModalTitle">${isRTL?'طلب اعتماد جديد':'New Approval Request'}</span></h2>
-      <button onclick="apvCloseModal()" class="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition"><i class="fas fa-times"></i></button>
+<!-- Filters + Search -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+  <div class="flex flex-wrap gap-3 items-center ${isRTL?'flex-row-reverse':''}">
+    <div class="relative flex-1 min-w-48">
+      <i class="fas fa-search absolute ${isRTL?'right-3':'left-3'} top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+      <input id="apvSearch" type="text" placeholder="${isRTL?'بحث بالاسم أو الرقم أو العنوان...':'Search by name, ID or title...'}"
+        class="w-full ${isRTL?'pr-9 pl-3 text-right':'pl-9 pr-3'} py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+        oninput="apvFilter()">
     </div>
-    <div class="p-6 space-y-5">
-
-      <!-- بيانات مقدّم الطلب -->
-      <div class="rounded-xl p-4 border border-blue-100" style="background:#F0F9FF">
-        <p class="text-xs font-bold text-blue-700 mb-3 flex items-center gap-2"><i class="fas fa-user-tie"></i>${isRTL?'بيانات مقدم الطلب':'Requester Information'}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'الاسم الكامل':'Full Name'} <span class="text-red-500">*</span></label>
-            <input id="apvName" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'أدخل اسمك الكامل':'Enter full name'}">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'الرقم الوظيفي':'Employee ID'} <span class="text-red-500">*</span></label>
-            <input id="apvEmpId" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300" placeholder="QU-2024-0001">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'القسم / الوحدة':'Department / Unit'} <span class="text-red-500">*</span></label>
-            <input id="apvDept" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300" placeholder="${isRTL?'مثال: قسم الرواتب':'e.g. Payroll Dept.'}">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'البريد الإلكتروني':'Email'} <span class="text-red-500">*</span></label>
-            <input id="apvEmail" type="email" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300" placeholder="name@qu.edu.qa">
-          </div>
-        </div>
-      </div>
-
-      <!-- تفاصيل الطلب -->
-      <div class="rounded-xl p-4 border border-purple-100" style="background:#FAF5FF">
-        <p class="text-xs font-bold text-purple-700 mb-3 flex items-center gap-2"><i class="fas fa-file-signature"></i>${isRTL?'تفاصيل الطلب':'Request Details'}</p>
-        <div class="space-y-3">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'نوع الطلب':'Request Type'} <span class="text-red-500">*</span></label>
-              <select id="apvType" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-300">
-                <option value="">${isRTL?'-- اختر النوع --':'-- Select Type --'}</option>
-                <option value="financial">${isRTL?'مالي – صرف / تحويل':'Financial – Payment/Transfer'}</option>
-                <option value="admin">${isRTL?'إداري – قرار / تعميم':'Administrative – Decision/Circular'}</option>
-                <option value="hr">${isRTL?'موارد بشرية – تعيين / إجازة':'HR – Hiring/Leave'}</option>
-                <option value="technical">${isRTL?'تقني – نظام / بنية تحتية':'Technical – System/Infrastructure'}</option>
-                <option value="legal">${isRTL?'قانوني – عقد / اتفاقية':'Legal – Contract/Agreement'}</option>
-                <option value="other">${isRTL?'أخرى':'Other'}</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'مستوى الأولوية':'Priority Level'} <span class="text-red-500">*</span></label>
-              <select id="apvPriority" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-300">
-                <option value="normal">${isRTL?'عادي':'Normal'}</option>
-                <option value="urgent">${isRTL?'عاجل':'Urgent'}</option>
-                <option value="very_urgent">${isRTL?'عاجل جداً':'Very Urgent'}</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'موضوع الطلب':'Request Subject'} <span class="text-red-500">*</span></label>
-            <input id="apvSubject" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-300" placeholder="${isRTL?'أدخل موضوع الطلب بوضوح':'Enter request subject clearly'}">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 mb-1">${isRTL?'تفاصيل وملاحظات الطلب':'Request Details & Notes'} <span class="text-red-500">*</span></label>
-            <textarea id="apvDetails" rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-300 resize-none" placeholder="${isRTL?'اشرح طلبك بالتفصيل وأضف أي ملاحظات مهمة...':'Describe your request in detail and add any important notes...'}"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- رفع الملفات المتعددة -->
-      <div class="rounded-xl p-4 border border-green-100" style="background:#F0FDF4">
-        <p class="text-xs font-bold text-green-700 mb-3 flex items-center gap-2"><i class="fas fa-paperclip"></i>${isRTL?'المرفقات – يمكن رفع ملفات متعددة لمواضيع مختلفة':'Attachments – Multiple files for different topics'}</p>
-        
-        <!-- Drop zone -->
-        <div id="apvDropZone" class="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all hover:border-green-400 hover:bg-green-50"
-             style="border-color:#86EFAC"
-             ondragover="event.preventDefault();this.style.borderColor='#16a34a';this.style.background='#DCFCE7'"
-             ondragleave="this.style.borderColor='#86EFAC';this.style.background=''"
-             ondrop="apvHandleDrop(event)"
-             onclick="document.getElementById('apvFiles').click()">
-          <i class="fas fa-cloud-upload-alt text-3xl text-green-400 mb-2"></i>
-          <p class="text-sm font-bold text-green-700">${isRTL?'اسحب وأسقط الملفات هنا':'Drag & Drop files here'}</p>
-          <p class="text-xs text-green-500 mt-1">${isRTL?'أو اضغط للاختيار – PDF, Word, Excel, PNG, JPG (حتى 20MB لكل ملف)':'or click to browse – PDF, Word, Excel, PNG, JPG (max 20MB each)'}</p>
-          <input id="apvFiles" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.ppt,.pptx" class="hidden" onchange="apvHandleFiles(this.files)">
-        </div>
-
-        <!-- قائمة الملفات المرفوعة -->
-        <div id="apvFileList" class="mt-3 space-y-2"></div>
-
-        <!-- حقول مواضيع الملفات -->
-        <div id="apvFileTopics" class="mt-3 space-y-2"></div>
-      </div>
-
-      <!-- مسار الاعتماد -->
-      <div class="rounded-xl p-4 border border-amber-100" style="background:#FFFBEB">
-        <p class="text-xs font-bold text-amber-700 mb-4 flex items-center gap-2"><i class="fas fa-route"></i>${isRTL?'مسار الاعتماد الإلزامي':'Mandatory Approval Workflow'}</p>
-        <div class="flex items-center gap-2 overflow-x-auto pb-2">
-          ${[
-            {ic:'fa-user-edit',  cl:'#1D4ED8', bg:'#EFF6FF', ar:'مقدم الطلب',      en:'Requester'},
-            {ic:'fa-arrow-left', cl:'#9CA3AF', bg:'transparent', ar:'', en:''},
-            {ic:'fa-user-tie',   cl:'#7C3AED', bg:'#FAF5FF', ar:'رئيس القسم',      en:'Dept. Head'},
-            {ic:'fa-arrow-left', cl:'#9CA3AF', bg:'transparent', ar:'', en:''},
-            {ic:'fa-user-shield',cl:'#15803D', bg:'#F0FDF4', ar:'مدير الإدارة',    en:'Admin Director'},
-            {ic:'fa-arrow-left', cl:'#9CA3AF', bg:'transparent', ar:'', en:''},
-            {ic:'fa-users-gear', cl:'#8B1A2F', bg:'#FEF2F2', ar:'النواب',          en:'Deputies'},
-            {ic:'fa-arrow-left', cl:'#9CA3AF', bg:'transparent', ar:'', en:''},
-            {ic:'fa-check-circle',cl:'#15803D',bg:'#DCFCE7', ar:'معتمد',           en:'Approved'},
-          ].map(s=>s.ar===''?`<i class="fas ${s.ic} text-gray-300 flex-shrink-0 text-xs ${isRTL?'fa-flip-horizontal':''}"></i>`:`
-          <div class="flex flex-col items-center gap-1 flex-shrink-0">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:${s.bg};border:1.5px solid ${s.cl}22">
-              <i class="fas ${s.ic} text-sm" style="color:${s.cl}"></i>
-            </div>
-            <span class="text-xs font-bold whitespace-nowrap" style="color:${s.cl}">${isRTL?s.ar:s.en}</span>
-          </div>`).join('')}
-        </div>
-        <div class="mt-3 p-3 rounded-lg text-xs text-amber-700" style="background:#FEF9C3">
-          <i class="fas fa-info-circle me-1"></i>
-          ${isRTL?'في حال الإعادة من أي مرحلة، يعود الطلب إلى رئيس القسم مع ملاحظات للتعديل قبل إعادة الإرسال.':'If returned from any stage, the request goes back to Dept. Head with revision notes before resubmission.'}
-        </div>
-      </div>
-
-      <!-- أزرار الحفظ -->
-      <div class="flex gap-3 justify-end pt-2 ${isRTL?'flex-row-reverse':''}">
-        <button onclick="apvCloseModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition">${isRTL?'إلغاء':'Cancel'}</button>
-        <button onclick="apvSaveRequest()" class="px-6 py-2.5 rounded-xl text-white text-sm font-bold hover:opacity-90 transition shadow" style="background:linear-gradient(135deg,#1e3a5f,#2d5490)">
-          <i class="fas fa-paper-plane me-2"></i>${isRTL?'إرسال للاعتماد':'Submit for Approval'}
-        </button>
-      </div>
-    </div>
+    <select id="apvStageFilter" onchange="apvFilter()" class="px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}">
+      <option value="">${isRTL?'كل المراحل':'All Stages'}</option>
+      <option value="pending_head">${isRTL?'رئيس القسم':'Dept. Head'}</option>
+      <option value="pending_director">${isRTL?'مدير الإدارة':'Admin Director'}</option>
+      <option value="pending_deputy">${isRTL?'النواب':'Deputies'}</option>
+      <option value="approved">${isRTL?'معتمدة':'Approved'}</option>
+      <option value="returned">${isRTL?'مُعادة':'Returned'}</option>
+      <option value="rejected">${isRTL?'مرفوضة':'Rejected'}</option>
+    </select>
+    <select id="apvTypeFilter" onchange="apvFilter()" class="px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}">
+      <option value="">${isRTL?'كل الأنواع':'All Types'}</option>
+      <option value="mission">${isRTL?'مهمة':'Mission'}</option>
+      <option value="financial">${isRTL?'مالي':'Financial'}</option>
+      <option value="admin">${isRTL?'إداري':'Administrative'}</option>
+      <option value="hr">${isRTL?'موارد بشرية':'HR'}</option>
+      <option value="technical">${isRTL?'تقني':'Technical'}</option>
+      <option value="legal">${isRTL?'قانوني':'Legal'}</option>
+    </select>
+    <select id="apvPrioFilter" onchange="apvFilter()" class="px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}">
+      <option value="">${isRTL?'كل الأولويات':'All Priorities'}</option>
+      <option value="very_urgent">${isRTL?'عاجل جداً':'Very Urgent'}</option>
+      <option value="urgent">${isRTL?'عاجل':'Urgent'}</option>
+      <option value="normal">${isRTL?'عادي':'Normal'}</option>
+    </select>
+    <button onclick="apvClearFilters()" class="px-4 py-2.5 rounded-xl text-sm font-bold text-gray-500 border border-gray-200 hover:bg-gray-50 transition">
+      <i class="fas fa-filter-circle-xmark me-1"></i>${isRTL?'مسح':'Clear'}
+    </button>
+    <span id="apvCountLabel" class="text-sm text-gray-400 font-medium ms-1"></span>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════
-     MODAL: View Request Details + Actions
-════════════════════════════════════════════ -->
-<div id="apvDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="background:rgba(0,0,0,.55)">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto" dir="${isRTL?'rtl':'ltr'}">
-    <div class="sticky top-0 flex items-center justify-between px-6 py-4 rounded-t-2xl border-b border-gray-100 z-10" style="background:linear-gradient(135deg,#8B1A2F,#6B1422)">
-      <h2 class="text-white font-bold text-lg flex items-center gap-2"><i class="fas fa-file-signature"></i>${isRTL?'تفاصيل الطلب':'Request Details'}</h2>
-      <button onclick="apvCloseDetail()" class="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition"><i class="fas fa-times"></i></button>
-    </div>
-    <div id="apvDetailBody" class="p-6"></div>
-  </div>
+<!-- Tabs: بوابة المهام / الطلبات الإدارية -->
+<div class="flex gap-2 mb-5 ${isRTL?'flex-row-reverse':''}">
+  <button id="tabAll"      onclick="apvSetTab('all')"      class="apv-tab active-tab px-5 py-2.5 rounded-xl text-sm font-bold border transition">${isRTL?'جميع الطلبات':'All Requests'}</button>
+  <button id="tabMissions" onclick="apvSetTab('missions')" class="apv-tab px-5 py-2.5 rounded-xl text-sm font-bold border transition">${isRTL?'مهام الموظفين':'Employee Missions'} <span id="missionsBadge" class="ms-1 bg-blue-500 text-white text-xs rounded-full px-1.5 py-0.5">0</span></button>
+  <button id="tabAdmin"    onclick="apvSetTab('admin')"    class="apv-tab px-5 py-2.5 rounded-xl text-sm font-bold border transition">${isRTL?'الطلبات الإدارية':'Admin Requests'}</button>
+  <button id="tabUrgent"   onclick="apvSetTab('urgent')"   class="apv-tab px-5 py-2.5 rounded-xl text-sm font-bold border transition">${isRTL?'العاجلة':'Urgent'} <span id="urgentBadge" class="ms-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">0</span></button>
 </div>
 
-<!-- ════════════════════════════════════════════
-     MODAL: Return / Reject with Notes
-════════════════════════════════════════════ -->
-<div id="apvActionModal" class="fixed inset-0 z-60 hidden flex items-center justify-center p-4" style="background:rgba(0,0,0,.65);z-index:60">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" dir="${isRTL?'rtl':'ltr'}">
-    <div id="apvActionHeader" class="flex items-center justify-between px-6 py-4 rounded-t-2xl border-b border-gray-100">
-      <h2 id="apvActionTitle" class="font-bold text-lg"></h2>
-      <button onclick="apvCloseAction()" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition"><i class="fas fa-times text-gray-500"></i></button>
+<style>
+.apv-tab { background:#fff; color:#6B7280; border-color:#E5E7EB; }
+.apv-tab:hover { background:#F9FAFB; }
+.apv-tab.active-tab { background:#1e3a5f; color:#fff; border-color:#1e3a5f; }
+</style>
+
+<!-- Main Content: Cards Grid -->
+<div id="apvGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+<div id="apvEmpty" class="hidden flex flex-col items-center justify-center py-20 text-center">
+  <div class="w-20 h-20 rounded-full flex items-center justify-center mb-4" style="background:#F1F5F9">
+    <i class="fas fa-inbox text-3xl text-gray-300"></i>
+  </div>
+  <p class="text-gray-400 font-medium">${isRTL?'لا توجد طلبات في هذا القسم':'No requests in this section'}</p>
+  <button onclick="apvOpenNew()" class="mt-4 px-5 py-2.5 rounded-xl text-sm font-bold text-white" style="background:#1e3a5f">${isRTL?'إضافة طلب جديد':'Add New Request'}</button>
+</div>
+
+<!-- ══ MODAL: New / Edit Request ══ -->
+<div id="apvModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto" style="background:rgba(0,0,0,.55)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-6">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 ${isRTL?'flex-row-reverse':''}">
+      <h2 class="text-lg font-bold" style="color:#1e3a5f" id="apvModalTitle">${isRTL?'طلب اعتماد جديد':'New Approval Request'}</h2>
+      <button onclick="apvCloseModal()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400 text-xl">&times;</button>
     </div>
     <div class="p-6 space-y-4">
-      <div>
-        <label class="block text-xs font-bold text-gray-600 mb-1.5">${isRTL?'ملاحظات / سبب الإجراء':'Notes / Reason'} <span class="text-red-500">*</span></label>
-        <textarea id="apvActionNote" rows="4" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-red-300 resize-none ${isRTL?'text-right':''}" placeholder="${isRTL?'أدخل الملاحظات أو سبب الإجراء...':'Enter notes or reason...'}"></textarea>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'عنوان الطلب *':'Request Title *'}</label>
+          <input id="fTitle" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}" placeholder="${isRTL?'أدخل عنوان الطلب':'Enter request title'}">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'نوع الطلب':'Request Type'}</label>
+          <select id="fType" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}">
+            <option value="mission">${isRTL?'مهمة':'Mission'}</option>
+            <option value="financial">${isRTL?'مالي':'Financial'}</option>
+            <option value="admin">${isRTL?'إداري':'Administrative'}</option>
+            <option value="hr">${isRTL?'موارد بشرية':'Human Resources'}</option>
+            <option value="technical">${isRTL?'تقني':'Technical'}</option>
+            <option value="legal">${isRTL?'قانوني':'Legal'}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'اسم مقدم الطلب':'Requester Name'}</label>
+          <input id="fEmpName" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}" placeholder="${isRTL?'اسم الموظف':'Employee name'}">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'الرقم الوظيفي':'Employee ID'}</label>
+          <input id="fEmpId" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}" placeholder="QU-XXXX-XXXX">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'القسم / الإدارة':'Department'}</label>
+          <input id="fDept" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}" placeholder="${isRTL?'مثال: كلية الهندسة':'e.g. College of Engineering'}">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'الأولوية':'Priority'}</label>
+          <select id="fPriority" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}">
+            <option value="normal">${isRTL?'عادي':'Normal'}</option>
+            <option value="urgent">${isRTL?'عاجل':'Urgent'}</option>
+            <option value="very_urgent">${isRTL?'عاجل جداً':'Very Urgent'}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'تاريخ الطلب':'Request Date'}</label>
+          <input id="fDate" type="date" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'التكلفة الإجمالية (ريال)':'Total Cost (QAR)'}</label>
+          <input id="fCost" type="number" min="0" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="0">
+        </div>
       </div>
-      <div id="apvActionBtns" class="flex gap-3 justify-end"></div>
+      <div>
+        <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'وصف / ملاحظات':'Description / Notes'}</label>
+        <textarea id="fDesc" rows="3" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}" placeholder="${isRTL?'تفاصيل إضافية عن الطلب...':'Additional details about the request...'}"></textarea>
+      </div>
+      <!-- مرحلة البدء -->
+      <div>
+        <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'ابدأ من مرحلة':'Start from Stage'}</label>
+        <select id="fStage" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}">
+          <option value="pending_head">${isRTL?'رئيس القسم':'Dept. Head'}</option>
+          <option value="pending_director">${isRTL?'مدير الإدارة':'Admin Director'}</option>
+          <option value="pending_deputy">${isRTL?'النواب':'Deputies'}</option>
+        </select>
+      </div>
+      <!-- مهمة مرتبطة -->
+      <div id="fMissionRow">
+        <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'ربط بمهمة (اختياري)':'Link to Mission (optional)'}</label>
+        <select id="fMissionLink" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}">
+          <option value="">${isRTL?'-- لا يوجد ربط --':'-- No link --'}</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-3 px-6 pb-5 ${isRTL?'flex-row-reverse':''}">
+      <button onclick="apvSaveRequest()" class="flex-1 py-3 rounded-xl font-bold text-white text-sm transition" style="background:#1e3a5f" onmouseover="this.style.background='#0f2440'" onmouseout="this.style.background='#1e3a5f'">
+        <i class="fas fa-save me-2"></i>${isRTL?'حفظ الطلب':'Save Request'}
+      </button>
+      <button onclick="apvCloseModal()" class="px-6 py-3 rounded-xl font-bold text-gray-600 text-sm border border-gray-200 hover:bg-gray-50">
+        ${isRTL?'إلغاء':'Cancel'}
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
-<div id="apvToast" class="fixed bottom-6 ${isRTL?'left-6':'right-6'} z-50 hidden transition-all">
-  <div id="apvToastInner" class="flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl text-white font-bold text-sm">
+<!-- ══ MODAL: Detail / Action ══ -->
+<div id="apvDetailModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto" style="background:rgba(0,0,0,.55)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-6">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 ${isRTL?'flex-row-reverse':''}">
+      <h2 class="text-lg font-bold" style="color:#1e3a5f" id="detTitle">${isRTL?'تفاصيل الطلب':'Request Details'}</h2>
+      <button onclick="apvCloseDetail()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400 text-xl">&times;</button>
+    </div>
+    <div id="detBody" class="p-6"></div>
+    <!-- Action Buttons -->
+    <div id="detActions" class="px-6 pb-5 flex flex-wrap gap-2 ${isRTL?'flex-row-reverse':''}"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: Approve Confirm ══ -->
+<div id="apvConfirmModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,.55)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+    <div class="text-center mb-4">
+      <div id="confirmIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3" style="background:#DCFCE7">
+        <i class="fas fa-check text-2xl text-emerald-600"></i>
+      </div>
+      <h3 id="confirmTitle" class="text-lg font-bold text-gray-800">${isRTL?'تأكيد الاعتماد':'Confirm Approval'}</h3>
+      <p id="confirmMsg" class="text-sm text-gray-500 mt-1"></p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-xs font-bold text-gray-600 mb-1 ${isRTL?'text-right':''}">${isRTL?'ملاحظات (اختياري)':'Notes (optional)'}</label>
+      <textarea id="confirmNote" rows="3" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${isRTL?'text-right':''}" placeholder="${isRTL?'أضف ملاحظاتك هنا...':'Add your notes here...'}"></textarea>
+    </div>
+    <div class="flex gap-3 ${isRTL?'flex-row-reverse':''}">
+      <button id="confirmBtn" onclick="apvDoAction()" class="flex-1 py-2.5 rounded-xl font-bold text-white text-sm" style="background:#15803D">${isRTL?'تأكيد':'Confirm'}</button>
+      <button onclick="apvCloseConfirm()" class="px-6 py-2.5 rounded-xl font-bold text-gray-600 text-sm border border-gray-200 hover:bg-gray-50">${isRTL?'إلغاء':'Cancel'}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Toast ══ -->
+<div id="apvToast" class="fixed bottom-6 ${isRTL?'left-6':'right-6'} z-[9999] hidden max-w-sm">
+  <div id="apvToastInner" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-white text-sm font-bold">
     <i id="apvToastIcon" class="fas fa-check-circle text-lg"></i>
     <span id="apvToastMsg"></span>
   </div>
 </div>
 
+<!-- ══ JS ══ -->
 <script>
 (function(){
+  var IS_RTL = ${isRTL};
+  var APV_KEY = 'qu_approvals_v1';
+  var MS_KEY  = 'qu_missions_v1';
+  var _editId  = null;
+  var _actionId = null;
+  var _actionType = null;
+  var _currentTab = 'all';
 
-var IS_RTL = ${isRTL};
-var APV_KEY = 'qu_approvals_v2';
-var _editId  = null;
-var _actionId = null;
-var _actionType = null;
-var _attachedFiles = [];  // { name, size, type, topic, dataUrl }
+  // ── localStorage helpers ────────────────────────────────────
+  function getAll(){ try{ return JSON.parse(localStorage.getItem(APV_KEY)||'[]'); }catch(e){ return []; } }
+  function saveAll(d){ localStorage.setItem(APV_KEY, JSON.stringify(d)); }
+  function getMissions(){ try{ return JSON.parse(localStorage.getItem(MS_KEY)||'[]'); }catch(e){ return []; } }
+  function genId(){ return 'APV-'+ Date.now().toString(36).toUpperCase(); }
+  function fmtDate(iso){ if(!iso) return '-'; var d=new Date(iso); return d.toLocaleDateString(IS_RTL?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'2-digit'}); }
+  function fmtDateTime(iso){ if(!iso) return '-'; var d=new Date(iso); return d.toLocaleDateString(IS_RTL?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+  function $(id){ return document.getElementById(id); }
 
-// ── helpers ──────────────────────────────────────────────
-function getAll(){ try{ return JSON.parse(localStorage.getItem(APV_KEY)||'[]'); }catch(e){ return []; } }
-function saveAll(d){ localStorage.setItem(APV_KEY, JSON.stringify(d)); }
-function genId(){ return 'APV-'+ Date.now().toString(36).toUpperCase(); }
-function fmtDate(iso){ if(!iso) return '-'; var d=new Date(iso); return d.toLocaleDateString(IS_RTL?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'}); }
-function $(id){ return document.getElementById(id); }
+  // ── Labels ───────────────────────────────────────────────────
+  var TYPE_LABEL   = { mission:IS_RTL?'مهمة':'Mission', financial:IS_RTL?'مالي':'Financial', admin:IS_RTL?'إداري':'Admin', hr:IS_RTL?'موارد بشرية':'HR', technical:IS_RTL?'تقني':'Technical', legal:IS_RTL?'قانوني':'Legal' };
+  var TYPE_COLOR   = { mission:'#1e3a5f', financial:'#1D4ED8', admin:'#7C3AED', hr:'#15803D', technical:'#0369A1', legal:'#B45309' };
+  var TYPE_BG      = { mission:'#EFF6FF', financial:'#EFF6FF', admin:'#FAF5FF', hr:'#F0FDF4', technical:'#F0F9FF', legal:'#FFFBEB' };
+  var PRIO_LABEL   = { normal:IS_RTL?'عادي':'Normal', urgent:IS_RTL?'عاجل':'Urgent', very_urgent:IS_RTL?'عاجل جداً':'Very Urgent' };
+  var PRIO_COLOR   = { normal:'#6B7280', urgent:'#D97706', very_urgent:'#DC2626' };
+  var PRIO_BG      = { normal:'#F9FAFB', urgent:'#FFFBEB', very_urgent:'#FEF2F2' };
 
-var TYPE_LABEL = {
-  financial: IS_RTL?'مالي':'Financial',
-  admin:     IS_RTL?'إداري':'Administrative',
-  hr:        IS_RTL?'موارد بشرية':'Human Resources',
-  technical: IS_RTL?'تقني':'Technical',
-  legal:     IS_RTL?'قانوني':'Legal',
-  other:     IS_RTL?'أخرى':'Other'
-};
-var TYPE_COLOR = { financial:'#1D4ED8', admin:'#7C3AED', hr:'#15803D', technical:'#0369A1', legal:'#B45309', other:'#6B7280' };
-var TYPE_BG    = { financial:'#EFF6FF', admin:'#FAF5FF', hr:'#F0FDF4', technical:'#F0F9FF', legal:'#FFFBEB', other:'#F9FAFB' };
-
-var PRIORITY_LABEL = {
-  normal:     IS_RTL?'عادي':'Normal',
-  urgent:     IS_RTL?'عاجل':'Urgent',
-  very_urgent:IS_RTL?'عاجل جداً':'Very Urgent'
-};
-var PRIORITY_COLOR = { normal:'#6B7280', urgent:'#D97706', very_urgent:'#DC2626' };
-var PRIORITY_BG    = { normal:'#F9FAFB', urgent:'#FFFBEB', very_urgent:'#FEF2F2' };
-
-// مراحل الاعتماد
-var STAGES = [
-  { key:'pending_head',     ar:'رئيس القسم',    en:'Dept. Head',      ic:'fa-user-tie',    cl:'#7C3AED', bg:'#FAF5FF' },
-  { key:'pending_director', ar:'مدير الإدارة',  en:'Admin Director',  ic:'fa-user-shield', cl:'#15803D', bg:'#F0FDF4' },
-  { key:'pending_deputy',   ar:'النواب',         en:'Deputies',        ic:'fa-users-gear',  cl:'#8B1A2F', bg:'#FEF2F2' },
-  { key:'approved',         ar:'معتمدة',         en:'Approved',        ic:'fa-check-circle',cl:'#15803D', bg:'#DCFCE7' },
-  { key:'returned',         ar:'مُعادة',          en:'Returned',        ic:'fa-rotate-left', cl:'#D97706', bg:'#FFFBEB' },
-  { key:'rejected',         ar:'مرفوضة',         en:'Rejected',        ic:'fa-times-circle',cl:'#DC2626', bg:'#FEF2F2' },
-];
-function stageInfo(key){ return STAGES.find(function(s){ return s.key===key; })||STAGES[0]; }
-function stageLabel(key){ var s=stageInfo(key); return IS_RTL?s.ar:s.en; }
-
-// next stage
-function nextStage(cur){
-  if(cur==='pending_head')     return 'pending_director';
-  if(cur==='pending_director') return 'pending_deputy';
-  if(cur==='pending_deputy')   return 'approved';
-  return cur;
-}
-
-// ── Update hero stats ─────────────────────────────────────
-function apvUpdateStats(){
-  var all = getAll();
-  var pending = all.filter(function(r){ return r.status.startsWith('pending'); }).length;
-  var approved = all.filter(function(r){ return r.status==='approved'; }).length;
-  var returned = all.filter(function(r){ return r.status==='returned'; }).length;
-  $('heroStat0').textContent = pending;
-  $('heroStat1').textContent = approved;
-  $('heroStat2').textContent = returned;
-  $('heroStat3').textContent = all.length;
-}
-
-// ── Render list ───────────────────────────────────────────
-function apvRenderAll(){
-  var all  = getAll();
-  var q    = ($('apvSearch').value||'').trim().toLowerCase();
-  var sf   = $('apvFilter').value;
-  var tf   = $('apvTypeFilter').value;
-  var list = all.filter(function(r){
-    if(q && !r.subject.toLowerCase().includes(q) && !r.id.toLowerCase().includes(q) && !r.name.toLowerCase().includes(q)) return false;
-    if(sf && r.status!==sf) return false;
-    if(tf && r.type!==tf)   return false;
-    return true;
-  });
-  list.sort(function(a,b){ return new Date(b.createdAt)-new Date(a.createdAt); });
-  apvUpdateStats();
-  var el = $('apvList');
-  var em = $('apvEmpty');
-  if(!list.length){ el.innerHTML=''; em.classList.remove('hidden'); return; }
-  em.classList.add('hidden');
-  el.innerHTML = list.map(function(r){
-    var si = stageInfo(r.status);
-    var ti = TYPE_COLOR[r.type]||'#6B7280';
-    var tb = TYPE_BG[r.type]||'#F9FAFB';
-    var pi = PRIORITY_COLOR[r.priority]||'#6B7280';
-    var pb = PRIORITY_BG[r.priority]||'#F9FAFB';
-    // timeline dots
-    var tl = ['pending_head','pending_director','pending_deputy','approved'];
-    var ci = tl.indexOf(r.status);
-    var tlHtml = tl.map(function(s,i){
-      var done = (ci>i)||(r.status==='approved'&&i<=3);
-      var cur  = ci===i;
-      var ssi  = stageInfo(s);
-      return '<div class="flex flex-col items-center gap-1 flex-shrink-0">'
-        +'<div class="w-7 h-7 rounded-full flex items-center justify-center border-2 transition-all"'
-        +' style="background:'+(done||cur?ssi.cl:'#fff')+';border-color:'+(done||cur?ssi.cl:'#D1D5DB')+';">'
-        +'<i class="fas '+ssi.ic+' text-xs" style="color:'+(done||cur?'#fff':'#D1D5DB')+'"></i></div>'
-        +'<span class="text-xs font-bold whitespace-nowrap" style="color:'+(done||cur?ssi.cl:'#9CA3AF')+';font-size:9px">'+stageLabel(s)+'</span>'
-        +'</div>'
-        +(i<3?'<div class="w-8 h-0.5 mb-4 flex-shrink-0" style="background:'+(done?si.cl:'#E5E7EB')+'"></div>':'');
-    }).join('');
-    var filesHtml = '';
-    if(r.files&&r.files.length){
-      filesHtml = '<div class="mt-3 flex flex-wrap gap-2">'
-        +r.files.map(function(f){
-          return '<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold" style="background:#EFF6FF;color:#1D4ED8">'
-            +'<i class="fas fa-paperclip"></i>'
-            +f.name
-            +(f.topic?'<span class="text-blue-400 font-normal"> – '+f.topic+'</span>':'')
-            +'</div>';
-        }).join('')
-        +'</div>';
-    }
-    var notesHtml = '';
-    if(r.timeline&&r.timeline.length){
-      var last = r.timeline[r.timeline.length-1];
-      if(last.note){
-        notesHtml = '<div class="mt-2 px-3 py-2 rounded-lg text-xs" style="background:#FFFBEB;border:1px solid #FDE68A;color:#92400E">'
-          +'<i class="fas fa-comment-alt me-1"></i>'+(IS_RTL?'آخر ملاحظة: ':'Last note: ')+last.note+'</div>';
-      }
-    }
-    return '<div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">'
-      +'<div class="flex items-start gap-4 p-5 '+(IS_RTL?'flex-row-reverse':'')+'">'
-        +'<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:'+si.bg+'">'
-          +'<i class="fas '+si.ic+' text-xl" style="color:'+si.cl+'"></i></div>'
-        +'<div class="flex-1 '+(IS_RTL?'text-right':'')+'">'
-          +'<div class="flex flex-wrap items-center gap-2 mb-1 '+(IS_RTL?'flex-row-reverse justify-end':'')+'">'
-            +'<span class="font-mono text-xs text-gray-400">'+r.id+'</span>'
-            +'<span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:'+tb+';color:'+ti+'">'+(TYPE_LABEL[r.type]||r.type)+'</span>'
-            +'<span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:'+pb+';color:'+pi+'">'+(PRIORITY_LABEL[r.priority]||r.priority)+'</span>'
-            +'<span class="text-xs font-bold px-2.5 py-0.5 rounded-full" style="background:'+si.bg+';color:'+si.cl+'">'+(IS_RTL?si.ar:si.en)+'</span>'
-          +'</div>'
-          +'<h4 class="font-bold text-gray-800 text-sm mb-0.5">'+r.subject+'</h4>'
-          +'<p class="text-xs text-gray-500">'+r.name+' &nbsp;·&nbsp; '+r.dept+'</p>'
-          +'<p class="text-xs text-gray-400 mt-0.5"><i class="fas fa-clock me-1"></i>'+fmtDate(r.createdAt)+'</p>'
-          +filesHtml
-          +notesHtml
-        +'</div>'
-        +'<div class="flex flex-col gap-2 flex-shrink-0 '+(IS_RTL?'items-start':'items-end')+'">'
-          +'<button onclick="apvViewDetail(this.dataset.apvId)" data-apv-id="'+r.id+'" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#1e3a5f">'
-            +'<i class="fas fa-eye me-1"></i>'+(IS_RTL?'عرض':'View')+'</button>'
-          +(r.status!=='approved'&&r.status!=='rejected'?'<button onclick="apvApprove(this.dataset.apvId)" data-apv-id="'+r.id+'" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#15803D">'
-            +'<i class="fas fa-check me-1"></i>'+(IS_RTL?'اعتماد':'Approve')+'</button>'
-            +'<button onclick="apvReturn(this.dataset.apvId)" data-apv-id="'+r.id+'" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#D97706">'
-            +'<i class="fas fa-rotate-left me-1"></i>'+(IS_RTL?'إعادة':'Return')+'</button>'
-            +'<button onclick="apvReject(this.dataset.apvId)" data-apv-id="'+r.id+'" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#DC2626">'
-            +'<i class="fas fa-times me-1"></i>'+(IS_RTL?'رفض':'Reject')+'</button>':'')
-          +(r.status==='returned'?'<button onclick="apvResubmit(this.dataset.apvId)" data-apv-id="'+r.id+'" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style="background:#7C3AED">'
-            +'<i class="fas fa-paper-plane me-1"></i>'+(IS_RTL?'إعادة إرسال':'Resubmit')+'</button>':'')
-        +'</div>'
-      +'</div>'
-      +'<div class="px-5 pb-4">'
-        +'<div class="flex items-center gap-2 overflow-x-auto '+(IS_RTL?'flex-row-reverse':'')+' pb-1">'+tlHtml+'</div>'
-      +'</div>'
-    +'</div>';
-  }).join('');
-}
-
-// ── Open New Modal ────────────────────────────────────────
-function apvOpenNew(){
-  _editId=null; _attachedFiles=[];
-  $('apvModalTitle').textContent = IS_RTL?'طلب اعتماد جديد':'New Approval Request';
-  ['apvName','apvEmpId','apvDept','apvEmail','apvSubject','apvDetails'].forEach(function(id){ $(id).value=''; });
-  $('apvType').value=''; $('apvPriority').value='normal';
-  $('apvFileList').innerHTML=''; $('apvFileTopics').innerHTML='';
-  $('apvModal').classList.remove('hidden');
-}
-
-function apvCloseModal(){ $('apvModal').classList.add('hidden'); }
-
-// ── File Handling ─────────────────────────────────────────
-function apvHandleDrop(e){
-  e.preventDefault();
-  var zone=$('apvDropZone');
-  zone.style.borderColor='#86EFAC'; zone.style.background='';
-  apvHandleFiles(e.dataTransfer.files);
-}
-
-function apvHandleFiles(files){
-  Array.from(files).forEach(function(file){
-    if(file.size>20*1024*1024){ apvToast((IS_RTL?'الملف أكبر من 20MB: ':'File exceeds 20MB: ')+file.name,'#DC2626','fa-exclamation-triangle'); return; }
-    var reader=new FileReader();
-    reader.onload=function(e){
-      _attachedFiles.push({ name:file.name, size:file.size, type:file.type, topic:'', dataUrl:e.target.result });
-      apvRenderFileList();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function apvRenderFileList(){
-  var icons = {'application/pdf':'fa-file-pdf','application/msword':'fa-file-word','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'fa-file-word','image/png':'fa-file-image','image/jpeg':'fa-file-image','application/vnd.ms-excel':'fa-file-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':'fa-file-excel'};
-  var colors={'application/pdf':'#DC2626','application/msword':'#1D4ED8','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'#1D4ED8','image/png':'#7C3AED','image/jpeg':'#7C3AED','application/vnd.ms-excel':'#15803D','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':'#15803D'};
-  $('apvFileList').innerHTML = _attachedFiles.map(function(f,i){
-    var ic=icons[f.type]||'fa-file';
-    var cl=colors[f.type]||'#6B7280';
-    var sz=(f.size/1024).toFixed(0);
-    return '<div class="flex items-center gap-3 p-2.5 rounded-lg '+(IS_RTL?'flex-row-reverse':'')+'" style="background:#F9FAFB;border:1px solid #E5E7EB">'
-      +'<div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:'+cl+'22">'
-        +'<i class="fas '+ic+' text-sm" style="color:'+cl+'"></i></div>'
-      +'<div class="flex-1 '+(IS_RTL?'text-right':'')+'">'
-        +'<p class="text-xs font-bold text-gray-700 truncate max-w-48">'+f.name+'</p>'
-        +'<p class="text-xs text-gray-400">'+sz+' KB</p>'
-      +'</div>'
-      +'<input type="text" placeholder="'+(IS_RTL?'موضوع الملف...':'File topic...')+'" class="flex-1 border border-gray-200 rounded-lg px-2 py-1 text-xs outline-none '+(IS_RTL?'text-right':'')+'" value="'+f.topic+'" onchange="_attachedFiles['+i+'].topic=this.value">'
-      +'<button onclick="_attachedFiles.splice('+i+',1);apvRenderFileList()" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center flex-shrink-0 transition">'
-        +'<i class="fas fa-trash text-red-400 text-xs"></i></button>'
-    +'</div>';
-  }).join('');
-}
-
-// ── Save Request ──────────────────────────────────────────
-function apvSaveRequest(){
-  var name   =$('apvName').value.trim();
-  var empId  =$('apvEmpId').value.trim();
-  var dept   =$('apvDept').value.trim();
-  var email  =$('apvEmail').value.trim();
-  var type   =$('apvType').value;
-  var prio   =$('apvPriority').value;
-  var subj   =$('apvSubject').value.trim();
-  var det    =$('apvDetails').value.trim();
-  if(!name||!empId||!dept||!email||!type||!subj||!det){
-    apvToast(IS_RTL?'يُرجى تعبئة جميع الحقول المطلوبة':'Please fill all required fields','#DC2626','fa-exclamation-triangle');
-    return;
-  }
-  var all=getAll();
-  if(_editId){
-    var idx=all.findIndex(function(r){ return r.id===_editId; });
-    if(idx>-1){
-      all[idx].name=name; all[idx].empId=empId; all[idx].dept=dept; all[idx].email=email;
-      all[idx].type=type; all[idx].priority=prio; all[idx].subject=subj; all[idx].details=det;
-      all[idx].files=_attachedFiles.map(function(f){ return {name:f.name,size:f.size,type:f.type,topic:f.topic}; });
-      all[idx].updatedAt=new Date().toISOString();
-    }
-  } else {
-    var rec={
-      id:genId(), name:name, empId:empId, dept:dept, email:email,
-      type:type, priority:prio, subject:subj, details:det,
-      files:_attachedFiles.map(function(f){ return {name:f.name,size:f.size,type:f.type,topic:f.topic}; }),
-      status:'pending_head',
-      createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(),
-      timeline:[{ stage:'pending_head', actor:name, action:IS_RTL?'أرسل الطلب':'Submitted', at:new Date().toISOString(), note:'' }]
-    };
-    all.unshift(rec);
-  }
-  saveAll(all);
-  apvCloseModal();
-  apvRenderAll();
-  apvToast(IS_RTL?'تم إرسال الطلب للاعتماد':'Request submitted for approval','#15803D','fa-check-circle');
-}
-
-// ── View Detail ───────────────────────────────────────────
-function apvViewDetail(id){
-  var all=getAll();
-  var r=all.find(function(x){ return x.id===id; });
-  if(!r) return;
-  var si=stageInfo(r.status);
-  var stages=['pending_head','pending_director','pending_deputy','approved'];
-  var ci=stages.indexOf(r.status);
-  var tlSteps=stages.map(function(s,i){
-    var done=(r.status==='approved')||(ci>i);
-    var cur=ci===i && r.status!=='approved'&&r.status!=='returned'&&r.status!=='rejected';
-    var ssi=stageInfo(s);
-    return '<div class="flex items-start gap-3 '+(IS_RTL?'flex-row-reverse':'')+'">'
-      +'<div class="flex flex-col items-center '+(i<3?'':'')+(IS_RTL?'items-end':'')+'">  '
-        +'<div class="w-9 h-9 rounded-full flex items-center justify-center border-2" style="background:'+(done||cur?ssi.cl:'#fff')+';border-color:'+(done||cur?ssi.cl:'#D1D5DB')+'">'
-          +'<i class="fas '+ssi.ic+' text-xs" style="color:'+(done||cur?'#fff':'#D1D5DB')+'"></i></div>'
-        +(i<3?'<div class="w-0.5 h-6 mt-1" style="background:'+(done?si.cl:'#E5E7EB')+'"></div>':'')
-      +'</div>'
-      +'<div class="pb-4 '+(IS_RTL?'text-right':'')+'">'
-        +'<p class="text-xs font-bold" style="color:'+(done||cur?ssi.cl:'#9CA3AF')+'">'+(IS_RTL?ssi.ar:ssi.en)+'</p>'
-        +(done||cur?'<p class="text-xs text-gray-400">'+fmtDate(r.updatedAt)+'</p>':'<p class="text-xs text-gray-300">'+(IS_RTL?'بانتظار الاعتماد...':'Awaiting approval...')+'</p>')
-      +'</div>'
-    +'</div>';
-  }).join('');
-  var filesHtml='';
-  if(r.files&&r.files.length){
-    filesHtml='<div class="space-y-1.5">'+r.files.map(function(f){
-      return '<div class="flex items-center gap-2 px-3 py-2 rounded-lg '+(IS_RTL?'flex-row-reverse':'')+'" style="background:#F9FAFB;border:1px solid #E5E7EB">'
-        +'<i class="fas fa-paperclip text-blue-400 text-xs"></i>'
-        +'<span class="text-xs font-bold text-gray-700">'+f.name+'</span>'
-        +(f.topic?'<span class="text-xs text-gray-400 ms-auto">'+f.topic+'</span>':'')
-      +'</div>';
-    }).join('')+'</div>';
-  }
-  var histHtml='';
-  if(r.timeline&&r.timeline.length){
-    histHtml='<div class="space-y-2">'+r.timeline.map(function(h){
-      return '<div class="flex items-start gap-3 '+(IS_RTL?'flex-row-reverse text-right':'')+'">'
-        +'<div class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mt-0.5">'
-          +'<i class="fas fa-history text-gray-400 text-xs"></i></div>'
-        +'<div>'
-          +'<p class="text-xs font-bold text-gray-700">'+h.action+'</p>'
-          +'<p class="text-xs text-gray-400">'+fmtDate(h.at)+(h.note?' &nbsp;·&nbsp; <span class=\"text-amber-600\">'+h.note+'</span>':'')+'</p>'
-        +'</div></div>';
-    }).join('')+'</div>';
-  }
-  $('apvDetailBody').innerHTML=
-    '<div class="space-y-5">'
-      // header info
-      +'<div class="flex items-center gap-4 p-4 rounded-xl '+(IS_RTL?'flex-row-reverse':'')+'" style="background:'+si.bg+';border:1px solid '+si.cl+'33">'
-        +'<div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:'+si.cl+'">'
-          +'<i class="fas '+si.ic+' text-white text-xl"></i></div>'
-        +'<div class="'+(IS_RTL?'text-right':'')+'">'
-          +'<p class="font-bold text-gray-800">'+r.subject+'</p>'
-          +'<p class="text-xs text-gray-500">'+r.id+' &nbsp;·&nbsp; '+(IS_RTL?si.ar:si.en)+'</p>'
-        +'</div>'
-      +'</div>'
-      // details
-      +'<div class="grid grid-cols-2 gap-3 text-sm">'
-        +[
-          {l:IS_RTL?'مقدم الطلب':'Requester', v:r.name},
-          {l:IS_RTL?'الرقم الوظيفي':'Emp. ID', v:r.empId},
-          {l:IS_RTL?'القسم':'Department', v:r.dept},
-          {l:IS_RTL?'البريد':'Email', v:r.email},
-        ].map(function(f){
-          return '<div class="'+(IS_RTL?'text-right':'')+'">'
-            +'<p class="text-xs text-gray-400 mb-0.5">'+f.l+'</p>'
-            +'<p class="font-bold text-gray-800 text-xs">'+f.v+'</p>'
-          +'</div>';
-        }).join('')
-      +'</div>'
-      // description
-      +'<div class="rounded-xl p-4 '+(IS_RTL?'text-right':'')+'" style="background:#F9FAFB">'
-        +'<p class="text-xs font-bold text-gray-500 mb-2">'+(IS_RTL?'التفاصيل':'Details')+'</p>'
-        +'<p class="text-sm text-gray-700 leading-relaxed">'+r.details+'</p>'
-      +'</div>'
-      // files
-      +(r.files&&r.files.length?'<div><p class="text-xs font-bold text-gray-500 mb-2 '+(IS_RTL?'text-right':'')+'">'+(IS_RTL?'المرفقات':'Attachments')+' ('+r.files.length+')</p>'+filesHtml+'</div>':'')
-      // timeline
-      +'<div><p class="text-xs font-bold text-gray-500 mb-3 '+(IS_RTL?'text-right':'')+'">'+(IS_RTL?'مسار الاعتماد':'Approval Path')+'</p>'+tlSteps+'</div>'
-      // history
-      +(histHtml?'<div><p class="text-xs font-bold text-gray-500 mb-3 '+(IS_RTL?'text-right':'')+'">'+(IS_RTL?'سجل الإجراءات':'Action History')+'</p>'+histHtml+'</div>':'')
-      // actions
-      +(r.status!=='approved'&&r.status!=='rejected'?
-        '<div class="flex flex-wrap gap-2 pt-2 '+(IS_RTL?'flex-row-reverse justify-end':'')+'"> '
-        +'<button onclick="apvCloseDetail();apvApprove(this.dataset.apvId)" data-apv-id="'+r.id+'" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white" style="background:#15803D"><i class="fas fa-check"></i>'+(IS_RTL?'اعتماد':'Approve')+'</button>'
-        +'<button onclick="apvCloseDetail();apvReturn(this.dataset.apvId)" data-apv-id="'+r.id+'" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white" style="background:#D97706"><i class="fas fa-rotate-left"></i>'+(IS_RTL?'إعادة لرئيس القسم':'Return to Dept. Head')+'</button>'
-        +'<button onclick="apvCloseDetail();apvReject(this.dataset.apvId)" data-apv-id="'+r.id+'" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white" style="background:#DC2626"><i class="fas fa-times"></i>'+(IS_RTL?'رفض':'Reject')+'</button>'
-        +'</div>':'')
-      +(r.status==='returned'?
-        '<button onclick="apvCloseDetail();apvResubmit(this.dataset.apvId)" data-apv-id="'+r.id+'" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white mt-2" style="background:#7C3AED"><i class="fas fa-paper-plane"></i>'+(IS_RTL?'إعادة إرسال':'Resubmit')+'</button>':'')
-    +'</div>';
-  $('apvDetailModal').classList.remove('hidden');
-}
-function apvCloseDetail(){ $('apvDetailModal').classList.add('hidden'); }
-
-// ── Approve ───────────────────────────────────────────────
-function apvApprove(id){
-  var all=getAll();
-  var r=all.find(function(x){ return x.id===id; });
-  if(!r) return;
-  var ns=nextStage(r.status);
-  r.status=ns; r.updatedAt=new Date().toISOString();
-  if(!r.timeline) r.timeline=[];
-  r.timeline.push({ stage:ns, actor:IS_RTL?'مسؤول النظام':'System', action:IS_RTL?'اعتمد وأحال للمرحلة التالية':'Approved & forwarded', at:new Date().toISOString(), note:'' });
-  saveAll(all);
-  apvRenderAll();
-  apvToast(IS_RTL?'تم الاعتماد والإحالة للمرحلة التالية':'Approved and forwarded to next stage','#15803D','fa-check-circle');
-}
-
-// ── Return ────────────────────────────────────────────────
-function apvReturn(id){
-  _actionId=id; _actionType='return';
-  $('apvActionTitle').innerHTML='<i class="fas fa-rotate-left me-2" style="color:#D97706"></i>'+(IS_RTL?'إعادة الطلب لرئيس القسم':'Return to Dept. Head');
-  $('apvActionHeader').style.borderBottom='3px solid #D97706';
-  $('apvActionNote').value='';
-  $('apvActionBtns').innerHTML=
-    '<button onclick="apvCloseAction()" class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition">'+(IS_RTL?'إلغاء':'Cancel')+'</button>'
-    +'<button onclick="apvConfirmReturn()" class="px-5 py-2 rounded-xl text-white text-sm font-bold" style="background:#D97706"><i class="fas fa-rotate-left me-1"></i>'+(IS_RTL?'إعادة':'Return')+'</button>';
-  $('apvActionModal').classList.remove('hidden');
-}
-function apvConfirmReturn(){
-  var note=$('apvActionNote').value.trim();
-  if(!note){ apvToast(IS_RTL?'يُرجى إدخال سبب الإعادة':'Please enter return reason','#DC2626','fa-exclamation-triangle'); return; }
-  var all=getAll();
-  var r=all.find(function(x){ return x.id===_actionId; });
-  if(!r) return;
-  r.status='returned'; r.updatedAt=new Date().toISOString();
-  if(!r.timeline) r.timeline=[];
-  r.timeline.push({ stage:'returned', actor:IS_RTL?'مسؤول النظام':'System', action:IS_RTL?'أعاد الطلب لرئيس القسم':'Returned to Dept. Head', at:new Date().toISOString(), note:note });
-  saveAll(all);
-  apvCloseAction();
-  apvRenderAll();
-  apvToast(IS_RTL?'تم إعادة الطلب لرئيس القسم مع الملاحظات':'Request returned to Dept. Head with notes','#D97706','fa-rotate-left');
-}
-
-// ── Reject ────────────────────────────────────────────────
-function apvReject(id){
-  _actionId=id; _actionType='reject';
-  $('apvActionTitle').innerHTML='<i class="fas fa-times-circle me-2" style="color:#DC2626"></i>'+(IS_RTL?'رفض الطلب':'Reject Request');
-  $('apvActionHeader').style.borderBottom='3px solid #DC2626';
-  $('apvActionNote').value='';
-  $('apvActionBtns').innerHTML=
-    '<button onclick="apvCloseAction()" class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition">'+(IS_RTL?'إلغاء':'Cancel')+'</button>'
-    +'<button onclick="apvConfirmReject()" class="px-5 py-2 rounded-xl text-white text-sm font-bold" style="background:#DC2626"><i class="fas fa-times me-1"></i>'+(IS_RTL?'رفض':'Reject')+'</button>';
-  $('apvActionModal').classList.remove('hidden');
-}
-function apvConfirmReject(){
-  var note=$('apvActionNote').value.trim();
-  if(!note){ apvToast(IS_RTL?'يُرجى إدخال سبب الرفض':'Please enter rejection reason','#DC2626','fa-exclamation-triangle'); return; }
-  var all=getAll();
-  var r=all.find(function(x){ return x.id===_actionId; });
-  if(!r) return;
-  r.status='rejected'; r.updatedAt=new Date().toISOString();
-  if(!r.timeline) r.timeline=[];
-  r.timeline.push({ stage:'rejected', actor:IS_RTL?'مسؤول النظام':'System', action:IS_RTL?'رفض الطلب':'Rejected', at:new Date().toISOString(), note:note });
-  saveAll(all);
-  apvCloseAction();
-  apvRenderAll();
-  apvToast(IS_RTL?'تم رفض الطلب':'Request rejected','#DC2626','fa-times-circle');
-}
-
-// ── Resubmit ──────────────────────────────────────────────
-function apvResubmit(id){
-  var all=getAll();
-  var r=all.find(function(x){ return x.id===id; });
-  if(!r) return;
-  r.status='pending_head'; r.updatedAt=new Date().toISOString();
-  if(!r.timeline) r.timeline=[];
-  r.timeline.push({ stage:'pending_head', actor:IS_RTL?'مقدم الطلب':'Requester', action:IS_RTL?'أعاد إرسال الطلب بعد التعديل':'Resubmitted after revision', at:new Date().toISOString(), note:'' });
-  saveAll(all);
-  apvRenderAll();
-  apvToast(IS_RTL?'تم إعادة إرسال الطلب':'Request resubmitted','#7C3AED','fa-paper-plane');
-}
-
-function apvCloseAction(){ $('apvActionModal').classList.add('hidden'); _actionId=null; }
-
-// ── Toast ─────────────────────────────────────────────────
-function apvToast(msg,color,icon){
-  var t=$('apvToast');
-  var inner=$('apvToastInner');
-  $('apvToastMsg').textContent=msg;
-  $('apvToastIcon').className='fas '+(icon||'fa-check-circle')+' text-lg';
-  inner.style.background=color||'#15803D';
-  t.classList.remove('hidden');
-  clearTimeout(t._timer);
-  t._timer=setTimeout(function(){ t.classList.add('hidden'); }, 4500);
-}
-
-// ── Seed demo data ────────────────────────────────────────
-function apvSeedDemo(){
-  if(getAll().length>0) return;
-  var demo=[
-    { id:'APV-DEMO01', name:IS_RTL?'محمد أحمد العلي':'Mohammed Al-Ali', empId:'QU-2022-0045', dept:IS_RTL?'قسم الرواتب':'Payroll Dept.', email:'m.alali@qu.edu.qa', type:'financial', priority:'urgent', subject:IS_RTL?'طلب صرف مكافآت ربع السنوي':'Quarterly Bonus Disbursement Request', details:IS_RTL?'طلب اعتماد صرف مكافآت ربع السنوي لموظفي القسم للفترة يناير-مارس 2025 بإجمالي 45,000 ريال.':'Request to approve quarterly bonus disbursement for department staff for Q1 2025 totaling QAR 45,000.', files:[{name:'bonus_q1_2025.pdf',size:245000,type:'application/pdf',topic:IS_RTL?'كشف المكافآت':'Bonus List'},{name:'finance_approval.xlsx',size:118000,type:'application/vnd.ms-excel',topic:IS_RTL?'اعتماد مالي':'Finance Approval'}], status:'pending_director', createdAt:'2025-05-10T09:00:00Z', updatedAt:'2025-05-12T11:00:00Z', timeline:[{stage:'pending_head',actor:IS_RTL?'محمد أحمد العلي':'Mohammed Al-Ali',action:IS_RTL?'أرسل الطلب':'Submitted',at:'2025-05-10T09:00:00Z',note:''},{stage:'pending_director',actor:IS_RTL?'رئيس القسم':'Dept. Head',action:IS_RTL?'اعتمد وأحال لمدير الإدارة':'Approved & forwarded to Director',at:'2025-05-12T11:00:00Z',note:''}] },
-    { id:'APV-DEMO02', name:IS_RTL?'سارة خالد المنصوري':'Sara Al-Mansouri', empId:'QU-2020-0112', dept:IS_RTL?'الموارد البشرية':'Human Resources', email:'s.almansouri@qu.edu.qa', type:'hr', priority:'normal', subject:IS_RTL?'تعديل بند بدل السكن في عقد موظف':'Housing Allowance Amendment in Employee Contract', details:IS_RTL?'طلب تعديل بند بدل السكن لموظف بعد زواجه وتغيير وضعه الاجتماعي وفقاً للائحة الموارد البشرية.':'Request to amend housing allowance clause for an employee following marriage and change of family status per HR regulations.', files:[{name:'marriage_certificate.pdf',size:890000,type:'application/pdf',topic:IS_RTL?'عقد الزواج':'Marriage Certificate'},{name:'hr_request_form.docx',size:55000,type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',topic:IS_RTL?'نموذج الطلب':'Request Form'}], status:'approved', createdAt:'2025-04-20T08:30:00Z', updatedAt:'2025-05-02T14:00:00Z', timeline:[{stage:'pending_head',actor:IS_RTL?'سارة المنصوري':'Sara',action:IS_RTL?'أرسلت الطلب':'Submitted',at:'2025-04-20T08:30:00Z',note:''},{stage:'pending_director',actor:IS_RTL?'رئيس القسم':'Dept. Head',action:IS_RTL?'اعتمد':'Approved',at:'2025-04-25T10:00:00Z',note:''},{stage:'pending_deputy',actor:IS_RTL?'مدير الإدارة':'Director',action:IS_RTL?'اعتمد':'Approved',at:'2025-04-28T09:00:00Z',note:''},{stage:'approved',actor:IS_RTL?'النواب':'Deputies',action:IS_RTL?'اعتمد نهائياً':'Final Approval',at:'2025-05-02T14:00:00Z',note:''}] },
-    { id:'APV-DEMO03', name:IS_RTL?'عبدالله ناصر القحطاني':'Abdullah Al-Qahtani', empId:'QU-2023-0078', dept:IS_RTL?'تقنية المعلومات':'IT Department', email:'a.alqahtani@qu.edu.qa', type:'technical', priority:'very_urgent', subject:IS_RTL?'ترقية بنية تحتية خادم الرواتب':'Payroll Server Infrastructure Upgrade', details:IS_RTL?'طلب اعتماد ترقية خادم نظام الرواتب لتحسين الأداء وضمان الأمن السيبراني قبل بدء الفصل الدراسي الجديد.':'Request to approve payroll system server upgrade to improve performance and ensure cybersecurity before the new semester.', files:[{name:'technical_specs.pdf',size:1200000,type:'application/pdf',topic:IS_RTL?'المواصفات التقنية':'Technical Specs'},{name:'cost_estimate.xlsx',size:88000,type:'application/vnd.ms-excel',topic:IS_RTL?'تقدير التكاليف':'Cost Estimate'},{name:'security_report.pdf',size:450000,type:'application/pdf',topic:IS_RTL?'تقرير الأمن':'Security Report'}], status:'returned', createdAt:'2025-05-08T11:00:00Z', updatedAt:'2025-05-14T09:30:00Z', timeline:[{stage:'pending_head',actor:IS_RTL?'عبدالله القحطاني':'Abdullah',action:IS_RTL?'أرسل الطلب':'Submitted',at:'2025-05-08T11:00:00Z',note:''},{stage:'returned',actor:IS_RTL?'رئيس القسم':'Dept. Head',action:IS_RTL?'أعاد الطلب للمراجعة':'Returned for revision',at:'2025-05-14T09:30:00Z',note:IS_RTL?'يُرجى إضافة عروض أسعار من ثلاثة موردين على الأقل':'Please add price quotes from at least three vendors'}] },
-    { id:'APV-DEMO04', name:IS_RTL?'نورة علي الكواري':'Noura Ali Al-Kuwari', empId:'QU-2021-0033', dept:IS_RTL?'الشؤون القانونية':'Legal Affairs', email:'n.alkuwari@qu.edu.qa', type:'legal', priority:'normal', subject:IS_RTL?'تجديد عقد شركة المعاشات التكميلية':'Supplementary Pension Company Contract Renewal', details:IS_RTL?'طلب اعتماد تجديد عقد شركة المعاشات التكميلية للموظفين لمدة سنتين بنفس الشروط والأحكام السابقة.':'Request to approve renewal of supplementary pension company contract for employees for 2 years under the same terms.', files:[{name:'contract_renewal.pdf',size:2100000,type:'application/pdf',topic:IS_RTL?'مسودة العقد':'Contract Draft'}], status:'pending_head', createdAt:'2025-05-15T07:45:00Z', updatedAt:'2025-05-15T07:45:00Z', timeline:[{stage:'pending_head',actor:IS_RTL?'نورة الكواري':'Noura',action:IS_RTL?'أرسلت الطلب':'Submitted',at:'2025-05-15T07:45:00Z',note:''}] },
+  var STAGES = [
+    { key:'pending_head',     ar:'رئيس القسم',    en:'Dept. Head',      ic:'fa-user-tie',    cl:'#7C3AED', bg:'#FAF5FF' },
+    { key:'pending_director', ar:'مدير الإدارة',  en:'Admin Director',  ic:'fa-user-shield', cl:'#15803D', bg:'#F0FDF4' },
+    { key:'pending_deputy',   ar:'النواب',         en:'Deputies',        ic:'fa-users-gear',  cl:'#0369A1', bg:'#F0F9FF' },
+    { key:'approved',         ar:'معتمدة',         en:'Approved',        ic:'fa-check-circle',cl:'#15803D', bg:'#DCFCE7' },
+    { key:'returned',         ar:'معادة',          en:'Returned',        ic:'fa-rotate-left', cl:'#D97706', bg:'#FFFBEB' },
+    { key:'rejected',         ar:'مرفوضة',         en:'Rejected',        ic:'fa-times-circle',cl:'#DC2626', bg:'#FEF2F2' }
   ];
-  saveAll(demo);
-}
+  function stageInfo(k){ return STAGES.find(function(s){ return s.key===k; })||STAGES[0]; }
+  function stageLabel(k){ var s=stageInfo(k); return IS_RTL?s.ar:s.en; }
+  function nextStage(cur){
+    if(cur==='pending_head')     return 'pending_director';
+    if(cur==='pending_director') return 'pending_deputy';
+    if(cur==='pending_deputy')   return 'approved';
+    return cur;
+  }
 
-// ── Init ──────────────────────────────────────────────────
-apvSeedDemo();
-apvRenderAll();
+  // ── Update Stats ─────────────────────────────────────────────
+  function apvUpdateStats(){
+    var all = getAll();
+    var pending  = all.filter(function(r){ return r.status.startsWith('pending'); }).length;
+    var approved = all.filter(function(r){ return r.status==='approved'; }).length;
+    var returned = all.filter(function(r){ return r.status==='returned'; }).length;
+    var rejected = all.filter(function(r){ return r.status==='rejected'; }).length;
+    if($('heroStat0')) $('heroStat0').textContent = pending;
+    if($('heroStat1')) $('heroStat1').textContent = approved;
+    if($('heroStat2')) $('heroStat2').textContent = returned;
+    if($('heroStat3')) $('heroStat3').textContent = rejected;
+    if($('heroStat4')) $('heroStat4').textContent = all.length;
+    // Pipeline counts
+    ['pending_head','pending_director','pending_deputy','approved'].forEach(function(k,i){
+      var el = $('pipeCount'+i);
+      if(el) el.textContent = all.filter(function(r){ return r.status===k; }).length;
+    });
+    // Badges
+    var mCount = all.filter(function(r){ return r.type==='mission'; }).length;
+    var uCount = all.filter(function(r){ return r.priority==='very_urgent'||r.priority==='urgent'; }).length;
+    if($('missionsBadge')) $('missionsBadge').textContent = mCount;
+    if($('urgentBadge'))   $('urgentBadge').textContent   = uCount;
+    // Navbar badge (إن وجد)
+    var nb = document.querySelector('[data-apv-badge]');
+    if(nb) nb.textContent = pending;
+  }
 
-// expose globals
-window.apvOpenNew     = apvOpenNew;
-window.apvCloseModal  = apvCloseModal;
-window.apvSaveRequest = apvSaveRequest;
-window.apvHandleDrop  = apvHandleDrop;
-window.apvHandleFiles = apvHandleFiles;
-window.apvViewDetail  = apvViewDetail;
-window.apvCloseDetail = apvCloseDetail;
-window.apvApprove     = apvApprove;
-window.apvReturn      = apvReturn;
-window.apvConfirmReturn= apvConfirmReturn;
-window.apvReject      = apvReject;
-window.apvConfirmReject= apvConfirmReject;
-window.apvResubmit    = apvResubmit;
-window.apvCloseAction = apvCloseAction;
-window.apvRenderAll   = apvRenderAll;
-window._attachedFiles = _attachedFiles;
+  // ── Build Card HTML ──────────────────────────────────────────
+  function buildCard(r){
+    var si = stageInfo(r.status);
+    var tc = TYPE_COLOR[r.type]||'#6B7280';
+    var tb = TYPE_BG[r.type]||'#F9FAFB';
+    var pc = PRIO_COLOR[r.priority]||'#6B7280';
+    var pb = PRIO_BG[r.priority]||'#F9FAFB';
+    var tl = TYPE_LABEL[r.type]||r.type;
+    var pl = PRIO_LABEL[r.priority]||r.priority;
+    var sl = stageLabel(r.status);
+    var isPending = r.status.startsWith('pending');
+    var isApproved = r.status==='approved';
+    var isReturned = r.status==='returned';
+    var isRejected = r.status==='rejected';
+
+    // Timeline dots
+    var stageKeys = ['pending_head','pending_director','pending_deputy','approved'];
+    var curIdx = stageKeys.indexOf(r.status);
+    var tlDots = stageKeys.map(function(sk,i){
+      var done = (r.status==='approved') ? true : (i < curIdx);
+      var active = (i===curIdx && isPending);
+      var col = done ? '#15803D' : (active ? si.cl : '#D1D5DB');
+      var bg  = done ? '#DCFCE7' : (active ? si.bg : '#F9FAFB');
+      return '<div class="flex flex-col items-center" style="flex:1">'
+        + '<div class="w-6 h-6 rounded-full flex items-center justify-center border-2 transition" style="border-color:'+col+';background:'+bg+'">'
+        + (done ? '<i class="fas fa-check text-xs" style="color:'+col+'"></i>' : (active ? '<div class="w-2 h-2 rounded-full animate-pulse" style="background:'+col+'"></div>' : '<div class="w-2 h-2 rounded-full" style="background:#D1D5DB"></div>'))
+        + '</div>'
+        + (i<3 ? '<div class="h-0.5 w-full mt-3" style="background:'+(done||active?col:'#E5E7EB')+';margin-top:-12px;position:relative;z-index:-1"></div>' : '')
+        + '</div>';
+    }).join('');
+
+    return '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition hover:shadow-md hover:-translate-y-0.5" style="transform:translateY(0);transition:all .2s">'
+      // Header strip
+      + '<div class="px-4 py-3 flex items-center justify-between" style="background:'+si.bg+';border-bottom:2px solid '+si.cl+'20">'
+      + '<div class="flex items-center gap-2">'
+      + '<i class="fas '+si.ic+' text-sm" style="color:'+si.cl+'"></i>'
+      + '<span class="text-xs font-bold" style="color:'+si.cl+'">'+sl+'</span>'
+      + (isPending ? '<span class="w-2 h-2 rounded-full animate-pulse bg-amber-400 ms-1"></span>' : '')
+      + '</div>'
+      + '<span class="font-mono text-xs text-gray-400">'+r.id+'</span>'
+      + '</div>'
+      // Body
+      + '<div class="p-4">'
+      + '<div class="flex items-start justify-between gap-2 mb-3">'
+      + '<h4 class="font-bold text-gray-800 text-sm leading-tight flex-1">'+r.title+'</h4>'
+      + '<span class="text-xs font-bold px-2 py-1 rounded-lg flex-shrink-0" style="background:'+pb+';color:'+pc+'">'+(r.priority==='very_urgent'?'<i class="fas fa-bolt me-1"></i>':'')+pl+'</span>'
+      + '</div>'
+      + '<div class="flex items-center gap-2 text-xs text-gray-500 mb-3 '+(IS_RTL?'flex-row-reverse':'')+'">'
+      + '<i class="fas fa-user-circle text-gray-400"></i>'
+      + '<span class="font-medium text-gray-700">'+r.empName+'</span>'
+      + (r.empId ? '<span class="text-gray-300">|</span><span class="font-mono">'+r.empId+'</span>' : '')
+      + '</div>'
+      + (r.dept ? '<div class="text-xs text-gray-400 mb-3"><i class="fas fa-building me-1"></i>'+r.dept+'</div>' : '')
+      + '<div class="flex items-center gap-2 mb-3 flex-wrap">'
+      + '<span class="text-xs px-2 py-1 rounded-lg font-bold" style="background:'+tb+';color:'+tc+'">'+tl+'</span>'
+      + (r.cost ? '<span class="text-xs px-2 py-1 rounded-lg font-bold bg-gray-50 text-gray-600"><i class="fas fa-coins me-1 text-amber-500"></i>'+Number(r.cost).toLocaleString()+' '+(IS_RTL?'ريال':'QAR')+'</span>' : '')
+      + (r.missionId ? '<span class="text-xs px-2 py-1 rounded-lg font-bold bg-blue-50 text-blue-600"><i class="fas fa-plane me-1"></i>'+r.missionId+'</span>' : '')
+      + '</div>'
+      // Timeline
+      + '<div class="flex items-center gap-0 mb-3 mt-4 px-1">'+tlDots+'</div>'
+      + (r.returnNote ? '<div class="text-xs text-amber-700 bg-amber-50 rounded-lg px-2 py-1.5 mb-2 mt-1"><i class="fas fa-comment-alt me-1"></i>'+r.returnNote+'</div>' : '')
+      + (r.rejectNote ? '<div class="text-xs text-red-700 bg-red-50 rounded-lg px-2 py-1.5 mb-2 mt-1"><i class="fas fa-ban me-1"></i>'+r.rejectNote+'</div>' : '')
+      + '</div>'
+      // Footer Actions
+      + '<div class="px-4 pb-4 flex gap-2 flex-wrap '+(IS_RTL?'flex-row-reverse':'')+'">'
+      + '<button onclick="apvViewDetail(this.dataset.id)" data-id="'+r.id+'" class="flex-1 py-2 rounded-xl text-xs font-bold text-white transition" style="background:#1e3a5f"><i class="fas fa-eye me-1"></i>'+(IS_RTL?'عرض':'View')+'</button>'
+      + (isPending ? '<button onclick="apvShowConfirm(this.dataset.id, this.dataset.act)" data-id="'+r.id+'" data-act="approve" class="flex-1 py-2 rounded-xl text-xs font-bold text-white transition" style="background:#15803D"><i class="fas fa-check me-1"></i>'+(IS_RTL?'اعتماد':'Approve')+'</button>' : '')
+      + (isPending ? '<button onclick="apvShowConfirm(this.dataset.id, this.dataset.act)" data-id="'+r.id+'" data-act="return" class="py-2 px-3 rounded-xl text-xs font-bold transition" style="background:#FFFBEB;color:#D97706;border:1.5px solid #FDE68A"><i class="fas fa-rotate-left"></i></button>' : '')
+      + (isPending ? '<button onclick="apvShowConfirm(this.dataset.id, this.dataset.act)" data-id="'+r.id+'" data-act="reject" class="py-2 px-3 rounded-xl text-xs font-bold transition" style="background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA"><i class="fas fa-times"></i></button>' : '')
+      + (isReturned ? '<button onclick="apvResubmit(this.dataset.id)" data-id="'+r.id+'" class="flex-1 py-2 rounded-xl text-xs font-bold text-white transition" style="background:#D97706"><i class="fas fa-paper-plane me-1"></i>'+(IS_RTL?'إعادة رفع':'Resubmit')+'</button>' : '')
+      + '<button onclick="apvDeleteReq(this.dataset.id)" data-id="'+r.id+'" class="py-2 px-3 rounded-xl text-xs font-bold text-red-400 hover:bg-red-50 border border-red-100 transition"><i class="fas fa-trash"></i></button>'
+      + '</div>'
+      + '</div>';
+  }
+
+  // ── Render Grid ──────────────────────────────────────────────
+  function apvRenderGrid(list){
+    var grid  = $('apvGrid');
+    var empty = $('apvEmpty');
+    if(!list){ list = getAll(); }
+    if(!list.length){ grid.innerHTML=''; empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+    grid.innerHTML = list.map(buildCard).join('');
+    if($('apvCountLabel')) $('apvCountLabel').textContent = list.length + (IS_RTL?' طلب':' requests');
+  }
+
+  // ── Filter ───────────────────────────────────────────────────
+  function apvFilter(){
+    var q   = ($('apvSearch')||{value:''}).value.toLowerCase();
+    var st  = ($('apvStageFilter')||{value:''}).value;
+    var tp  = ($('apvTypeFilter')||{value:''}).value;
+    var pr  = ($('apvPrioFilter')||{value:''}).value;
+    var all = getAll();
+    // tab filter
+    if(_currentTab==='missions') all = all.filter(function(r){ return r.type==='mission'; });
+    if(_currentTab==='admin')    all = all.filter(function(r){ return r.type!=='mission'; });
+    if(_currentTab==='urgent')   all = all.filter(function(r){ return r.priority==='urgent'||r.priority==='very_urgent'; });
+    if(st) all = all.filter(function(r){ return r.status===st; });
+    if(tp) all = all.filter(function(r){ return r.type===tp; });
+    if(pr) all = all.filter(function(r){ return r.priority===pr; });
+    if(q)  all = all.filter(function(r){
+      return (r.title||'').toLowerCase().includes(q)
+          || (r.empName||'').toLowerCase().includes(q)
+          || (r.empId||'').toLowerCase().includes(q)
+          || (r.id||'').toLowerCase().includes(q);
+    });
+    apvRenderGrid(all);
+  }
+
+  window.apvFilter = apvFilter;
+
+  function apvClearFilters(){
+    if($('apvSearch'))      $('apvSearch').value='';
+    if($('apvStageFilter')) $('apvStageFilter').value='';
+    if($('apvTypeFilter'))  $('apvTypeFilter').value='';
+    if($('apvPrioFilter'))  $('apvPrioFilter').value='';
+    apvFilter();
+  }
+  window.apvClearFilters = apvClearFilters;
+
+  // ── Tabs ─────────────────────────────────────────────────────
+  function apvSetTab(tab){
+    _currentTab = tab;
+    ['all','missions','admin','urgent'].forEach(function(t){
+      var btn = $('tab'+t.charAt(0).toUpperCase()+t.slice(1));
+      if(btn){
+        if(t===tab){ btn.classList.add('active-tab'); }
+        else { btn.classList.remove('active-tab'); }
+      }
+    });
+    apvFilter();
+  }
+  window.apvSetTab = apvSetTab;
+
+  // ── Open New Modal ───────────────────────────────────────────
+  function apvOpenNew(){
+    _editId = null;
+    if($('apvModalTitle')) $('apvModalTitle').textContent = IS_RTL?'طلب اعتماد جديد':'New Approval Request';
+    if($('fTitle'))    $('fTitle').value='';
+    if($('fType'))     $('fType').value='mission';
+    if($('fEmpName'))  $('fEmpName').value='';
+    if($('fEmpId'))    $('fEmpId').value='';
+    if($('fDept'))     $('fDept').value='';
+    if($('fPriority')) $('fPriority').value='normal';
+    if($('fDate'))     $('fDate').value=new Date().toISOString().split('T')[0];
+    if($('fCost'))     $('fCost').value='';
+    if($('fDesc'))     $('fDesc').value='';
+    if($('fStage'))    $('fStage').value='pending_head';
+    // populate missions dropdown
+    apvPopulateMissions();
+    if($('apvModal')) $('apvModal').classList.remove('hidden');
+  }
+  window.apvOpenNew = apvOpenNew;
+
+  function apvPopulateMissions(){
+    var sel = $('fMissionLink');
+    if(!sel) return;
+    var ms = getMissions();
+    sel.innerHTML = '<option value="">'+(IS_RTL?'-- لا يوجد ربط --':'-- No link --')+'</option>'
+      + ms.map(function(m){ return '<option value="'+m.id+'">'+m.id+' – '+(m.empName||'')+' – '+(m.dest||'')+'</option>'; }).join('');
+  }
+
+  function apvCloseModal(){
+    if($('apvModal')) $('apvModal').classList.add('hidden');
+  }
+  window.apvCloseModal = apvCloseModal;
+
+  // ── Save Request ─────────────────────────────────────────────
+  function apvSaveRequest(){
+    var title = ($('fTitle')||{value:''}).value.trim();
+    if(!title){ apvToast(IS_RTL?'أدخل عنوان الطلب':'Enter request title','error'); return; }
+    var all = getAll();
+    if(_editId){
+      all = all.map(function(r){
+        if(r.id!==_editId) return r;
+        r.title    = title;
+        r.type     = ($('fType')||{value:'mission'}).value;
+        r.empName  = ($('fEmpName')||{value:''}).value.trim();
+        r.empId    = ($('fEmpId')||{value:''}).value.trim();
+        r.dept     = ($('fDept')||{value:''}).value.trim();
+        r.priority = ($('fPriority')||{value:'normal'}).value;
+        r.cost     = ($('fCost')||{value:0}).value||0;
+        r.desc     = ($('fDesc')||{value:''}).value.trim();
+        r.missionId= ($('fMissionLink')||{value:''}).value;
+        r.updatedAt= new Date().toISOString();
+        return r;
+      });
+      apvToast(IS_RTL?'تم تحديث الطلب':'Request updated','success');
+    } else {
+      var rec = {
+        id:        genId(),
+        title:     title,
+        type:      ($('fType')||{value:'mission'}).value,
+        empName:   ($('fEmpName')||{value:''}).value.trim(),
+        empId:     ($('fEmpId')||{value:''}).value.trim(),
+        dept:      ($('fDept')||{value:''}).value.trim(),
+        priority:  ($('fPriority')||{value:'normal'}).value,
+        date:      ($('fDate')||{value:''}).value,
+        cost:      ($('fCost')||{value:0}).value||0,
+        desc:      ($('fDesc')||{value:''}).value.trim(),
+        status:    ($('fStage')||{value:'pending_head'}).value,
+        missionId: ($('fMissionLink')||{value:''}).value,
+        timeline:  [{ stage: ($('fStage')||{value:'pending_head'}).value, action:'submitted', at: new Date().toISOString(), note:IS_RTL?'تم رفع الطلب':'Request submitted' }],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      all.unshift(rec);
+      apvToast(IS_RTL?'تم إضافة الطلب بنجاح':'Request added successfully','success');
+    }
+    saveAll(all);
+    apvCloseModal();
+    apvUpdateStats();
+    apvFilter();
+  }
+  window.apvSaveRequest = apvSaveRequest;
+
+  // ── View Detail ──────────────────────────────────────────────
+  function apvViewDetail(id){
+    var all = getAll();
+    var r = all.find(function(x){ return x.id===id; });
+    if(!r) return;
+    var si = stageInfo(r.status);
+    var tc = TYPE_COLOR[r.type]||'#6B7280';
+    var tb = TYPE_BG[r.type]||'#F9FAFB';
+    var pc = PRIO_COLOR[r.priority]||'#6B7280';
+    var pb = PRIO_BG[r.priority]||'#F9FAFB';
+
+    // Timeline history
+    var tlHTML = '';
+    if(r.timeline && r.timeline.length){
+      tlHTML = '<div class="mt-4"><p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">'+(IS_RTL?'سجل التنقلات':'Activity Timeline')+'</p>'
+        + '<div class="space-y-2">'
+        + r.timeline.map(function(t){
+            var ts = stageInfo(t.stage);
+            return '<div class="flex items-start gap-2">'
+              + '<div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:'+ts.bg+'">'
+              + '<i class="fas '+ts.ic+' text-xs" style="color:'+ts.cl+'"></i>'
+              + '</div>'
+              + '<div class="flex-1">'
+              + '<div class="flex items-center gap-2 flex-wrap">'
+              + '<span class="text-xs font-bold" style="color:'+ts.cl+'">'+(IS_RTL?ts.ar:ts.en)+'</span>'
+              + '<span class="text-xs text-gray-400">'+fmtDateTime(t.at)+'</span>'
+              + '</div>'
+              + (t.note ? '<p class="text-xs text-gray-500 mt-0.5">'+t.note+'</p>' : '')
+              + '</div></div>';
+          }).join('')
+        + '</div></div>';
+    }
+
+    var bodyHTML = '<div class="space-y-4">'
+      + '<div class="flex items-center gap-3 p-3 rounded-xl" style="background:'+si.bg+'">'
+      + '<i class="fas '+si.ic+' text-xl" style="color:'+si.cl+'"></i>'
+      + '<div>'
+      + '<div class="text-xs text-gray-500">'+(IS_RTL?'المرحلة الحالية':'Current Stage')+'</div>'
+      + '<div class="font-bold text-sm" style="color:'+si.cl+'">'+(IS_RTL?si.ar:si.en)+'</div>'
+      + '</div>'
+      + '<span class="ms-auto font-mono text-xs text-gray-400">'+r.id+'</span>'
+      + '</div>'
+      + '<div class="grid grid-cols-2 gap-3 text-sm">'
+      + '<div><p class="text-xs text-gray-400">'+(IS_RTL?'العنوان':'Title')+'</p><p class="font-bold text-gray-800">'+r.title+'</p></div>'
+      + '<div><p class="text-xs text-gray-400">'+(IS_RTL?'النوع':'Type')+'</p><span class="text-xs font-bold px-2 py-0.5 rounded-lg" style="background:'+tb+';color:'+tc+'">'+(TYPE_LABEL[r.type]||r.type)+'</span></div>'
+      + '<div><p class="text-xs text-gray-400">'+(IS_RTL?'مقدم الطلب':'Requester')+'</p><p class="font-bold text-gray-800">'+r.empName+'</p></div>'
+      + '<div><p class="text-xs text-gray-400">'+(IS_RTL?'الرقم الوظيفي':'Emp. ID')+'</p><p class="font-mono text-gray-600 text-xs">'+r.empId+'</p></div>'
+      + (r.dept ? '<div><p class="text-xs text-gray-400">'+(IS_RTL?'القسم':'Dept.')+'</p><p class="text-gray-700 text-xs">'+r.dept+'</p></div>' : '')
+      + '<div><p class="text-xs text-gray-400">'+(IS_RTL?'الأولوية':'Priority')+'</p><span class="text-xs font-bold px-2 py-0.5 rounded-lg" style="background:'+pb+';color:'+pc+'">'+(PRIO_LABEL[r.priority]||r.priority)+'</span></div>'
+      + (r.cost ? '<div><p class="text-xs text-gray-400">'+(IS_RTL?'التكلفة':'Cost')+'</p><p class="font-bold text-gray-800">'+Number(r.cost).toLocaleString()+' '+(IS_RTL?'ريال':'QAR')+'</p></div>' : '')
+      + (r.missionId ? '<div><p class="text-xs text-gray-400">'+(IS_RTL?'مهمة مرتبطة':'Linked Mission')+'</p><p class="font-mono text-blue-600 text-xs">'+r.missionId+'</p></div>' : '')
+      + '<div><p class="text-xs text-gray-400">'+(IS_RTL?'تاريخ الرفع':'Submitted')+'</p><p class="text-gray-600 text-xs">'+fmtDate(r.createdAt)+'</p></div>'
+      + '</div>'
+      + (r.desc ? '<div><p class="text-xs text-gray-400 mb-1">'+(IS_RTL?'الوصف':'Description')+'</p><p class="text-sm text-gray-700 bg-gray-50 rounded-xl p-3">'+r.desc+'</p></div>' : '')
+      + (r.returnNote ? '<div class="bg-amber-50 border border-amber-200 rounded-xl p-3"><p class="text-xs font-bold text-amber-700 mb-1"><i class="fas fa-rotate-left me-1"></i>'+(IS_RTL?'سبب الإعادة':'Return Reason')+'</p><p class="text-sm text-amber-800">'+r.returnNote+'</p></div>' : '')
+      + (r.rejectNote ? '<div class="bg-red-50 border border-red-200 rounded-xl p-3"><p class="text-xs font-bold text-red-700 mb-1"><i class="fas fa-ban me-1"></i>'+(IS_RTL?'سبب الرفض':'Rejection Reason')+'</p><p class="text-sm text-red-800">'+r.rejectNote+'</p></div>' : '')
+      + tlHTML
+      + '</div>';
+
+    if($('detBody')) $('detBody').innerHTML = bodyHTML;
+    if($('detTitle')) $('detTitle').textContent = r.title;
+
+    // Actions in footer
+    var isPending = r.status.startsWith('pending');
+    var isReturned = r.status==='returned';
+    var actHTML = '';
+    if(isPending){
+      actHTML += '<button onclick="apvShowConfirm(this.dataset.id,this.dataset.act)" data-id="'+r.id+'" data-act="approve" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white" style="background:#15803D"><i class="fas fa-check me-1"></i>'+(IS_RTL?'اعتماد':'Approve')+'</button>';
+      actHTML += '<button onclick="apvShowConfirm(this.dataset.id,this.dataset.act)" data-id="'+r.id+'" data-act="return" class="px-5 py-2.5 rounded-xl text-sm font-bold" style="background:#FFFBEB;color:#D97706;border:1.5px solid #FDE68A"><i class="fas fa-rotate-left me-1"></i>'+(IS_RTL?'إعادة':'Return')+'</button>';
+      actHTML += '<button onclick="apvShowConfirm(this.dataset.id,this.dataset.act)" data-id="'+r.id+'" data-act="reject" class="px-5 py-2.5 rounded-xl text-sm font-bold" style="background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA"><i class="fas fa-times me-1"></i>'+(IS_RTL?'رفض':'Reject')+'</button>';
+    }
+    if(isReturned){
+      actHTML += '<button onclick="apvResubmit(this.dataset.id)" data-id="'+r.id+'" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white" style="background:#D97706"><i class="fas fa-paper-plane me-1"></i>'+(IS_RTL?'إعادة رفع':'Resubmit')+'</button>';
+    }
+    actHTML += '<button onclick="apvEditReq(this.dataset.id)" data-id="'+r.id+'" class="px-4 py-2.5 rounded-xl text-sm font-bold text-gray-600 border border-gray-200 hover:bg-gray-50"><i class="fas fa-edit me-1"></i>'+(IS_RTL?'تعديل':'Edit')+'</button>';
+    actHTML += '<button onclick="apvCloseDetail()" class="px-4 py-2.5 rounded-xl text-sm font-bold text-gray-500 border border-gray-200 hover:bg-gray-50">'+(IS_RTL?'إغلاق':'Close')+'</button>';
+    if($('detActions')) $('detActions').innerHTML = actHTML;
+
+    if($('apvDetailModal')) $('apvDetailModal').classList.remove('hidden');
+  }
+  window.apvViewDetail = apvViewDetail;
+
+  function apvCloseDetail(){
+    if($('apvDetailModal')) $('apvDetailModal').classList.add('hidden');
+  }
+  window.apvCloseDetail = apvCloseDetail;
+
+  // ── Edit Request ─────────────────────────────────────────────
+  function apvEditReq(id){
+    var all = getAll();
+    var r = all.find(function(x){ return x.id===id; });
+    if(!r) return;
+    _editId = id;
+    apvCloseDetail();
+    apvPopulateMissions();
+    if($('apvModalTitle')) $('apvModalTitle').textContent = IS_RTL?'تعديل الطلب':'Edit Request';
+    if($('fTitle'))    $('fTitle').value = r.title||'';
+    if($('fType'))     $('fType').value  = r.type||'mission';
+    if($('fEmpName'))  $('fEmpName').value = r.empName||'';
+    if($('fEmpId'))    $('fEmpId').value   = r.empId||'';
+    if($('fDept'))     $('fDept').value    = r.dept||'';
+    if($('fPriority')) $('fPriority').value= r.priority||'normal';
+    if($('fDate'))     $('fDate').value    = (r.date||r.createdAt||'').split('T')[0];
+    if($('fCost'))     $('fCost').value    = r.cost||'';
+    if($('fDesc'))     $('fDesc').value    = r.desc||'';
+    if($('fStage'))    $('fStage').value   = r.status||'pending_head';
+    if($('fMissionLink')) $('fMissionLink').value = r.missionId||'';
+    if($('apvModal'))  $('apvModal').classList.remove('hidden');
+  }
+  window.apvEditReq = apvEditReq;
+
+  // ── Show Confirm Modal ───────────────────────────────────────
+  function apvShowConfirm(id, type){
+    _actionId   = id;
+    _actionType = type;
+    var all = getAll();
+    var r = all.find(function(x){ return x.id===id; });
+    var title = r ? r.title : id;
+    var icon  = $('confirmIcon');
+    var ctitle= $('confirmTitle');
+    var cmsg  = $('confirmMsg');
+    var cbtn  = $('confirmBtn');
+    if(type==='approve'){
+      if(icon)  icon.style.background='#DCFCE7'; icon.innerHTML='<i class="fas fa-check text-2xl text-emerald-600"></i>';
+      if(ctitle)ctitle.textContent=IS_RTL?'تأكيد الاعتماد':'Confirm Approval';
+      if(cmsg)  cmsg.textContent=(IS_RTL?'هل تريد اعتماد الطلب: ':'Approve request: ')+title;
+      if(cbtn)  { cbtn.style.background='#15803D'; cbtn.textContent=IS_RTL?'اعتماد':'Approve'; }
+    } else if(type==='return'){
+      if(icon)  icon.style.background='#FFFBEB'; icon.innerHTML='<i class="fas fa-rotate-left text-2xl" style="color:#D97706"></i>';
+      if(ctitle)ctitle.textContent=IS_RTL?'إعادة الطلب':'Return Request';
+      if(cmsg)  cmsg.textContent=(IS_RTL?'سيتم إعادة الطلب مع ملاحظاتك: ':'Request will be returned: ')+title;
+      if(cbtn)  { cbtn.style.background='#D97706'; cbtn.textContent=IS_RTL?'إعادة':'Return'; }
+    } else if(type==='reject'){
+      if(icon)  icon.style.background='#FEF2F2'; icon.innerHTML='<i class="fas fa-times text-2xl text-red-600"></i>';
+      if(ctitle)ctitle.textContent=IS_RTL?'رفض الطلب':'Reject Request';
+      if(cmsg)  cmsg.textContent=(IS_RTL?'هل تريد رفض الطلب نهائياً: ':'Permanently reject: ')+title;
+      if(cbtn)  { cbtn.style.background='#DC2626'; cbtn.textContent=IS_RTL?'رفض':'Reject'; }
+    }
+    if($('confirmNote')) $('confirmNote').value='';
+    if($('apvConfirmModal')) $('apvConfirmModal').classList.remove('hidden');
+  }
+  window.apvShowConfirm = apvShowConfirm;
+
+  function apvCloseConfirm(){
+    if($('apvConfirmModal')) $('apvConfirmModal').classList.add('hidden');
+  }
+  window.apvCloseConfirm = apvCloseConfirm;
+
+  // ── Do Action ────────────────────────────────────────────────
+  function apvDoAction(){
+    if(!_actionId || !_actionType) return;
+    var note = ($('confirmNote')||{value:''}).value.trim();
+    var all  = getAll();
+    all = all.map(function(r){
+      if(r.id !== _actionId) return r;
+      var entry = { stage: r.status, action: _actionType, at: new Date().toISOString(), note: note };
+      if(!r.timeline) r.timeline=[];
+      if(_actionType==='approve'){
+        var ns = nextStage(r.status);
+        entry.stage = ns;
+        r.status = ns;
+        if(ns==='approved') entry.note = note||(IS_RTL?'تم الاعتماد النهائي':'Final approval granted');
+        apvToast(IS_RTL?'تم الاعتماد وترفيع الطلب':'Approved and forwarded','success');
+        // تحديث المهمة المرتبطة إن وجدت
+        if(ns==='approved' && r.missionId){
+          var ms = getMissions();
+          ms = ms.map(function(m){ if(m.id===r.missionId){ m.status='approved'; m.updatedAt=new Date().toISOString(); } return m; });
+          localStorage.setItem(MS_KEY, JSON.stringify(ms));
+        }
+      } else if(_actionType==='return'){
+        r.status = 'returned';
+        r.returnNote = note;
+        entry.stage = 'returned';
+        apvToast(IS_RTL?'تم إعادة الطلب':'Request returned','warning');
+      } else if(_actionType==='reject'){
+        r.status = 'rejected';
+        r.rejectNote = note;
+        entry.stage = 'rejected';
+        apvToast(IS_RTL?'تم رفض الطلب':'Request rejected','error');
+        // تحديث المهمة المرتبطة
+        if(r.missionId){
+          var ms2 = getMissions();
+          ms2 = ms2.map(function(m){ if(m.id===r.missionId){ m.status='rejected'; m.updatedAt=new Date().toISOString(); } return m; });
+          localStorage.setItem(MS_KEY, JSON.stringify(ms2));
+        }
+      }
+      r.timeline.push(entry);
+      r.updatedAt = new Date().toISOString();
+      return r;
+    });
+    saveAll(all);
+    apvCloseConfirm();
+    apvCloseDetail();
+    apvUpdateStats();
+    apvFilter();
+  }
+  window.apvDoAction = apvDoAction;
+
+  // ── Resubmit ─────────────────────────────────────────────────
+  function apvResubmit(id){
+    var all = getAll();
+    all = all.map(function(r){
+      if(r.id!==id) return r;
+      r.status = 'pending_head';
+      r.returnNote = null;
+      if(!r.timeline) r.timeline=[];
+      r.timeline.push({ stage:'pending_head', action:'resubmit', at:new Date().toISOString(), note:IS_RTL?'أُعيد رفع الطلب':'Request resubmitted' });
+      r.updatedAt = new Date().toISOString();
+      return r;
+    });
+    saveAll(all);
+    apvCloseDetail();
+    apvUpdateStats();
+    apvFilter();
+    apvToast(IS_RTL?'تمت إعادة رفع الطلب':'Request resubmitted','success');
+  }
+  window.apvResubmit = apvResubmit;
+
+  // ── Delete ───────────────────────────────────────────────────
+  function apvDeleteReq(id){
+    if(!confirm(IS_RTL?'هل تريد حذف هذا الطلب نهائياً؟':'Delete this request permanently?')) return;
+    var all = getAll().filter(function(r){ return r.id!==id; });
+    saveAll(all);
+    apvUpdateStats();
+    apvFilter();
+    apvToast(IS_RTL?'تم حذف الطلب':'Request deleted','error');
+  }
+  window.apvDeleteReq = apvDeleteReq;
+
+  // ── Sync Missions ────────────────────────────────────────────
+  function apvSyncMissions(){
+    var ms  = getMissions();
+    var all = getAll();
+    var added = 0;
+    ms.forEach(function(m){
+      // تحقق من عدم وجود طلب مرتبط بهذه المهمة مسبقاً
+      var exists = all.find(function(r){ return r.missionId===m.id; });
+      if(!exists && (m.status==='pending'||m.status==='approved')){
+        var typeMap  = { official:'mission', academic:'mission', training:'mission', conference:'mission' };
+        var prioMap  = { pending:'normal', approved:'normal' };
+        all.unshift({
+          id:        genId(),
+          title:     (IS_RTL?'مهمة: ':'Mission: ')+(m.dest||m.id),
+          type:      'mission',
+          empName:   m.empName||'',
+          empId:     m.empId||'',
+          dept:      m.dept||'',
+          priority:  'normal',
+          date:      (m.dateFrom||'').split('T')[0]||new Date().toISOString().split('T')[0],
+          cost:      m.totalCost||0,
+          desc:      m.purpose||'',
+          status:    m.status==='approved'?'approved':'pending_head',
+          missionId: m.id,
+          timeline:  [{ stage:'pending_head', action:'synced', at:new Date().toISOString(), note:IS_RTL?'مزامنة من نظام المهام':'Synced from Missions system' }],
+          createdAt: m.createdAt||new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+        added++;
+      }
+    });
+    saveAll(all);
+    apvUpdateStats();
+    apvFilter();
+    apvToast((IS_RTL?'تمت المزامنة: تم استيراد ':'Sync complete: ')+added+(IS_RTL?' مهام جديدة':' new missions'),'success');
+  }
+  window.apvSyncMissions = apvSyncMissions;
+
+  // ── Toast ────────────────────────────────────────────────────
+  function apvToast(msg, type){
+    var el  = $('apvToast');
+    var inn = $('apvToastInner');
+    var ic  = $('apvToastIcon');
+    var ms  = $('apvToastMsg');
+    if(!el||!inn) return;
+    var cfg = {
+      success: { bg:'#15803D', icon:'fa-check-circle' },
+      warning: { bg:'#D97706', icon:'fa-rotate-left' },
+      error:   { bg:'#DC2626', icon:'fa-times-circle' }
+    }[type||'success'] || { bg:'#1e3a5f', icon:'fa-info-circle' };
+    inn.style.background = cfg.bg;
+    if(ic) ic.className = 'fas '+cfg.icon+' text-lg';
+    if(ms) ms.textContent = msg;
+    el.classList.remove('hidden');
+    setTimeout(function(){ el.classList.add('hidden'); }, 3200);
+  }
+  window.apvToast = apvToast;
+
+  // ── Seed Demo ────────────────────────────────────────────────
+  function apvSeedDemo(){
+    if(getAll().length) return;
+    var demos = [
+      {id:'APV-DEMO01',title:IS_RTL?'اعتماد مهمة رسمية – أحمد النعيمي':'Official Mission – Ahmed Al-Naimi',type:'mission',empName:IS_RTL?'أحمد محمد النعيمي':'Ahmed M. Al-Naimi',empId:'QU-2019-0245',dept:IS_RTL?'كلية الهندسة':'College of Engineering',priority:'urgent',date:'2025-05-10',cost:4500,desc:IS_RTL?'حضور مؤتمر الهندسة الدولي في دبي':'Attending International Engineering Conference in Dubai',status:'pending_director',missionId:'MS-A1B2C3',timeline:[{stage:'pending_head',action:'submitted',at:'2025-05-10T08:00:00Z',note:IS_RTL?'تم الرفع':'Submitted'},{stage:'pending_director',action:'approve',at:'2025-05-11T10:00:00Z',note:IS_RTL?'اعتمدها رئيس القسم':'Approved by Dept. Head'}],createdAt:'2025-05-10T08:00:00Z',updatedAt:'2025-05-11T10:00:00Z'},
+      {id:'APV-DEMO02',title:IS_RTL?'اعتماد تدريب خارجي – فاطمة القحطاني':'External Training – Fatima Al-Qahtani',type:'mission',empName:IS_RTL?'فاطمة سالم القحطاني':'Fatima S. Al-Qahtani',empId:'QU-2020-0189',dept:IS_RTL?'إدارة الموارد البشرية':'HR Department',priority:'normal',date:'2025-04-01',cost:10000,desc:IS_RTL?'دورة تدريبية في إدارة الموارد البشرية – لندن':'HR Management Training – London',status:'pending_head',missionId:'MS-D4E5F6',timeline:[{stage:'pending_head',action:'submitted',at:'2025-04-01T09:00:00Z',note:IS_RTL?'تم الرفع':'Submitted'}],createdAt:'2025-04-01T09:00:00Z',updatedAt:'2025-04-01T09:00:00Z'},
+      {id:'APV-DEMO03',title:IS_RTL?'قرار مالي – صرف مكافآت الربع الثاني':'Financial Decision – Q2 Bonuses',type:'financial',empName:IS_RTL?'نواف عبدالله':'Nawaf Abdullah',empId:'QU-2015-0100',dept:IS_RTL?'إدارة الرواتب':'Payroll Dept.',priority:'very_urgent',date:'2025-05-01',cost:85000,desc:IS_RTL?'اعتماد صرف مكافآت الأداء للربع الثاني 2025':'Approval for Q2 2025 performance bonuses',status:'pending_deputy',missionId:'',timeline:[{stage:'pending_head',action:'submitted',at:'2025-05-01T08:00:00Z',note:''},{stage:'pending_director',action:'approve',at:'2025-05-02T10:00:00Z',note:IS_RTL?'اعتمدها مدير الإدارة':'Approved by Admin Director'},{stage:'pending_deputy',action:'forward',at:'2025-05-03T09:00:00Z',note:IS_RTL?'للمراجعة النهائية':'For final review'}],createdAt:'2025-05-01T08:00:00Z',updatedAt:'2025-05-03T09:00:00Z'},
+      {id:'APV-DEMO04',title:IS_RTL?'قرار إداري – تعديل هيكل الوردية':'Admin Decision – Shift Structure',type:'admin',empName:IS_RTL?'نورة راشد المري':'Noura R. Al-Marri',empId:'QU-2021-0098',dept:IS_RTL?'إدارة المالية':'Finance Dept.',priority:'normal',date:'2025-04-20',cost:0,desc:IS_RTL?'تعديل جداول الوردية للقسم الإداري':'Administrative shift schedule modification',status:'approved',missionId:'',timeline:[{stage:'pending_head',action:'submitted',at:'2025-04-20T08:00:00Z',note:''},{stage:'pending_director',action:'approve',at:'2025-04-21T10:00:00Z',note:''},{stage:'pending_deputy',action:'approve',at:'2025-04-22T09:00:00Z',note:''},{stage:'approved',action:'approve',at:'2025-04-23T11:00:00Z',note:IS_RTL?'اعتمدت بالكامل':'Fully approved'}],createdAt:'2025-04-20T08:00:00Z',updatedAt:'2025-04-23T11:00:00Z'},
+      {id:'APV-DEMO05',title:IS_RTL?'طلب موارد بشرية – إجازة استثنائية':'HR Request – Special Leave',type:'hr',empName:IS_RTL?'خالد عبدالله الدوسري':'Khaled Al-Dosari',empId:'QU-2018-0312',dept:IS_RTL?'كلية العلوم':'College of Science',priority:'urgent',date:'2025-05-12',cost:0,desc:IS_RTL?'طلب إجازة استثنائية لظروف عائلية':'Special leave request for family circumstances',status:'returned',missionId:'',returnNote:IS_RTL?'يرجى إرفاق المستندات الداعمة قبل إعادة الرفع':'Please attach supporting documents before resubmitting',timeline:[{stage:'pending_head',action:'submitted',at:'2025-05-12T08:00:00Z',note:''},{stage:'returned',action:'return',at:'2025-05-13T10:00:00Z',note:IS_RTL?'يرجى إرفاق المستندات الداعمة':'Attach supporting documents'}],createdAt:'2025-05-12T08:00:00Z',updatedAt:'2025-05-13T10:00:00Z'}
+    ];
+    saveAll(demos);
+  }
+
+  // ── Init ─────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function(){
+    apvSeedDemo();
+    apvUpdateStats();
+    apvFilter();
+  });
 
 })();
 </script>
-`
+`;
 
   return c.html(layout(
     isRTL ? 'الموافقات والاعتمادات – جامعة قطر' : 'Approvals & Endorsements – Qatar University',
@@ -15813,7 +15948,6 @@ window._attachedFiles = _attachedFiles;
     lang
   ))
 })
-
 
 
 export default app
