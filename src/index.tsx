@@ -16707,7 +16707,8 @@ app.get('/mgmt-approvals', (c) => {
 
   const content = `
 <div dir="${isRTL ? 'rtl' : 'ltr'}">
-  <!-- Header -->
+
+  <!-- ── Page header ── -->
   <div class="flex flex-wrap items-center gap-3 mb-5 ${isRTL ? 'flex-row-reverse' : ''}">
     <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white flex-shrink-0"
       style="background:linear-gradient(135deg,#1B2B4B,#243555)">
@@ -16718,117 +16719,205 @@ app.get('/mgmt-approvals', (c) => {
       <p class="text-sm text-gray-500" id="apvRoleDesc"></p>
     </div>
     <div class="flex-1"></div>
-    <!-- Stats pills -->
-    <div class="flex items-center gap-2 flex-wrap">
-      <span id="apvBadgePending" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-pending cursor-pointer" onclick="mgApvSetTab('pending')">
-        <i class="fas fa-clock"></i><span id="apvCntPending">0</span> ${isRTL ? 'معلق' : 'Pending'}
-      </span>
-      <span id="apvBadgeEndorsed" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-endorsed cursor-pointer" onclick="mgApvSetTab('endorsed')">
-        <i class="fas fa-thumbs-up"></i><span id="apvCntEndorsed">0</span> ${isRTL ? 'مؤشَّر' : 'Endorsed'}
-      </span>
-      <span id="apvBadgeApproved" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-approved cursor-pointer" onclick="mgApvSetTab('approved')">
-        <i class="fas fa-check"></i><span id="apvCntApproved">0</span> ${isRTL ? 'معتمد' : 'Approved'}
-      </span>
-      <span id="apvBadgeAll" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 cursor-pointer" onclick="mgApvSetTab('all')">
-        <i class="fas fa-list"></i><span id="apvCntAll">0</span> ${isRTL ? 'الكل' : 'All'}
-      </span>
+    <!-- Tab badges -->
+    <div class="flex items-center gap-2 flex-wrap" id="apvTabsBar">
+      <button id="tab-pending"  onclick="mgApvSetTab('pending')"
+        class="tab-btn inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-pending">
+        <i class="fas fa-clock"></i><span id="cnt-pending">0</span> ${isRTL ? 'معلق' : 'Pending'}
+      </button>
+      <button id="tab-endorsed" onclick="mgApvSetTab('endorsed')"
+        class="tab-btn inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-endorsed opacity-60">
+        <i class="fas fa-thumbs-up"></i><span id="cnt-endorsed">0</span> ${isRTL ? 'مؤشَّر' : 'Endorsed'}
+      </button>
+      <button id="tab-approved" onclick="mgApvSetTab('approved')"
+        class="tab-btn inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-approved opacity-60">
+        <i class="fas fa-check-circle"></i><span id="cnt-approved">0</span> ${isRTL ? 'معتمد' : 'Approved'}
+      </button>
+      <button id="tab-rejected" onclick="mgApvSetTab('rejected')"
+        class="tab-btn inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-rejected opacity-60">
+        <i class="fas fa-times-circle"></i><span id="cnt-rejected">0</span> ${isRTL ? 'مرفوض' : 'Rejected'}
+      </button>
+      <button id="tab-returned" onclick="mgApvSetTab('returned')"
+        class="tab-btn inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full badge-returned opacity-60">
+        <i class="fas fa-undo"></i><span id="cnt-returned">0</span> ${isRTL ? 'مُعاد' : 'Returned'}
+      </button>
+      <button id="tab-all" onclick="mgApvSetTab('all')"
+        class="tab-btn inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 opacity-60">
+        <i class="fas fa-list"></i><span id="cnt-all">0</span> ${isRTL ? 'الكل' : 'All'}
+      </button>
     </div>
   </div>
 
-  <!-- Filters -->
+  <!-- ── Filters bar ── -->
   <div class="mg-card p-4 mb-5">
     <div class="flex flex-wrap gap-3 ${isRTL ? 'flex-row-reverse' : ''}">
       <div class="flex-1 min-w-48 relative">
         <i class="fas fa-search absolute ${isRTL ? 'right-3' : 'left-3'} top-3 text-gray-400 text-sm"></i>
-        <input type="text" id="apvSearch" placeholder="${isRTL ? 'ابحث باسم الموظف أو المعرف...' : 'Search by name or ID...'}"
+        <input type="text" id="apvSearch"
+          placeholder="${isRTL ? 'ابحث باسم الموظف أو رقم الطلب...' : 'Search name or request ID...'}"
           class="w-full ${isRTL ? 'pr-9 pl-3' : 'pl-9 pr-3'} py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-blue-400"
           oninput="mgApvFilter()"/>
       </div>
-      <select id="apvFilterType" onchange="mgApvFilter()" class="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400">
+      <select id="apvFType" onchange="mgApvFilter()"
+        class="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400">
         <option value="">${isRTL ? 'كل الأنواع' : 'All Types'}</option>
         <option value="salary">${isRTL ? 'راتب' : 'Salary'}</option>
         <option value="advance">${isRTL ? 'سلفة' : 'Advance'}</option>
         <option value="allowance">${isRTL ? 'بدل' : 'Allowance'}</option>
         <option value="certificate">${isRTL ? 'شهادة' : 'Certificate'}</option>
         <option value="mission">${isRTL ? 'مهمة' : 'Mission'}</option>
-        <option value="eos">${isRTL ? 'نهاية خدمة' : 'End of Service'}</option>
+        <option value="eos">${isRTL ? 'نهاية خدمة' : 'EOS'}</option>
         <option value="other">${isRTL ? 'أخرى' : 'Other'}</option>
       </select>
-      <select id="apvFilterPriority" onchange="mgApvFilter()" class="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400">
+      <select id="apvFPri" onchange="mgApvFilter()"
+        class="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400">
         <option value="">${isRTL ? 'كل الأولويات' : 'All Priorities'}</option>
         <option value="urgent">${isRTL ? 'عاجل' : 'Urgent'}</option>
         <option value="high">${isRTL ? 'عالية' : 'High'}</option>
         <option value="normal">${isRTL ? 'عادية' : 'Normal'}</option>
       </select>
-      <button onclick="mgApvClearFilters()" class="px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition">
-        <i class="fas fa-times mr-1"></i>${isRTL ? 'مسح' : 'Clear'}
+      <button onclick="mgApvClearFilters()"
+        class="px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition">
+        <i class="fas fa-times ${isRTL ? 'ml-1' : 'mr-1'}"></i>${isRTL ? 'مسح' : 'Clear'}
       </button>
     </div>
   </div>
 
-  <!-- Table -->
+  <!-- ── Requests table ── -->
   <div class="mg-card overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="mg-table" id="apvTable">
+      <table class="mg-table">
         <thead>
           <tr>
             <th class="${isRTL ? 'text-right' : ''}">${isRTL ? 'الموظف / الطلب' : 'Employee / Request'}</th>
             <th>${isRTL ? 'النوع' : 'Type'}</th>
-            <th>${isRTL ? 'القسم' : 'Department'}</th>
+            <th>${isRTL ? 'القسم' : 'Dept.'}</th>
             <th>${isRTL ? 'الأولوية' : 'Priority'}</th>
             <th>${isRTL ? 'الحالة' : 'Status'}</th>
             <th>${isRTL ? 'التاريخ' : 'Date'}</th>
-            <th>${isRTL ? 'الإجراء' : 'Action'}</th>
+            <th class="text-center">${isRTL ? 'الإجراءات' : 'Actions'}</th>
           </tr>
         </thead>
-        <tbody id="apvTableBody">
+        <tbody id="apvTbody">
           <tr><td colspan="7" class="text-center py-10 text-gray-400">
             <i class="fas fa-spinner fa-spin text-2xl"></i>
           </td></tr>
         </tbody>
       </table>
     </div>
-    <div id="apvEmptyMsg" class="hidden flex-col items-center py-14 text-gray-400">
+    <div id="apvEmpty" class="hidden flex-col items-center py-14 text-gray-400">
       <i class="fas fa-inbox text-5xl mb-3" style="color:#CBD5E1"></i>
-      <p class="font-semibold">${isRTL ? 'لا توجد طلبات في هذه الفئة' : 'No requests in this category'}</p>
+      <p class="font-semibold">${isRTL ? 'لا توجد طلبات في هذه الفئة' : 'No requests here'}</p>
     </div>
   </div>
 </div>
 
-<!-- Detail Modal -->
-<div class="mg-modal-overlay" id="apvDetailModal">
-  <div class="mg-modal-box mx-4">
+<!-- ══════════════════════════════════════════════
+     MODAL 1 – Detail / View + inline action bar
+     ══════════════════════════════════════════════ -->
+<div class="mg-modal-overlay" id="modalDetail">
+  <div class="mg-modal-box mx-4" style="max-width:680px">
     <div class="mg-modal-header flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}">
-      <h3 class="text-white font-bold text-lg">${isRTL ? 'تفاصيل الطلب' : 'Request Details'}</h3>
-      <button onclick="closeApvDetail()" class="text-white/70 hover:text-white text-xl leading-none">×</button>
+      <div class="flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}">
+        <i class="fas fa-file-alt text-white/80"></i>
+        <h3 class="text-white font-bold text-lg">${isRTL ? 'تفاصيل الطلب' : 'Request Details'}</h3>
+        <span id="detailStageBadge" class="text-xs font-bold px-2 py-0.5 rounded-full"></span>
+      </div>
+      <button onclick="closeDetail()" class="text-white/70 hover:text-white text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
     </div>
-    <div class="p-6" id="apvDetailBody"></div>
+
+    <!-- Info grid -->
+    <div class="p-5 border-b border-gray-100" id="detailGrid"></div>
+
+    <!-- Timeline / audit trail -->
+    <div class="px-5 py-4 border-b border-gray-100">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">${isRTL ? 'سجل الإجراءات' : 'Action Log'}</p>
+      <div id="detailTimeline" class="space-y-2"></div>
+    </div>
+
+    <!-- Mgmt notes input (always visible) -->
+    <div class="px-5 py-4 border-b border-gray-100">
+      <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ${isRTL ? 'text-right' : ''}">
+        ${isRTL ? 'ملاحظات الإدارة' : 'Management Notes'}
+      </label>
+      <textarea id="detailNote" rows="2"
+        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 resize-none ${isRTL ? 'text-right' : ''}"
+        placeholder="${isRTL ? 'أضف ملاحظة للطلب...' : 'Add a note to this request...'}"></textarea>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="p-5 flex flex-wrap gap-2 ${isRTL ? 'flex-row-reverse' : ''}" id="detailActions"></div>
   </div>
 </div>
 
-<!-- Confirm Action Modal -->
-<div class="mg-modal-overlay" id="apvActionModal">
-  <div class="mg-modal-box mx-4" style="max-width:480px">
+<!-- ══════════════════════════════════════════════
+     MODAL 2 – Edit request fields (admin only)
+     ══════════════════════════════════════════════ -->
+<div class="mg-modal-overlay" id="modalEdit">
+  <div class="mg-modal-box mx-4" style="max-width:580px">
     <div class="mg-modal-header flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}">
-      <h3 class="text-white font-bold" id="apvActionTitle">${isRTL ? 'تأكيد الإجراء' : 'Confirm Action'}</h3>
-      <button onclick="closeApvAction()" class="text-white/70 hover:text-white text-xl leading-none">×</button>
+      <div class="flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}">
+        <i class="fas fa-edit text-white/80"></i>
+        <h3 class="text-white font-bold text-lg">${isRTL ? 'تعديل الطلب' : 'Edit Request'}</h3>
+      </div>
+      <button onclick="closeEdit()" class="text-white/70 hover:text-white text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
     </div>
     <div class="p-5">
-      <p class="text-gray-700 text-sm mb-4" id="apvActionDesc"></p>
-      <div class="mb-4">
-        <label class="block text-sm font-semibold text-gray-700 mb-1.5 ${isRTL ? 'text-right' : ''}">
-          ${isRTL ? 'ملاحظات (اختياري)' : 'Notes (optional)'}
-        </label>
-        <textarea id="apvActionNote" rows="3"
-          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 resize-none ${isRTL ? 'text-right' : ''}"
-          placeholder="${isRTL ? 'أضف ملاحظة...' : 'Add a note...'}"></textarea>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <!-- Employee name -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-1 ${isRTL ? 'text-right' : ''}">${isRTL ? 'اسم الموظف' : 'Employee Name'}</label>
+          <input id="editEmpName" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 ${isRTL ? 'text-right' : ''}"/>
+        </div>
+        <!-- Employee ID -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-1 ${isRTL ? 'text-right' : ''}">${isRTL ? 'الرقم الوظيفي' : 'Employee ID'}</label>
+          <input id="editEmpId" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 ${isRTL ? 'text-right' : ''}"/>
+        </div>
+        <!-- Type -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-1 ${isRTL ? 'text-right' : ''}">${isRTL ? 'نوع الطلب' : 'Request Type'}</label>
+          <select id="editType" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400">
+            <option value="salary">${isRTL ? 'راتب' : 'Salary'}</option>
+            <option value="advance">${isRTL ? 'سلفة' : 'Advance'}</option>
+            <option value="allowance">${isRTL ? 'بدل' : 'Allowance'}</option>
+            <option value="certificate">${isRTL ? 'شهادة' : 'Certificate'}</option>
+            <option value="mission">${isRTL ? 'مهمة' : 'Mission'}</option>
+            <option value="eos">${isRTL ? 'نهاية خدمة' : 'End of Service'}</option>
+            <option value="other">${isRTL ? 'أخرى' : 'Other'}</option>
+          </select>
+        </div>
+        <!-- Priority -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-1 ${isRTL ? 'text-right' : ''}">${isRTL ? 'الأولوية' : 'Priority'}</label>
+          <select id="editPriority" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400">
+            <option value="urgent">${isRTL ? 'عاجل' : 'Urgent'}</option>
+            <option value="high">${isRTL ? 'عالية' : 'High'}</option>
+            <option value="normal">${isRTL ? 'عادية' : 'Normal'}</option>
+          </select>
+        </div>
+        <!-- Dept -->
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-bold text-gray-500 mb-1 ${isRTL ? 'text-right' : ''}">${isRTL ? 'القسم' : 'Department'}</label>
+          <input id="editDept" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 ${isRTL ? 'text-right' : ''}"/>
+        </div>
+        <!-- Reason -->
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-bold text-gray-500 mb-1 ${isRTL ? 'text-right' : ''}">${isRTL ? 'السبب / الوصف' : 'Reason / Description'}</label>
+          <textarea id="editReason" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 resize-none ${isRTL ? 'text-right' : ''}"></textarea>
+        </div>
+        <!-- Admin notes -->
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-bold text-gray-500 mb-1 ${isRTL ? 'text-right' : ''}">${isRTL ? 'ملاحظات الإدارة' : 'Management Notes'}</label>
+          <textarea id="editMgmtNotes" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 resize-none ${isRTL ? 'text-right' : ''}"></textarea>
+        </div>
       </div>
       <div class="flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}">
-        <button id="apvActionConfirmBtn" onclick="doApvAction()" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition"
-          style="background:linear-gradient(135deg,#1B2B4B,#243555)">
-          ${isRTL ? 'تأكيد' : 'Confirm'}
+        <button onclick="saveEdit()" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition"
+          style="background:linear-gradient(135deg,#1B2B4B,#2563EB)">
+          <i class="fas fa-save ${isRTL ? 'ml-2' : 'mr-2'}"></i>${isRTL ? 'حفظ التعديلات' : 'Save Changes'}
         </button>
-        <button onclick="closeApvAction()" class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
+        <button onclick="closeEdit()" class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
           ${isRTL ? 'إلغاء' : 'Cancel'}
         </button>
       </div>
@@ -16836,127 +16925,216 @@ app.get('/mgmt-approvals', (c) => {
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════
+     MODAL 3 – Confirm action (approve/reject/etc)
+     ══════════════════════════════════════════════ -->
+<div class="mg-modal-overlay" id="modalConfirm">
+  <div class="mg-modal-box mx-4" style="max-width:460px">
+    <div class="mg-modal-header flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}" id="confirmHeader">
+      <div class="flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}">
+        <i id="confirmIcon" class="fas fa-question-circle text-white/80"></i>
+        <h3 class="text-white font-bold" id="confirmTitle">${isRTL ? 'تأكيد الإجراء' : 'Confirm Action'}</h3>
+      </div>
+      <button onclick="closeConfirm()" class="text-white/70 hover:text-white text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+    </div>
+    <div class="p-5">
+      <div id="confirmInfoBox" class="rounded-xl p-3 mb-4 text-sm"></div>
+      <p class="text-gray-700 text-sm font-medium mb-4" id="confirmDesc"></p>
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ${isRTL ? 'text-right' : ''}">
+          ${isRTL ? 'ملاحظة (مطلوبة للرفض والإعادة)' : 'Note (required for reject / return)'}
+        </label>
+        <textarea id="confirmNote" rows="3"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-400 resize-none ${isRTL ? 'text-right' : ''}"
+          placeholder="${isRTL ? 'سبب القرار...' : 'Reason for this decision...'}"></textarea>
+        <p id="confirmNoteErr" class="text-red-500 text-xs mt-1 hidden">${isRTL ? '* هذا الحقل مطلوب' : '* This field is required'}</p>
+      </div>
+      <div class="flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}">
+        <button id="confirmBtn" onclick="execAction()"
+          class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition">
+          ${isRTL ? 'تأكيد' : 'Confirm'}
+        </button>
+        <button onclick="closeConfirm()"
+          class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
+          ${isRTL ? 'إلغاء' : 'Cancel'}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .tab-btn { cursor:pointer; transition:opacity .15s,transform .15s; }
+  .tab-btn.active-tab { opacity:1!important; transform:scale(1.05); box-shadow:0 2px 10px rgba(0,0,0,.12); }
+  .tab-btn:not(.active-tab) { opacity:.55; }
+  .tab-btn:hover { opacity:.85; }
+  .act-row { display:flex; align-items:center; gap:.5rem; font-size:.8rem; }
+  .act-dot  { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+  .act-line { width:2px;height:18px;background:#E5E7EB;margin:1px auto; }
+</style>
+
 <script>
 (function(){
-  var IS_RTL = ${isRTL};
-  var LANG   = '${lang}';
+  var IS_RTL  = ${isRTL};
+  var LANG    = '${lang}';
   var APV_KEY = 'qu_approvals_v1';
   var MS_KEY  = 'qu_missions_v1';
 
   var sess = {};
-  try { sess = JSON.parse(localStorage.getItem('mgmtSession') || '{}'); } catch(e) {}
-  var ROLE = sess.role || 'dept-head';
-  var IS_ADMIN = ROLE === 'admin';
-  var MY_DEPT = IS_ADMIN ? null : (sess.deptEn || '');
+  try { sess = JSON.parse(localStorage.getItem('mgmtSession') || '{}'); } catch(e){}
+  var IS_ADMIN = sess.role === 'admin';
+  var MY_DEPT  = IS_ADMIN ? null : (sess.deptEn || '');
+  var ACTOR    = IS_RTL ? (sess.nameAr || sess.username) : (sess.nameEn || sess.username);
 
-  // Role description
-  document.getElementById('apvRoleDesc').textContent = IS_RTL
-    ? (IS_ADMIN ? 'صلاحية الاعتماد النهائي لجميع الأقسام' : 'صلاحية التأشير – ' + (sess.deptAr || 'قسمك'))
-    : (IS_ADMIN ? 'Full approval authority for all departments' : 'Endorsement authority – ' + (sess.deptEn || 'Your dept.'));
-
+  /* ── lookups ── */
   var TYPE_L  = {salary:IS_RTL?'راتب':'Salary',advance:IS_RTL?'سلفة':'Advance',allowance:IS_RTL?'بدل':'Allowance',certificate:IS_RTL?'شهادة':'Certificate',eos:IS_RTL?'نهاية خدمة':'EOS',mission:IS_RTL?'مهمة':'Mission',other:IS_RTL?'أخرى':'Other'};
   var STAGE_L = {pending:IS_RTL?'معلق':'Pending',endorsed:IS_RTL?'مؤشَّر':'Endorsed',approved:IS_RTL?'معتمد':'Approved',rejected:IS_RTL?'مرفوض':'Rejected',returned:IS_RTL?'مُعاد':'Returned'};
   var STAGE_C = {pending:'badge-pending',endorsed:'badge-endorsed',approved:'badge-approved',rejected:'badge-rejected',returned:'badge-returned'};
   var PRI_L   = {urgent:IS_RTL?'عاجل':'Urgent',high:IS_RTL?'عالية':'High',normal:IS_RTL?'عادية':'Normal'};
   var PRI_C   = {urgent:'bg-red-100 text-red-700',high:'bg-amber-100 text-amber-700',normal:'bg-gray-100 text-gray-600'};
+  var DOT_C   = {pending:'#D97706',endorsed:'#1D4ED8',approved:'#15803D',rejected:'#DC2626',returned:'#92400E',edit:'#7C3AED'};
 
+  /* ── role description ── */
+  document.getElementById('apvRoleDesc').textContent = IS_RTL
+    ? (IS_ADMIN ? 'صلاحية الاعتماد النهائي – كل الأقسام + التعديل' : 'صلاحية التأشير – ' + (sess.deptAr||'قسمك'))
+    : (IS_ADMIN ? 'Full approval authority – all depts + edit' : 'Endorsement authority – ' + (sess.deptEn||'Your dept.'));
+
+  /* ── state ── */
   var currentTab = 'pending';
-  var pendingAction = null;
+  var pendingAct = null;   // { id, act }
+  var editingId  = null;
 
+  /* ── storage ── */
   function getAll() {
     try { return JSON.parse(localStorage.getItem(APV_KEY) || '[]'); } catch(e){ return []; }
   }
   function saveAll(d) { localStorage.setItem(APV_KEY, JSON.stringify(d)); }
+  function getById(id) { return getAll().find(function(r){ return r.id === id; }); }
 
+  /* ── dept filter ── */
   function inMyDept(r) {
     if (IS_ADMIN) return true;
-    var dept = (r.dept || '').toLowerCase();
-    var mine = MY_DEPT.toLowerCase();
-    return dept.includes(mine) || mine.includes(dept) || mine === '' || dept === '';
+    var dept = (r.dept||'').toLowerCase();
+    var mine = (MY_DEPT||'').toLowerCase();
+    return mine === '' || dept === '' || dept.includes(mine) || mine.includes(dept);
   }
 
+  /* ── helpers ── */
   function fmtDate(s) {
     if (!s) return '–';
-    try { return new Date(s).toLocaleDateString(IS_RTL?'ar-QA':'en-GB'); } catch(e){ return s; }
+    try { return new Date(s).toLocaleDateString(IS_RTL?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'numeric'}); } catch(e){ return s; }
   }
+  function fmtDateTime(s) {
+    if (!s) return '–';
+    try { return new Date(s).toLocaleString(IS_RTL?'ar-QA':'en-GB',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e){ return s; }
+  }
+  function genId() { return 'APV-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
 
+  /* ─────────────────────────────────────────────
+     TABS & BADGES
+  ───────────────────────────────────────────── */
   function updateBadges(data) {
     var my = data.filter(inMyDept);
-    document.getElementById('apvCntPending').textContent  = my.filter(function(r){ return r.stage==='pending'; }).length;
-    document.getElementById('apvCntEndorsed').textContent = my.filter(function(r){ return r.stage==='endorsed'; }).length;
-    document.getElementById('apvCntApproved').textContent = my.filter(function(r){ return r.stage==='approved'; }).length;
-    document.getElementById('apvCntAll').textContent      = my.length;
+    ['pending','endorsed','approved','rejected','returned'].forEach(function(s){
+      var cnt = my.filter(function(r){ return r.stage === s; }).length;
+      document.getElementById('cnt-' + s).textContent = cnt;
+    });
+    document.getElementById('cnt-all').textContent = my.length;
   }
 
   function mgApvSetTab(tab) {
     currentTab = tab;
-    window.mgApvSetTab = mgApvSetTab;
+    document.querySelectorAll('.tab-btn').forEach(function(b){
+      b.classList.toggle('active-tab', b.id === 'tab-' + tab);
+    });
     mgApvFilter();
   }
   window.mgApvSetTab = mgApvSetTab;
 
+  /* ─────────────────────────────────────────────
+     FILTER & RENDER TABLE
+  ───────────────────────────────────────────── */
   function mgApvFilter() {
-    var data    = getAll();
-    var search  = (document.getElementById('apvSearch').value || '').toLowerCase();
-    var type    = document.getElementById('apvFilterType').value;
-    var pri     = document.getElementById('apvFilterPriority').value;
+    var data   = getAll();
+    var search = (document.getElementById('apvSearch').value||'').toLowerCase();
+    var ftype  = document.getElementById('apvFType').value;
+    var fpri   = document.getElementById('apvFPri').value;
 
     updateBadges(data);
 
-    var filtered = data.filter(function(r){
+    var rows = data.filter(function(r){
       if (!inMyDept(r)) return false;
       if (currentTab !== 'all' && r.stage !== currentTab) return false;
-      if (search && !(r.empName||'').toLowerCase().includes(search) && !(r.id||'').toLowerCase().includes(search) && !(r.requestedBy||'').toLowerCase().includes(search)) return false;
-      if (type && r.type !== type) return false;
-      if (pri  && r.priority !== pri) return false;
+      if (search) {
+        var hay = [(r.empName||''),(r.requestedBy||''),(r.id||''),(r.empId||'')].join(' ').toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      if (ftype && r.type !== ftype) return false;
+      if (fpri  && r.priority !== fpri) return false;
       return true;
     }).reverse();
 
-    var tbody = document.getElementById('apvTableBody');
-    var empty = document.getElementById('apvEmptyMsg');
+    var tbody = document.getElementById('apvTbody');
+    var empty = document.getElementById('apvEmpty');
 
-    if (filtered.length === 0) {
+    if (rows.length === 0) {
       tbody.innerHTML = '';
-      empty.classList.remove('hidden');
-      empty.classList.add('flex');
-      return;
+      empty.classList.remove('hidden'); empty.classList.add('flex'); return;
     }
-    empty.classList.add('hidden');
-    empty.classList.remove('flex');
+    empty.classList.add('hidden'); empty.classList.remove('flex');
 
-    tbody.innerHTML = filtered.map(function(r){
-      // Build action buttons based on role + stage
+    tbody.innerHTML = rows.map(function(r){
+      /* ── action buttons per role + stage ── */
       var btns = '';
-      if (IS_ADMIN) {
-        if (r.stage === 'pending' || r.stage === 'endorsed') {
-          btns += '<button class="btn-approve mr-1" data-id="'+r.id+'" data-act="approve" onclick="openApvAction(this.dataset.id,this.dataset.act)">' + (IS_RTL?'اعتماد':'Approve') + '</button>';
-          btns += '<button class="btn-reject mr-1"  data-id="'+r.id+'" data-act="reject"  onclick="openApvAction(this.dataset.id,this.dataset.act)">'  + (IS_RTL?'رفض':'Reject') + '</button>';
-          btns += '<button class="btn-return"        data-id="'+r.id+'" data-act="return"  onclick="openApvAction(this.dataset.id,this.dataset.act)">'  + (IS_RTL?'إعادة':'Return') + '</button>';
-        } else {
-          btns = '<span class="text-xs text-gray-400">' + (STAGE_L[r.stage]||r.stage) + '</span>';
-        }
-      } else {
-        // dept-head: can endorse pending, return pending
-        if (r.stage === 'pending') {
-          btns += '<button class="btn-endorse mr-1" data-id="'+r.id+'" data-act="endorse" onclick="openApvAction(this.dataset.id,this.dataset.act)">' + (IS_RTL?'تأشير':'Endorse') + '</button>';
-          btns += '<button class="btn-return"       data-id="'+r.id+'" data-act="return"  onclick="openApvAction(this.dataset.id,this.dataset.act)">'  + (IS_RTL?'إعادة':'Return') + '</button>';
-        } else {
-          btns = '<span class="text-xs text-gray-400">' + (STAGE_L[r.stage]||r.stage) + '</span>';
-        }
+      var canActAdmin = IS_ADMIN && (r.stage === 'pending' || r.stage === 'endorsed' || r.stage === 'returned');
+      var canActHead  = !IS_ADMIN && r.stage === 'pending';
+
+      if (canActAdmin) {
+        btns +=
+          '<button class="btn-approve" title="' + (IS_RTL?'اعتماد':'Approve') + '"' +
+          ' data-id="'+r.id+'" data-act="approve" onclick="askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-check"></i></button> ' +
+          '<button class="btn-reject" title="' + (IS_RTL?'رفض':'Reject') + '"' +
+          ' data-id="'+r.id+'" data-act="reject" onclick="askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-times"></i></button> ' +
+          '<button class="btn-return" title="' + (IS_RTL?'إعادة':'Return') + '"' +
+          ' data-id="'+r.id+'" data-act="return" onclick="askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-undo"></i></button> ' +
+          '<button class="btn-endorse" title="' + (IS_RTL?'تعديل':'Edit') + '"' +
+          ' data-id="'+r.id+'" onclick="openEdit(this.dataset.id)">' +
+          '<i class="fas fa-pen"></i></button>';
+      } else if (canActHead) {
+        btns +=
+          '<button class="btn-endorse" title="' + (IS_RTL?'تأشير':'Endorse') + '"' +
+          ' data-id="'+r.id+'" data-act="endorse" onclick="askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-thumbs-up"></i></button> ' +
+          '<button class="btn-return" title="' + (IS_RTL?'إعادة':'Return') + '"' +
+          ' data-id="'+r.id+'" data-act="return" onclick="askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-undo"></i></button>';
+      } else if (IS_ADMIN) {
+        /* approved / rejected – admin can still edit */
+        btns += '<button class="btn-endorse" title="' + (IS_RTL?'تعديل':'Edit') + '"' +
+          ' data-id="'+r.id+'" onclick="openEdit(this.dataset.id)">' +
+          '<i class="fas fa-pen"></i></button>';
       }
 
       return '<tr>' +
         '<td class="' + (IS_RTL?'text-right':'') + '">' +
           '<p class="font-semibold text-gray-800 text-sm">' + (r.empName||r.requestedBy||'–') + '</p>' +
           '<p class="text-xs text-gray-400">' + (r.id||'') + (r.empId?' · '+r.empId:'') + '</p>' +
-          '<button data-id="'+r.id+'" onclick="openApvDetail(this.dataset.id)" class="text-xs text-blue-600 hover:underline font-semibold mt-0.5">' + (IS_RTL?'التفاصيل':'Details') + '</button>' +
+          '<button data-id="'+r.id+'" onclick="openDetail(this.dataset.id)"' +
+          ' class="text-xs text-blue-600 hover:underline font-semibold">' +
+          (IS_RTL?'التفاصيل':'Details') + '</button>' +
         '</td>' +
-        '<td><span class="text-xs px-2 py-1 rounded-md bg-gray-100 text-gray-600 font-semibold">' + (TYPE_L[r.type]||r.type||'–') + '</span></td>' +
+        '<td><span class="text-xs px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 font-semibold">' +
+          (TYPE_L[r.type]||r.type||'–') + '</span></td>' +
         '<td class="text-xs text-gray-600">' + (IS_RTL?(r.deptAr||r.dept||'–'):(r.deptEn||r.dept||'–')) + '</td>' +
-        '<td><span class="text-xs px-2 py-1 rounded-full font-bold ' + (PRI_C[r.priority]||'bg-gray-100 text-gray-600') + '">' + (PRI_L[r.priority]||r.priority||'–') + '</span></td>' +
-        '<td><span class="badge text-xs px-2 py-1 rounded-full font-bold ' + (STAGE_C[r.stage]||'badge-pending') + '">' + (STAGE_L[r.stage]||r.stage||'–') + '</span></td>' +
-        '<td class="text-xs text-gray-500">' + fmtDate(r.createdAt||r.submittedAt) + '</td>' +
-        '<td class="whitespace-nowrap">' + btns + '</td>' +
+        '<td><span class="text-xs px-2 py-0.5 rounded-full font-bold ' + (PRI_C[r.priority]||'bg-gray-100 text-gray-600') + '">' +
+          (PRI_L[r.priority]||r.priority||'–') + '</span></td>' +
+        '<td><span class="badge text-xs px-2 py-0.5 rounded-full font-bold ' + (STAGE_C[r.stage]||'badge-pending') + '">' +
+          (STAGE_L[r.stage]||r.stage||'–') + '</span></td>' +
+        '<td class="text-xs text-gray-500 whitespace-nowrap">' + fmtDate(r.createdAt||r.submittedAt) + '</td>' +
+        '<td class="whitespace-nowrap text-center">' + (btns||'<span class="text-xs text-gray-300">–</span>') + '</td>' +
       '</tr>';
     }).join('');
   }
@@ -16964,151 +17142,314 @@ app.get('/mgmt-approvals', (c) => {
 
   function mgApvClearFilters() {
     document.getElementById('apvSearch').value = '';
-    document.getElementById('apvFilterType').value = '';
-    document.getElementById('apvFilterPriority').value = '';
+    document.getElementById('apvFType').value  = '';
+    document.getElementById('apvFPri').value   = '';
     mgApvFilter();
   }
   window.mgApvClearFilters = mgApvClearFilters;
 
-  // ── Detail modal ──
-  function openApvDetail(id) {
-    var data = getAll();
-    var r = data.find(function(x){ return x.id === id; });
+  /* ─────────────────────────────────────────────
+     DETAIL MODAL
+  ───────────────────────────────────────────── */
+  function openDetail(id) {
+    var r = getById(id);
     if (!r) return;
-    var body = document.getElementById('apvDetailBody');
+
+    /* Stage badge in header */
+    var sb = document.getElementById('detailStageBadge');
+    sb.textContent = STAGE_L[r.stage]||r.stage;
+    sb.className   = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (STAGE_C[r.stage]||'badge-pending');
+
+    /* Info grid */
     var fields = [
-      [IS_RTL?'رقم الطلب':'Request ID', r.id],
-      [IS_RTL?'اسم الموظف':'Employee Name', r.empName||r.requestedBy||'–'],
-      [IS_RTL?'رقم الموظف':'Employee ID', r.empId||'–'],
-      [IS_RTL?'البريد':'Email', r.empEmail||'–'],
-      [IS_RTL?'القسم':'Department', IS_RTL?(r.deptAr||r.dept||'–'):(r.deptEn||r.dept||'–')],
-      [IS_RTL?'نوع الطلب':'Request Type', TYPE_L[r.type]||r.type||'–'],
-      [IS_RTL?'الأولوية':'Priority', PRI_L[r.priority]||r.priority||'–'],
-      [IS_RTL?'الحالة الحالية':'Current Stage', STAGE_L[r.stage]||r.stage||'–'],
-      [IS_RTL?'تاريخ التقديم':'Submitted', fmtDate(r.createdAt||r.submittedAt)],
-      [IS_RTL?'السبب':'Reason', r.reason||r.purpose||r.details||'–'],
-      [IS_RTL?'ملاحظات الموظف':'Staff Notes', r.notes||'–'],
-      [IS_RTL?'ملاحظات الإدارة':'Mgmt Notes', r.mgmtNotes||'–'],
+      [IS_RTL?'رقم الطلب':'Request ID',        r.id||'–'],
+      [IS_RTL?'اسم الموظف':'Employee Name',     r.empName||r.requestedBy||'–'],
+      [IS_RTL?'الرقم الوظيفي':'Employee ID',    r.empId||'–'],
+      [IS_RTL?'البريد الإلكتروني':'Email',       r.empEmail||'–'],
+      [IS_RTL?'القسم':'Department',              IS_RTL?(r.deptAr||r.dept||'–'):(r.deptEn||r.dept||'–')],
+      [IS_RTL?'نوع الطلب':'Type',                TYPE_L[r.type]||r.type||'–'],
+      [IS_RTL?'الأولوية':'Priority',             PRI_L[r.priority]||r.priority||'–'],
+      [IS_RTL?'تاريخ التقديم':'Submitted',       fmtDate(r.createdAt||r.submittedAt)],
+      [IS_RTL?'السبب / الوصف':'Reason',          r.reason||r.purpose||r.details||'–'],
+      [IS_RTL?'ملاحظات الموظف':'Staff Notes',   r.notes||'–'],
+      [IS_RTL?'ملاحظات الإدارة':'Mgmt Notes',   r.mgmtNotes||'–'],
     ];
-    body.innerHTML = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+    document.getElementById('detailGrid').innerHTML =
+      '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
       fields.map(function(f){
         return '<div class="bg-gray-50 rounded-lg p-3 ' + (IS_RTL?'text-right':'') + '">' +
           '<p class="text-xs text-gray-400 font-semibold mb-0.5">' + f[0] + '</p>' +
-          '<p class="text-sm text-gray-800 font-medium">' + (f[1]||'–') + '</p>' +
+          '<p class="text-sm text-gray-800 font-medium break-words">' + (f[1]||'–') + '</p>' +
         '</div>';
-      }).join('') +
-      '</div>' +
-      // Action buttons in detail
-      (function(){
-        if (r.stage !== 'pending' && r.stage !== 'endorsed') return '';
-        var btns = '<div class="mt-4 flex gap-2 ' + (IS_RTL?' flex-row-reverse':'') + '">';
-        if (IS_ADMIN) {
-          btns += '<button class="btn-approve" data-id="'+r.id+'" data-act="approve" onclick="closeApvDetail();openApvAction(this.dataset.id,this.dataset.act)">' + (IS_RTL?'اعتماد':'Approve') + '</button>';
-          btns += '<button class="btn-reject mx-2" data-id="'+r.id+'" data-act="reject"  onclick="closeApvDetail();openApvAction(this.dataset.id,this.dataset.act)">' + (IS_RTL?'رفض':'Reject') + '</button>';
-          btns += '<button class="btn-return" data-id="'+r.id+'" data-act="return"  onclick="closeApvDetail();openApvAction(this.dataset.id,this.dataset.act)">' + (IS_RTL?'إعادة':'Return') + '</button>';
-        } else if (r.stage === 'pending') {
-          btns += '<button class="btn-endorse" data-id="'+r.id+'" data-act="endorse" onclick="closeApvDetail();openApvAction(this.dataset.id,this.dataset.act)">' + (IS_RTL?'تأشير':'Endorse') + '</button>';
-          btns += '<button class="btn-return ml-2" data-id="'+r.id+'" data-act="return"  onclick="closeApvDetail();openApvAction(this.dataset.id,this.dataset.act)">' + (IS_RTL?'إعادة':'Return') + '</button>';
-        }
-        return btns + '</div>';
-      })();
-    document.getElementById('apvDetailModal').classList.add('open');
+      }).join('') + '</div>';
+
+    /* Timeline */
+    var tl = [];
+    if (r.createdAt||r.submittedAt)  tl.push({date:r.createdAt||r.submittedAt, label:IS_RTL?'تم التقديم':'Submitted',           color:'#6B7280'});
+    if (r.endorsedAt)                tl.push({date:r.endorsedAt,               label:IS_RTL?('تأشير – '+(r.endorsedBy||''))    :('Endorsed – '+(r.endorsedBy||'')),  color:DOT_C.endorsed});
+    if (r.approvedAt)                tl.push({date:r.approvedAt,               label:IS_RTL?('اعتماد – '+(r.approvedBy||''))   :('Approved – '+(r.approvedBy||'')),  color:DOT_C.approved});
+    if (r.rejectedAt)                tl.push({date:r.rejectedAt,               label:IS_RTL?('رفض – '+(r.rejectedBy||''))      :('Rejected – '+(r.rejectedBy||'')),  color:DOT_C.rejected});
+    if (r.returnedAt)                tl.push({date:r.returnedAt,               label:IS_RTL?('إعادة – '+(r.returnedBy||''))    :('Returned – '+(r.returnedBy||'')),  color:DOT_C.returned});
+    if (r.editedAt)                  tl.push({date:r.editedAt,                 label:IS_RTL?('تعديل – '+(r.editedBy||''))      :('Edited – '+(r.editedBy||'')),      color:DOT_C.edit});
+    tl.sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
+
+    document.getElementById('detailTimeline').innerHTML = tl.length === 0
+      ? '<p class="text-xs text-gray-400 ' + (IS_RTL?'text-right':'') + '">' + (IS_RTL?'لا يوجد سجل بعد':'No activity yet') + '</p>'
+      : tl.map(function(e, i){
+          return '<div class="act-row ' + (IS_RTL?'flex-row-reverse':'') + '">' +
+            '<div class="act-dot" style="background:' + e.color + '"></div>' +
+            '<div class="' + (IS_RTL?'text-right':'') + '">' +
+              '<span class="font-semibold text-gray-700" style="font-size:.8rem">' + e.label + '</span>' +
+              '<span class="text-gray-400 text-xs ml-2">' + fmtDateTime(e.date) + '</span>' +
+            '</div></div>' +
+            (i < tl.length-1 ? '<div class="act-line ' + (IS_RTL?'mr-1':'ml-1') + '"></div>' : '');
+        }).join('');
+
+    /* Restore saved note */
+    document.getElementById('detailNote').value = r.mgmtNotes || '';
+
+    /* Action buttons */
+    var canActAdmin = IS_ADMIN && (r.stage === 'pending' || r.stage === 'endorsed' || r.stage === 'returned');
+    var canActHead  = !IS_ADMIN && r.stage === 'pending';
+    var actHTML = '';
+
+    if (canActAdmin) {
+      actHTML +=
+        '<button class="btn-approve flex items-center gap-1.5 px-4 py-2" data-id="'+r.id+'" data-act="approve" onclick="saveDetailNote(this.dataset.id);closeDetail();askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-check-circle"></i>' + (IS_RTL?'اعتماد':'Approve') + '</button>' +
+        '<button class="btn-reject flex items-center gap-1.5 px-4 py-2" data-id="'+r.id+'" data-act="reject" onclick="saveDetailNote(this.dataset.id);closeDetail();askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-times-circle"></i>' + (IS_RTL?'رفض':'Reject') + '</button>' +
+        '<button class="btn-return flex items-center gap-1.5 px-4 py-2" data-id="'+r.id+'" data-act="return" onclick="saveDetailNote(this.dataset.id);closeDetail();askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-undo"></i>' + (IS_RTL?'إعادة':'Return') + '</button>' +
+        '<button class="btn-endorse flex items-center gap-1.5 px-4 py-2" data-id="'+r.id+'" onclick="saveDetailNote(this.dataset.id);closeDetail();openEdit(this.dataset.id)">' +
+          '<i class="fas fa-pen"></i>' + (IS_RTL?'تعديل':'Edit') + '</button>';
+    } else if (canActHead) {
+      actHTML +=
+        '<button class="btn-endorse flex items-center gap-1.5 px-4 py-2" data-id="'+r.id+'" data-act="endorse" onclick="saveDetailNote(this.dataset.id);closeDetail();askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-thumbs-up"></i>' + (IS_RTL?'تأشير':'Endorse') + '</button>' +
+        '<button class="btn-return flex items-center gap-1.5 px-4 py-2" data-id="'+r.id+'" data-act="return" onclick="saveDetailNote(this.dataset.id);closeDetail();askAction(this.dataset.id,this.dataset.act)">' +
+          '<i class="fas fa-undo"></i>' + (IS_RTL?'إعادة':'Return') + '</button>';
+    } else if (IS_ADMIN) {
+      actHTML +=
+        '<button class="btn-endorse flex items-center gap-1.5 px-4 py-2" data-id="'+r.id+'" onclick="saveDetailNote(this.dataset.id);closeDetail();openEdit(this.dataset.id)">' +
+          '<i class="fas fa-pen"></i>' + (IS_RTL?'تعديل':'Edit') + '</button>';
+    }
+    actHTML +=
+      '<button data-id="'+r.id+'" onclick="saveDetailNote(this.dataset.id);closeDetail()" class="px-4 py-2 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition flex items-center gap-1.5">' +
+        '<i class="fas fa-save text-blue-500"></i>' + (IS_RTL?'حفظ الملاحظة':'Save Note') + '</button>';
+
+    document.getElementById('detailActions').innerHTML = actHTML;
+    document.getElementById('modalDetail').classList.add('open');
   }
-  window.openApvDetail = openApvDetail;
+  window.openDetail = openDetail;
 
-  function closeApvDetail() { document.getElementById('apvDetailModal').classList.remove('open'); }
-  window.closeApvDetail = closeApvDetail;
+  function closeDetail() { document.getElementById('modalDetail').classList.remove('open'); }
+  window.closeDetail = closeDetail;
 
-  // ── Action modal ──
-  var ACT_CONFIG = {
-    approve:  { titleAr:'تأكيد الاعتماد',     titleEn:'Confirm Approval',   descAr:'هل تريد اعتماد هذا الطلب نهائياً؟',   descEn:'Are you sure you want to approve this request?',   btnColor:'#15803D' },
-    reject:   { titleAr:'تأكيد الرفض',        titleEn:'Confirm Rejection',  descAr:'هل تريد رفض هذا الطلب؟',              descEn:'Are you sure you want to reject this request?',    btnColor:'#DC2626' },
-    endorse:  { titleAr:'تأكيد التأشير',      titleEn:'Confirm Endorsement',descAr:'هل تريد التأشير وإحالة الطلب للاعتماد؟',descEn:'Endorse and forward to admin for final approval?', btnColor:'#1D4ED8' },
-    return:   { titleAr:'إعادة الطلب',        titleEn:'Return Request',     descAr:'هل تريد إعادة الطلب لمراجعته؟',       descEn:'Return this request for revision?',                btnColor:'#D97706' },
-  };
-
-  function openApvAction(id, act) {
-    var cfg = ACT_CONFIG[act];
-    if (!cfg) return;
-    pendingAction = { id: id, act: act };
-    document.getElementById('apvActionTitle').textContent    = IS_RTL ? cfg.titleAr : cfg.titleEn;
-    document.getElementById('apvActionDesc').textContent     = IS_RTL ? cfg.descAr  : cfg.descEn;
-    document.getElementById('apvActionNote').value           = '';
-    document.getElementById('apvActionConfirmBtn').style.background = 'linear-gradient(135deg,' + cfg.btnColor + ',' + cfg.btnColor + 'CC)';
-    document.getElementById('apvActionModal').classList.add('open');
-  }
-  window.openApvAction = openApvAction;
-
-  function closeApvAction() { document.getElementById('apvActionModal').classList.remove('open'); pendingAction = null; }
-  window.closeApvAction = closeApvAction;
-
-  function doApvAction() {
-    if (!pendingAction) return;
-    var id   = pendingAction.id;
-    var act  = pendingAction.act;
-    var note = document.getElementById('apvActionNote').value.trim();
+  /* Save only note from detail modal */
+  function saveDetailNote(id) {
+    var note = document.getElementById('detailNote').value.trim();
+    if (!note) return;
     var data = getAll();
     var idx  = data.findIndex(function(r){ return r.id === id; });
-    if (idx === -1) { closeApvAction(); return; }
-    var actorName = IS_RTL ? (sess.nameAr||sess.username) : (sess.nameEn||sess.username);
+    if (idx === -1) return;
+    data[idx].mgmtNotes  = note;
+    data[idx].updatedAt  = new Date().toISOString();
+    saveAll(data);
+    mgApvFilter();
+  }
+  window.saveDetailNote = saveDetailNote;
+
+  /* ─────────────────────────────────────────────
+     CONFIRM ACTION MODAL
+  ───────────────────────────────────────────── */
+  var ACT_CFG = {
+    approve:  { icon:'fa-check-circle',  color:'#15803D', reqNote:false,
+                titleAr:'تأكيد الاعتماد النهائي',  titleEn:'Confirm Final Approval',
+                descAr:'بالضغط على تأكيد سيتم اعتماد هذا الطلب نهائياً ولن يُمكن التراجع عن الاعتماد.',
+                descEn:'Clicking confirm will finally approve this request. Approval cannot be undone.' },
+    endorse:  { icon:'fa-thumbs-up',     color:'#1D4ED8', reqNote:false,
+                titleAr:'تأكيد التأشير والإحالة', titleEn:'Confirm Endorsement',
+                descAr:'سيتم التأشير على الطلب وإحالته لمدير الإدارة للاعتماد النهائي.',
+                descEn:'Request will be endorsed and forwarded to admin for final approval.' },
+    reject:   { icon:'fa-times-circle',  color:'#DC2626', reqNote:true,
+                titleAr:'تأكيد الرفض',           titleEn:'Confirm Rejection',
+                descAr:'سيتم رفض الطلب. يُرجى إدخال سبب الرفض (مطلوب).',
+                descEn:'Request will be rejected. Please enter a rejection reason (required).' },
+    return:   { icon:'fa-undo',          color:'#D97706', reqNote:true,
+                titleAr:'إعادة الطلب للمراجعة',  titleEn:'Return for Revision',
+                descAr:'سيتم إعادة الطلب للموظف للمراجعة. يُرجى توضيح ما يجب تصحيحه (مطلوب).',
+                descEn:'Request will be returned to staff for revision. Please clarify what needs fixing (required).' },
+  };
+
+  function askAction(id, act) {
+    var cfg = ACT_CFG[act];
+    if (!cfg) return;
+    var r = getById(id);
+    if (!r) return;
+    pendingAct = { id:id, act:act };
+
+    document.getElementById('confirmHeader').style.background = 'linear-gradient(135deg,' + cfg.color + 'CC,' + cfg.color + ')';
+    document.getElementById('confirmIcon').className = 'fas ' + cfg.icon + ' text-white/80';
+    document.getElementById('confirmTitle').textContent = IS_RTL ? cfg.titleAr : cfg.titleEn;
+    document.getElementById('confirmDesc').textContent  = IS_RTL ? cfg.descAr  : cfg.descEn;
+    document.getElementById('confirmNote').value = '';
+    document.getElementById('confirmNoteErr').classList.add('hidden');
+    document.getElementById('confirmBtn').style.background = 'linear-gradient(135deg,' + cfg.color + ',' + cfg.color + 'CC)';
+
+    /* Info box */
+    document.getElementById('confirmInfoBox').innerHTML =
+      '<div class="flex items-start gap-3 ' + (IS_RTL?'flex-row-reverse':'') + '">' +
+        '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + cfg.color + '22">' +
+          '<i class="fas fa-file-alt" style="color:' + cfg.color + '"></i></div>' +
+        '<div class="' + (IS_RTL?'text-right':'') + '">' +
+          '<p class="font-bold text-gray-800 text-sm">' + (r.empName||r.requestedBy||'–') + '</p>' +
+          '<p class="text-xs text-gray-500">' + (TYPE_L[r.type]||r.type) + ' · ' + (r.id||'') + '</p>' +
+          '<p class="text-xs text-gray-400">' + (IS_RTL?(r.deptAr||r.dept||'–'):(r.deptEn||r.dept||'–')) + '</p>' +
+        '</div></div>';
+    document.getElementById('confirmInfoBox').style.background = cfg.color + '0D';
+    document.getElementById('confirmInfoBox').style.border = '1px solid ' + cfg.color + '33';
+
+    document.getElementById('modalConfirm').classList.add('open');
+  }
+  window.askAction = askAction;
+
+  function closeConfirm() { document.getElementById('modalConfirm').classList.remove('open'); pendingAct = null; }
+  window.closeConfirm = closeConfirm;
+
+  function execAction() {
+    if (!pendingAct) return;
+    var id  = pendingAct.id;
+    var act = pendingAct.act;
+    var cfg = ACT_CFG[act];
+    var note = document.getElementById('confirmNote').value.trim();
+
+    /* Validate required note */
+    if (cfg && cfg.reqNote && !note) {
+      document.getElementById('confirmNoteErr').classList.remove('hidden');
+      document.getElementById('confirmNote').focus();
+      return;
+    }
+    document.getElementById('confirmNoteErr').classList.add('hidden');
+
+    var data = getAll();
+    var idx  = data.findIndex(function(r){ return r.id === id; });
+    if (idx === -1) { closeConfirm(); return; }
     var now = new Date().toISOString();
 
     if (act === 'approve') {
-      data[idx].stage = 'approved';
-      data[idx].approvedBy = actorName;
+      data[idx].stage      = 'approved';
+      data[idx].approvedBy = ACTOR;
       data[idx].approvedAt = now;
-      // Sync to missions if mission type
-      if (data[idx].missionId) {
+      /* sync missions */
+      if (data[idx].type === 'mission' || data[idx].missionId) {
         try {
-          var ms = JSON.parse(localStorage.getItem(MS_KEY) || '[]');
-          var mi = ms.findIndex(function(m){ return m.id === data[idx].missionId; });
-          if (mi !== -1) { ms[mi].status = 'approved'; localStorage.setItem(MS_KEY, JSON.stringify(ms)); }
-        } catch(e) {}
+          var ms = JSON.parse(localStorage.getItem(MS_KEY)||'[]');
+          var mi = ms.findIndex(function(m){ return m.id === (data[idx].missionId||data[idx].id); });
+          if (mi !== -1) { ms[mi].status = 'approved'; ms[mi].updatedAt = now; localStorage.setItem(MS_KEY, JSON.stringify(ms)); }
+        } catch(e){}
       }
-    } else if (act === 'reject') {
-      data[idx].stage = 'rejected';
-      data[idx].rejectedBy = actorName;
-      data[idx].rejectedAt = now;
     } else if (act === 'endorse') {
-      data[idx].stage = 'endorsed';
-      data[idx].endorsedBy = actorName;
+      data[idx].stage      = 'endorsed';
+      data[idx].endorsedBy = ACTOR;
       data[idx].endorsedAt = now;
+    } else if (act === 'reject') {
+      data[idx].stage      = 'rejected';
+      data[idx].rejectedBy = ACTOR;
+      data[idx].rejectedAt = now;
     } else if (act === 'return') {
-      data[idx].stage = 'returned';
-      data[idx].returnedBy = actorName;
+      data[idx].stage      = 'returned';
+      data[idx].returnedBy = ACTOR;
       data[idx].returnedAt = now;
     }
-    if (note) data[idx].mgmtNotes = note;
+    if (note) {
+      data[idx].mgmtNotes = (data[idx].mgmtNotes ? data[idx].mgmtNotes + '\\n' : '') +
+        '[' + new Date().toLocaleDateString(IS_RTL?'ar-QA':'en-GB') + '] ' + ACTOR + ': ' + note;
+    }
     data[idx].updatedAt = now;
     saveAll(data);
-    closeApvAction();
+    closeConfirm();
     mgApvFilter();
-    var msgs = {
-      approve:  IS_RTL?'✅ تم الاعتماد بنجاح':'✅ Approved successfully',
-      reject:   IS_RTL?'❌ تم الرفض':'❌ Request rejected',
-      endorse:  IS_RTL?'👍 تم التأشير – بانتظار الاعتماد النهائي':'👍 Endorsed – pending final approval',
-      return:   IS_RTL?'↩️ تم إعادة الطلب للموظف':'↩️ Request returned to staff',
-    };
-    mgToast(msgs[act] || 'Done', act === 'reject' ? 'error' : act === 'return' ? 'info' : 'success');
-  }
-  window.doApvAction = doApvAction;
 
-  // Seed demo data if empty
+    var MSGS = {
+      approve: IS_RTL?'✅ تم الاعتماد النهائي بنجاح':'✅ Final approval granted',
+      endorse: IS_RTL?'👍 تم التأشير – بانتظار الاعتماد':'👍 Endorsed – awaiting final approval',
+      reject:  IS_RTL?'❌ تم رفض الطلب':'❌ Request rejected',
+      return:  IS_RTL?'↩️ تم إعادة الطلب للمراجعة':'↩️ Request returned for revision',
+    };
+    mgToast(MSGS[act]||'Done', act==='reject'?'error':act==='return'?'info':'success');
+  }
+  window.execAction = execAction;
+
+  /* ─────────────────────────────────────────────
+     EDIT MODAL  (admin only)
+  ───────────────────────────────────────────── */
+  function openEdit(id) {
+    var r = getById(id);
+    if (!r || !IS_ADMIN) return;
+    editingId = id;
+    document.getElementById('editEmpName').value   = r.empName   || r.requestedBy || '';
+    document.getElementById('editEmpId').value     = r.empId     || '';
+    document.getElementById('editType').value      = r.type      || 'other';
+    document.getElementById('editPriority').value  = r.priority  || 'normal';
+    document.getElementById('editDept').value      = IS_RTL ? (r.deptAr||r.dept||'') : (r.deptEn||r.dept||'');
+    document.getElementById('editReason').value    = r.reason    || r.purpose || r.details || '';
+    document.getElementById('editMgmtNotes').value = r.mgmtNotes || '';
+    document.getElementById('modalEdit').classList.add('open');
+  }
+  window.openEdit = openEdit;
+
+  function closeEdit() { document.getElementById('modalEdit').classList.remove('open'); editingId = null; }
+  window.closeEdit = closeEdit;
+
+  function saveEdit() {
+    if (!editingId || !IS_ADMIN) return;
+    var data = getAll();
+    var idx  = data.findIndex(function(r){ return r.id === editingId; });
+    if (idx === -1) { closeEdit(); return; }
+    var now  = new Date().toISOString();
+    var dept = document.getElementById('editDept').value.trim();
+
+    data[idx].empName    = document.getElementById('editEmpName').value.trim() || data[idx].empName;
+    data[idx].requestedBy= data[idx].empName;
+    data[idx].empId      = document.getElementById('editEmpId').value.trim()   || data[idx].empId;
+    data[idx].type       = document.getElementById('editType').value;
+    data[idx].priority   = document.getElementById('editPriority').value;
+    data[idx].dept       = dept;
+    if (IS_RTL) { data[idx].deptAr = dept; } else { data[idx].deptEn = dept; }
+    data[idx].reason     = document.getElementById('editReason').value.trim();
+    data[idx].mgmtNotes  = document.getElementById('editMgmtNotes').value.trim();
+    data[idx].editedBy   = ACTOR;
+    data[idx].editedAt   = now;
+    data[idx].updatedAt  = now;
+
+    saveAll(data);
+    closeEdit();
+    mgApvFilter();
+    mgToast(IS_RTL?'✏️ تم حفظ التعديلات بنجاح':'✏️ Changes saved successfully', 'info');
+  }
+  window.saveEdit = saveEdit;
+
+  /* ─────────────────────────────────────────────
+     SEED DEMO DATA
+  ───────────────────────────────────────────── */
   function seedDemo() {
     if (getAll().length > 0) return;
     var demo = [
-      { id:'APV-001', empName:'أحمد محمد العبدالله', requestedBy:'Ahmed Al-Abdullah', empId:'QU-2019-0145', empEmail:'a.alabdullah@qu.edu.qa', dept:'Computer Science', deptAr:'قسم علوم الحاسب', deptEn:'Computer Science', type:'salary',      priority:'urgent', stage:'pending',  reason:'طلب تعديل راتب بسبب الترقية',         notes:'',  createdAt:'2025-05-10T08:00:00Z', updatedAt:'2025-05-10T08:00:00Z' },
-      { id:'APV-002', empName:'فاطمة سالم القحطاني', requestedBy:'Fatima Al-Qahtani', empId:'QU-2020-0189', empEmail:'f.alqahtani@qu.edu.qa',  dept:'Human Resources',  deptAr:'إدارة الموارد البشرية', deptEn:'Human Resources',  type:'advance',     priority:'high',   stage:'pending',  reason:'سلفة على الراتب لظرف طارئ',          notes:'',  createdAt:'2025-05-11T09:30:00Z', updatedAt:'2025-05-11T09:30:00Z' },
-      { id:'APV-003', empName:'خالد عبدالله الدوسري', requestedBy:'Khaled Al-Dosari', empId:'QU-2018-0312', empEmail:'k.aldosari@qu.edu.qa',  dept:'College of Science',deptAr:'كلية العلوم',          deptEn:'College of Science', type:'mission',     priority:'normal', stage:'endorsed', reason:'مؤتمر الكيمياء الدولي – باريس',        notes:'تمت الموافقة من رئيس القسم', endorsedBy:'رئيس قسم العلوم', endorsedAt:'2025-05-12T10:00:00Z', createdAt:'2025-05-09T11:00:00Z', updatedAt:'2025-05-12T10:00:00Z' },
-      { id:'APV-004', empName:'نورة راشد المري',      requestedBy:'Noura Al-Marri',   empId:'QU-2021-0098', empEmail:'n.almarri@qu.edu.qa',    dept:'Finance',          deptAr:'إدارة المالية',        deptEn:'Finance',          type:'allowance',   priority:'normal', stage:'approved', reason:'بدل سكن – تحديث العقد',               notes:'', approvedBy:'مدير الإدارة', approvedAt:'2025-05-13T12:00:00Z', createdAt:'2025-05-08T07:00:00Z', updatedAt:'2025-05-13T12:00:00Z' },
-      { id:'APV-005', empName:'سلطان محمد الكعبي',   requestedBy:'Sultan Al-Kaabi',  empId:'QU-2017-0234', empEmail:'s.alkaabi@qu.edu.qa',   dept:'Computer Science', deptAr:'قسم علوم الحاسب',      deptEn:'Computer Science', type:'certificate', priority:'normal', stage:'rejected', reason:'شهادة خبرة لإجراءات الجنسية',         notes:'', rejectedBy:'مدير الإدارة', rejectedAt:'2025-05-14T09:00:00Z', createdAt:'2025-05-07T08:00:00Z', updatedAt:'2025-05-14T09:00:00Z' },
-      { id:'APV-006', empName:'مريم حمد الشمري',     requestedBy:'Mariam Al-Shammari',empId:'QU-2022-0056',empEmail:'m.alshammari@qu.edu.qa', dept:'Finance',          deptAr:'إدارة المالية',        deptEn:'Finance',          type:'eos',         priority:'high',   stage:'pending',  reason:'حساب مكافأة نهاية الخدمة',            notes:'',  createdAt:'2025-05-15T10:00:00Z', updatedAt:'2025-05-15T10:00:00Z' },
+      { id:'APV-001', empName:'أحمد محمد العبدالله', requestedBy:'Ahmed Al-Abdullah',    empId:'QU-2019-0145', empEmail:'a.alabdullah@qu.edu.qa',  dept:'Computer Science', deptAr:'قسم علوم الحاسب',       deptEn:'Computer Science',    type:'salary',      priority:'urgent', stage:'pending',  reason:'طلب تعديل راتب بسبب الترقية الوظيفية التي صدر قرارها رقم 2025/112',   notes:'',            createdAt:'2025-05-10T08:00:00Z', updatedAt:'2025-05-10T08:00:00Z' },
+      { id:'APV-002', empName:'فاطمة سالم القحطاني', requestedBy:'Fatima Al-Qahtani',   empId:'QU-2020-0189', empEmail:'f.alqahtani@qu.edu.qa',   dept:'Human Resources',  deptAr:'إدارة الموارد البشرية', deptEn:'Human Resources',     type:'advance',     priority:'high',   stage:'pending',  reason:'سلفة على الراتب لسداد نفقات طارئة',                                 notes:'',            createdAt:'2025-05-11T09:30:00Z', updatedAt:'2025-05-11T09:30:00Z' },
+      { id:'APV-003', empName:'خالد عبدالله الدوسري', requestedBy:'Khaled Al-Dosari',   empId:'QU-2018-0312', empEmail:'k.aldosari@qu.edu.qa',    dept:'College of Science',deptAr:'كلية العلوم',           deptEn:'College of Science',  type:'mission',     priority:'normal', stage:'endorsed', reason:'حضور مؤتمر الكيمياء الدولي في باريس يوليو 2025',                     notes:'الرجاء الاعتماد العاجل', endorsedBy:'رئيس قسم العلوم', endorsedAt:'2025-05-12T10:00:00Z', createdAt:'2025-05-09T11:00:00Z', updatedAt:'2025-05-12T10:00:00Z' },
+      { id:'APV-004', empName:'نورة راشد المري',       requestedBy:'Noura Al-Marri',     empId:'QU-2021-0098', empEmail:'n.almarri@qu.edu.qa',     dept:'Finance',           deptAr:'إدارة المالية',         deptEn:'Finance',             type:'allowance',   priority:'normal', stage:'approved', reason:'تحديث بدل السكن وفقاً للعقد الجديد',                                notes:'', approvedBy:'مدير الإدارة', approvedAt:'2025-05-13T12:00:00Z', createdAt:'2025-05-08T07:00:00Z', updatedAt:'2025-05-13T12:00:00Z' },
+      { id:'APV-005', empName:'سلطان محمد الكعبي',    requestedBy:'Sultan Al-Kaabi',    empId:'QU-2017-0234', empEmail:'s.alkaabi@qu.edu.qa',    dept:'Computer Science',  deptAr:'قسم علوم الحاسب',       deptEn:'Computer Science',    type:'certificate', priority:'normal', stage:'rejected', reason:'شهادة خبرة لإجراءات الجنسية',                                       notes:'', rejectedBy:'مدير الإدارة', rejectedAt:'2025-05-14T09:00:00Z', mgmtNotes:'لا تصدر هذه الشهادات عبر قسم الرواتب، يُرجى مراجعة الموارد البشرية.', createdAt:'2025-05-07T08:00:00Z', updatedAt:'2025-05-14T09:00:00Z' },
+      { id:'APV-006', empName:'مريم حمد الشمري',      requestedBy:'Mariam Al-Shammari', empId:'QU-2022-0056', empEmail:'m.alshammari@qu.edu.qa', dept:'Finance',            deptAr:'إدارة المالية',         deptEn:'Finance',             type:'eos',         priority:'high',   stage:'pending',  reason:'حساب مكافأة نهاية الخدمة – إنهاء عقد بتاريخ 30/6/2025',            notes:'',            createdAt:'2025-05-15T10:00:00Z', updatedAt:'2025-05-15T10:00:00Z' },
+      { id:'APV-007', empName:'عمر سعيد الرشيد',      requestedBy:'Omar Al-Rasheed',    empId:'QU-2016-0401', empEmail:'o.alrasheed@qu.edu.qa',  dept:'Human Resources',   deptAr:'إدارة الموارد البشرية', deptEn:'Human Resources',     type:'allowance',   priority:'urgent', stage:'returned', reason:'طلب بدل انتقال – نقل داخلي من قسم لآخر',                           notes:'', returnedBy:'رئيس قسم الموارد', returnedAt:'2025-05-16T08:00:00Z', mgmtNotes:'يُرجى إرفاق قرار النقل الداخلي الصادر من الإدارة العليا.', createdAt:'2025-05-14T12:00:00Z', updatedAt:'2025-05-16T08:00:00Z' },
     ];
     saveAll(demo);
   }
 
+  /* ── init ── */
   seedDemo();
-  mgApvFilter();
+  mgApvSetTab('pending');
 })();
 </script>`
 
